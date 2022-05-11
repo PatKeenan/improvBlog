@@ -16,7 +16,11 @@
     "incremental": true,
     "baseUrl": "src",
     "paths": {
-      "@components-core/*": ["components-core/*"]
+      "@components-core/*": ["components-core/*"],
+      "@components-feat/*": ["components-feat/*"],
+      "@components-common/*": ["components-common/*"],
+      "@lib/*": ["lib/*"],
+      "@styles/*": ["styles/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
