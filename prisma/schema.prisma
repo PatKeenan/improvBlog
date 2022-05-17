@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id                Int                 @id @default(autoincrement())
+  user_uuid         String              @unique @default(uuid())
+  createdAt         DateTime            @default(now())
+  role              Role                @default(USER)
+  email             String              @unique
+  username          String              @unique
+  password          String
+  posts             Post[]
+  contributions     Contribution[]
+  profile           Profile?
+  slug              String?
+  privatePostMember PrivatePostMember[]
+}
+
+model Profile {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updateAt     DateTime @default(now())
+  profile_uuid String   @unique @default(uuid())
+  social       Json?
+  bio          String?
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id])
+  rank         Int      @default(0)
+}
+
+model Post {
+  id             Int                 @id @default(autoincrement())
+  post_uuid      String              @unique @default(uuid())
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  authorId       Int
+  author         User                @relation(fields: [authorId], references: [id])
+  private        Boolean             @default(false)
+  privateMembers PrivatePostMember[] // any block contribuotrs on post will automatically be added if set to private after content is created
+  blocks         Block[]
+  title          String              @db.VarChar(255)
+  about          String?
+  slug           String
+}
+
+model PrivatePostMember {
+  id     Int   @id @default(autoincrement())
+  postId Int?
+  post   Post? @relation(fields: [postId], references: [id])
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+}
+
+model Block {
+  id            Int            @id @default(autoincrement())
+  block_uuid    String         @unique @default(uuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  postId        Int
+  Post          Post           @relation(fields: [postId], references: [id])
+  contributions Contribution[]
+}
+
+model Contribution {
+  id                Int      @id @default(autoincrement())
+  contribution_uuid String   @unique @default(uuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  authorId          Int
+  author            User     @relation(fields: [authorId], references: [id])
+  content           String
+  votes             Int      @default(0)
+  blockId           Int
+  block             Block    @relation(fields: [blockId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_USER
+}
