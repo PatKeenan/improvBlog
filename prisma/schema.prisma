@@ -12,18 +12,17 @@ datasource db {
 }
 
 model User {
-  id                Int                 @id @default(autoincrement())
-  user_uuid         String              @unique @default(uuid())
-  createdAt         DateTime            @default(now())
-  role              Role                @default(USER)
-  email             String              @unique
-  username          String              @unique
-  password          String
-  posts             Post[]
-  contributions     Contribution[]
-  profile           Profile?
-  slug              String?
-  privatePostMember PrivatePostMember[]
+  id            Int            @id @default(autoincrement())
+  user_uuid     String         @unique @default(uuid())
+  createdAt     DateTime       @default(now())
+  role          Role           @default(USER)
+  email         String         @unique
+  username      String         @unique
+  password      String
+  posts         Post[]
+  contributions Contribution[]
+  profile       Profile?
+  slug          String?        @unique
 }
 
 model Profile {
@@ -39,26 +38,18 @@ model Profile {
 }
 
 model Post {
-  id             Int                 @id @default(autoincrement())
-  post_uuid      String              @unique @default(uuid())
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
-  authorId       Int
-  author         User                @relation(fields: [authorId], references: [id])
-  private        Boolean             @default(false)
-  privateMembers PrivatePostMember[] // any block contribuotrs on post will automatically be added if set to private after content is created
-  blocks         Block[]
-  title          String              @db.VarChar(255)
-  about          String?
-  slug           String
-}
-
-model PrivatePostMember {
-  id     Int   @id @default(autoincrement())
-  postId Int?
-  post   Post? @relation(fields: [postId], references: [id])
-  userId Int?
-  user   User? @relation(fields: [userId], references: [id])
+  id               Int      @id @default(autoincrement())
+  post_uuid        String   @unique @default(uuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  authorId         Int
+  author           User     @relation(fields: [authorId], references: [id])
+  private          Boolean  @default(false)
+  privateMemberIds Int[] // will autofill with current participants
+  blocks           Block[]
+  title            String   @db.VarChar(255)
+  plot             String
+  slug             String
 }
 
 model Block {
@@ -79,7 +70,7 @@ model Contribution {
   authorId          Int
   author            User     @relation(fields: [authorId], references: [id])
   content           String
-  votes             Int      @default(0)
+  likes             Int      @default(0)
   blockId           Int
   block             Block    @relation(fields: [blockId], references: [id])
 }
