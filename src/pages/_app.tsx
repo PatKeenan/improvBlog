@@ -1,11 +1,23 @@
 import '../styles/globals.css'
 import type {AppProps} from 'next/app'
-import {ChakraProvider} from '@chakra-ui/react'
+import {ChakraProvider, extendTheme} from '@chakra-ui/react'
+import {ErrorBoundary} from '@components-feat/ErrorBoundary'
+import Layout from '@components-feat/Layout'
+
+const customTheme = extendTheme()
 
 function MyApp({Component, pageProps}: AppProps) {
   return (
-    <ChakraProvider>
-      <Component {...pageProps} />
+    <ChakraProvider theme={customTheme}>
+      <ErrorBoundary fallback={<p>An application error has occurred</p>}>
+        {Component.displayName !== 'signIn' ? (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        ) : (
+          <Component {...pageProps} />
+        )}
+      </ErrorBoundary>
     </ChakraProvider>
   )
 }

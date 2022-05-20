@@ -32,22 +32,24 @@ model Profile {
   profile_uuid String   @unique @default(uuid())
   social       Json?
   bio          String?
+  profilePic   String?
   userId       Int      @unique
   user         User     @relation(fields: [userId], references: [id])
   rank         Int      @default(0)
 }
 
 model Post {
-  id               Int      @id @default(autoincrement())
-  post_uuid        String   @unique @default(uuid())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id               Int            @id @default(autoincrement())
+  post_uuid        String         @unique @default(uuid())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
   authorId         Int
-  author           User     @relation(fields: [authorId], references: [id])
-  private          Boolean  @default(false)
+  author           User           @relation(fields: [authorId], references: [id])
+  private          Boolean        @default(false)
   privateMemberIds Int[] // will autofill with current participants
   blocks           Block[]
-  title            String   @db.VarChar(255)
+  contributions    Contribution[]
+  title            String         @db.VarChar(255)
   plot             String
   slug             String
 }
@@ -73,6 +75,8 @@ model Contribution {
   likes             Int      @default(0)
   blockId           Int
   block             Block    @relation(fields: [blockId], references: [id])
+  postId            Int
+  Post              Post     @relation(fields: [postId], references: [id])
 }
 
 enum Role {

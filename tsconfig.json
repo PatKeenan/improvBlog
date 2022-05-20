@@ -19,7 +19,8 @@
       "@components-core/*": ["components-core/*"],
       "@components-feat/*": ["components-feat/*"],
       "@components-common/*": ["components-common/*"],
-      "@lib/*": ["lib/*"],
+      "@lib-client/*": ["lib-client/*"],
+      "@lib-server/*": ["lib-server/*"],
       "@styles/*": ["styles/*"]
     }
   },
