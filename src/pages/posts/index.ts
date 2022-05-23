@@ -1,0 +1,1 @@
+export {PostsContainer as default} from '@components-core/posts'

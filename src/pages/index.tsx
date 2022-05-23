@@ -1,3 +1,1 @@
-import HomeContainer from '@components-core/home'
-
-export default HomeContainer
+export {HomeContainer as default} from '@components-core/home'

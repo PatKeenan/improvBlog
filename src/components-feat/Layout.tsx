@@ -22,7 +22,10 @@ const Header = () => {
       h={{base: '75px'}}
       alignItems="center"
     >
-      <Box w="100px">Logo</Box>
+      <HStack spacing="5">
+        <Link href={'/'}>Logo</Link>
+        <Link href={'/posts/'}>Posts</Link>
+      </HStack>
       <Box flexGrow={1}>Search Bar</Box>
       <HStack>
         <Link href={'/signin'}>Login</Link>

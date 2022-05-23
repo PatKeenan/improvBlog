@@ -18,7 +18,7 @@
     "paths": {
       "@components-core/*": ["components-core/*"],
       "@components-feat/*": ["components-feat/*"],
-      "@components-common/*": ["components-common/*"],
+      "@components-common": ["components-common/index.ts"],
       "@lib-client/*": ["lib-client/*"],
       "@lib-server/*": ["lib-server/*"],
       "@styles/*": ["styles/*"]
