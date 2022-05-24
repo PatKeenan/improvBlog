@@ -60,6 +60,7 @@ model Block {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   postId        Int
+  frozen        Boolean        @default(false)
   Post          Post           @relation(fields: [postId], references: [id])
   contributions Contribution[]
 }

@@ -7,23 +7,35 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) { 
-    const post_uuid = req.body
-
-    if(post_uuid){
+    try {
+        const {post_uuid} = req.query as unknown as {post_uuid: string}
         const data =  await prisma.post.findUnique({
             where: {
-                post_uuid: req.body,
+                post_uuid: post_uuid,
+            },
+            include: {
+                author: {
+                    select: {
+                        username: true
+                    }
+                },
+                blocks: {
+                    include: {contributions: {
+                        include: {
+                            author: {select: {username: true}}
+                        }
+                    }}
+                }
             }
         })
-          if(data){
-              res.status(200).json(data);
-          }else{
-              res.status(404);
-              res.json({message: `Post ${post_uuid} not found`})
-          }
-    }else {
-        res.status(404);
-        res.json({message: 'An error has occurred'})
+        if(data){
+            return res.status(200).json(data);
+        }
+        
+        return res.status(404).json( {message: `Post ${post_uuid} not found`})
+        
+    } catch (error) {
+        return  res.status(500).json( {message: `An error has occurred`})
     }
-      
+    
 }

@@ -1,18 +1,25 @@
-import {Post, User} from '@prisma/client'
+import {Block, Contribution, Post, User} from '@prisma/client'
 import fetcher from './fetcher'
 import useSWR from 'swr'
 
-interface PostType extends Post {
-  _count: {blocks: number; contributions: number}
+interface UserType extends Contribution {
+  author: Pick<User, 'username'>
 }
-interface UsePostTypes extends PostType {
+
+interface BlockType extends Block {
+  contributions: UserType[]
+}
+interface UsePostTypes extends Post {
   author: User
+  blocks: BlockType[]
 }
 
 export const usePost = (post_uuid: string) => {
-  const {data, error} = useSWR<UsePostTypes>(`/posts/${post_uuid}`, url =>
-    fetcher(url, post_uuid),
+  const {data, error} = useSWR<UsePostTypes>(
+    post_uuid ? `/posts/${post_uuid}` : null,
+    fetcher,
   )
+
   return {
     post: data,
     loading: !data && !error,

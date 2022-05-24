@@ -23,7 +23,7 @@ export const Card = ({
   )
   return link ? (
     <Container>
-      <Link href={`posts/${encodeURIComponent(link)}`} passHref>
+      <Link href={{pathname: `posts/${encodeURIComponent(link)}`}} passHref>
         <ChakraLink width="full">
           <CardContent />
         </ChakraLink>
