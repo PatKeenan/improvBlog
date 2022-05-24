@@ -1,12 +1,12 @@
+import {ContributionCard, H1, H5, SmallText} from '@components-common'
 import {Box, Grid, GridItem, HStack, VStack} from '@chakra-ui/react'
+import {Determine} from '@components-feat/Determine'
+import {toCapitalCase} from 'utils/toCapitalCase'
 import {usePost} from '@lib-client/usePost'
 import {useRouter} from 'next/router'
-import {ContributionCard, H1, H5, SmallText} from '@components-common'
+import Head from 'next/head'
 import moment from 'moment'
 import React from 'react'
-import Head from 'next/head'
-import {toCapitalCase} from 'utils/toCapitalCase'
-import {Determine} from '@components-feat/Determine'
 
 export const PostDetailContainer = () => {
   const router = useRouter()
