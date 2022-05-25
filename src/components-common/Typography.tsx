@@ -4,14 +4,20 @@
  * a wrapper so it can be changed out if need be with this file being the source of truth.
  */
 
-import type {TextProps} from '@chakra-ui/react'
-import {Text} from '@chakra-ui/react'
+import type { TextProps } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import * as React from 'react'
 
 interface TextPropsType extends TextProps {}
 
-const BaseText = ({...rest}: TextPropsType) => {
-  return <Text color={rest.color ?? 'gray.700'} {...rest} />
+const BaseText = ({ ...rest }: TextPropsType) => {
+  return (
+    <Text
+      margin={rest.margin ? rest.margin : 0}
+      color={rest.color ?? 'gray.700'}
+      {...rest}
+    />
+  )
 }
 
 export const H1 = (props: TextPropsType) => (

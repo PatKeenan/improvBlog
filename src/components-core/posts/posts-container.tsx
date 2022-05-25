@@ -1,4 +1,4 @@
-import {Determine} from '@components-feat/Determine'
+import {Determine} from '@components-feat'
 import {usePosts} from '@lib-client/usePosts'
 import {VStack} from '@chakra-ui/react'
 import type {NextPage} from 'next'
@@ -25,9 +25,7 @@ export const PostsContainer: NextPage = () => {
               <CardContent>{i.plot}</CardContent>
               <CardFooter>
                 <SmallText>Creator: {i.author.username}</SmallText>
-                <SmallText>
-                  Last Updated: {moment(i.updatedAt).fromNow()}
-                </SmallText>
+                <SmallText>Created: {moment(i.createdAt).fromNow()}</SmallText>
               </CardFooter>
             </Card>
           )

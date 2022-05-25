@@ -1,1 +1,1 @@
-export {AboutContainer as default} from './about-container'
+export * from './about-container'

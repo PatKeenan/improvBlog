@@ -7,11 +7,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) { 
-      const data =  await prisma.post.findMany({include: {
-        author: true,
+      const data =  await prisma.post.findMany({orderBy: {createdAt: 'desc'}, include: {
+        
+        author: {
+          select: {username: true}
+        },
         _count : {
-          select: {blocks: true, contributions:true }
-        }
+          select: {blocks: true, contributions: true }
+        },
+        
+        
       }})
         if(data){
             res.status(200).json(data);

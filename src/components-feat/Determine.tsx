@@ -1,5 +1,5 @@
 import {Box, HStack, Spinner} from '@chakra-ui/react'
-import {H3} from '@components-common'
+import {H3, Paragraph} from '@components-common'
 import React from 'react'
 
 /**
@@ -14,7 +14,9 @@ import React from 'react'
 
 interface DetermineProps<U, V> {
   component: JSX.Element | null
-  error: U
+  error: {
+    message: string | null
+  }
   loading: V
 }
 
@@ -26,14 +28,17 @@ export const Determine = <U extends unknown, V extends unknown>({
   if (loading || error) {
     return (
       <Box display="flex" w="full" placeItems="center" h="full" flexGrow={1}>
-        <HStack flexGrow={1} justify="center">
+        <HStack flexGrow={1} justify="center" spacing={3}>
           {loading && !error ? (
             <>
               <H3>Loading</H3>
-              <Spinner size="xl" />
+              <Spinner size="lg" />
             </>
           ) : (
-            <H3>Error</H3>
+            <>
+              <H3>Error:</H3>
+              <H3>{error.message}</H3>
+            </>
           )}
         </HStack>
       </Box>

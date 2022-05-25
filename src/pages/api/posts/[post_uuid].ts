@@ -12,6 +12,7 @@ export default async function handler(
         const data =  await prisma.post.findUnique({
             where: {
                 post_uuid: post_uuid,
+                
             },
             include: {
                 author: {
@@ -20,11 +21,26 @@ export default async function handler(
                     }
                 },
                 blocks: {
-                    include: {contributions: {
-                        include: {
-                            author: {select: {username: true}}
-                        }
-                    }}
+                    orderBy: {
+                      createdAt: 'asc'  
+                    },
+                    include: {
+                        _count:{
+                            select: {
+                                contributions: true
+                            }
+                        },
+                        contributions: {
+                            take: 1,
+                            orderBy: {
+                                likes: 'desc'
+                            },
+                            include: {
+                                author: {select: {username: true}}
+                            },
+                            
+                         }
+                    }
                 }
             }
         })

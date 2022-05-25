@@ -1,8 +1,8 @@
-import {Box, Container, HStack, Stack, VStack} from '@chakra-ui/react'
+import { Box, Container, HStack, Stack, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
-import type {ReactNode} from 'react'
+import type { ReactNode } from 'react'
 
-export default function Layout({children}: {children: ReactNode}) {
+export function Layout({ children }: { children: ReactNode }) {
   return (
     <VStack minH={'100vh'} w={'100vw'} flex={1}>
       <Header />
@@ -19,7 +19,7 @@ const Header = () => {
       w="100%"
       shadow={'base'}
       p="4"
-      h={{base: '75px'}}
+      h={{ base: '75px' }}
       alignItems="center"
     >
       <HStack spacing="5">

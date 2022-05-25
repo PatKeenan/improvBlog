@@ -1,3 +1,1 @@
-import AboutContainer from '@components-core/about'
-
-export default AboutContainer
+export { AboutContainer as default } from '@components-core/about'
