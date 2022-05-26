@@ -1,4 +1,4 @@
-import React, {Component, ErrorInfo, ReactNode} from 'react'
+import React, { ErrorInfo, ReactNode } from 'react'
 
 interface ErrorBoundaryProps {
   fallback: ReactNode
@@ -6,7 +6,7 @@ interface ErrorBoundaryProps {
 }
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
-  state = {hasError: false, error: null}
+  state = { hasError: false, error: null }
   static getDerivedStateFromError(error: Error) {
     return {
       hasError: true,
@@ -15,7 +15,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // You can use your own error logging service here
-    console.log({error, errorInfo})
+    console.log({ error, errorInfo })
   }
   render() {
     if (this.state.hasError) {

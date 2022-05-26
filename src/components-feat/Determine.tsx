@@ -1,5 +1,5 @@
-import {Box, HStack, Spinner} from '@chakra-ui/react'
-import {H3, Paragraph} from '@components-common'
+import { Box, HStack, Spinner } from '@chakra-ui/react'
+import { H3 } from '@components-common'
 import React from 'react'
 
 /**

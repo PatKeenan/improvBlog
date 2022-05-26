@@ -1,5 +1,5 @@
-import type {Contribution, User, Block} from '@prisma/client'
-import {Paragraph, SmallText} from '@components-common'
+import type { Contribution, User, Block } from '@prisma/client'
+import { Paragraph, SmallText } from '@components-common'
 import {
   AvatarBadge,
   Box,
@@ -9,8 +9,8 @@ import {
   IconButton,
   VStack,
 } from '@chakra-ui/react'
-import {BsLock, BsUnlock} from 'react-icons/bs'
-import {AiOutlineHeart} from 'react-icons/ai'
+import { BsLock, BsUnlock } from 'react-icons/bs'
+import { AiOutlineHeart } from 'react-icons/ai'
 import moment from 'moment'
 import React from 'react'
 
@@ -44,6 +44,8 @@ export const BlockCard = ({
         bg="gray.50"
         position="relative"
         role="group"
+        wordBreak="break-word"
+        whiteSpace="normal"
       >
         <Box
           position="absolute"
@@ -67,14 +69,14 @@ export const BlockCard = ({
           w="full"
           alignItems={'flex-start'}
         >
-          <Paragraph>{content}</Paragraph>
+          <Paragraph textAlign="left">{content}</Paragraph>
           <HStack
             align="center"
             justify="space-between"
             w="full"
             spacing="4"
             opacity="0"
-            _groupHover={{opacity: 1}}
+            _groupHover={{ opacity: 1 }}
           >
             <SmallText fontWeight="light">
               Contributed by {username} {moment(createdAt).fromNow()}
