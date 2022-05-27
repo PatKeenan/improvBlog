@@ -81,23 +81,25 @@ export const ContributionCard = ({
           <SmallText fontWeight="light">
             Contributed by {username} {moment(createdAt).fromNow()}
           </SmallText>
-          <HStack>
-            {liked ? (
-              <AiFillHeart
-                onClick={handleLike}
-                style={{
-                  cursor: 'pointer',
-                  fill: 'var(--chakra-colors-blue-200)',
-                }}
-              />
-            ) : (
-              <AiOutlineHeart
-                onClick={handleLike}
-                style={{ cursor: 'pointer' }}
-              />
-            )}
-            <SmallText>{likes} Likes</SmallText>
-          </HStack>
+          {!asBlockCard ? (
+            <HStack>
+              {liked ? (
+                <AiFillHeart
+                  onClick={handleLike}
+                  style={{
+                    cursor: 'pointer',
+                    fill: 'var(--chakra-colors-blue-200)',
+                  }}
+                />
+              ) : (
+                <AiOutlineHeart
+                  onClick={handleLike}
+                  style={{ cursor: 'pointer' }}
+                />
+              )}
+              <SmallText>{likes} Likes</SmallText>
+            </HStack>
+          ) : null}
         </HStack>
       </VStack>
     </Button>

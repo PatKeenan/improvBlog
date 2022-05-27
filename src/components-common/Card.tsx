@@ -1,7 +1,13 @@
-import {HStack, VStack, Link as ChakraLink, Container} from '@chakra-ui/react'
+import {
+  HStack,
+  VStack,
+  Link as ChakraLink,
+  Container,
+  Box,
+} from '@chakra-ui/react'
 import Link from 'next/link'
 import React from 'react'
-import {H3, Paragraph} from './Typography'
+import { H3, Paragraph } from './Typography'
 
 export const Card = ({
   children,
@@ -17,24 +23,25 @@ export const Card = ({
       p="4"
       spacing="2"
       align="flex-start"
+      w="full"
     >
       {children}
     </VStack>
   )
   return link ? (
-    <Container>
-      <Link href={{pathname: `posts/${encodeURIComponent(link)}`}} passHref>
+    <Box w="full">
+      <Link href={{ pathname: `posts/${encodeURIComponent(link)}` }} passHref>
         <ChakraLink width="full">
           <CardContent />
         </ChakraLink>
       </Link>
-    </Container>
+    </Box>
   ) : (
     <CardContent />
   )
 }
 
-export const CardTitle = ({children}: {children: React.ReactNode}) => (
+export const CardTitle = ({ children }: { children: React.ReactNode }) => (
   <H3 textTransform="capitalize">{children}</H3>
 )
 export const CardContent = ({
@@ -42,7 +49,7 @@ export const CardContent = ({
 }: {
   children: React.ReactNode | string
 }) => <Paragraph>{children}</Paragraph>
-export const CardFooter = ({children}: {children: React.ReactNode}) => (
+export const CardFooter = ({ children }: { children: React.ReactNode }) => (
   <HStack justify="space-between" my="2" w="100%">
     {children}
   </HStack>

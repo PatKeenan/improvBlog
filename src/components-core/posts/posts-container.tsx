@@ -1,7 +1,7 @@
-import {Determine} from '@components-feat'
-import {usePosts} from '@lib-client/usePosts'
-import {VStack} from '@chakra-ui/react'
-import type {NextPage} from 'next'
+import { Determine } from '@components-feat'
+import { usePosts } from '@lib-client/usePosts'
+import { VStack } from '@chakra-ui/react'
+import type { NextPage } from 'next'
 import moment from 'moment'
 import {
   CardContent,
@@ -12,7 +12,7 @@ import {
 } from '@components-common'
 
 export const PostsContainer: NextPage = () => {
-  const {posts, loading, error} = usePosts()
+  const { posts, loading, error } = usePosts()
   return Determine({
     error,
     loading,
