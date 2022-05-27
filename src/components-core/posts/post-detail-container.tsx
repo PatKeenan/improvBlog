@@ -1,3 +1,17 @@
+import { ContributionList } from './contribution-list'
+import { ContributionCard } from './contribution-card'
+import { PostHeader } from '@components-core/posts'
+import type { Block, Post } from '@prisma/client'
+import { BsLock, BsUnlock } from 'react-icons/bs'
+import { Paragraph } from '@components-common'
+import { usePost } from '@lib-client/usePost'
+import { Determine } from '@components-feat'
+import { BlockCard } from './block-card'
+import { useRouter } from 'next/router'
+import { toCapitalCase } from '@utils'
+import Head from 'next/head'
+import React from 'react'
+
 import {
   Box,
   Button,
@@ -7,18 +21,6 @@ import {
   Icon,
   VStack,
 } from '@chakra-ui/react'
-import { usePost } from '@lib-client/usePost'
-import { PostHeader } from '@components-core/posts'
-import { Determine } from '@components-feat'
-import type { Block, Post } from '@prisma/client'
-import { useRouter } from 'next/router'
-import { toCapitalCase } from '@utils'
-import Head from 'next/head'
-import React from 'react'
-import { BlockCard } from './block-card'
-import { Paragraph, SmallText } from '@components-common'
-import { useBlocks } from '@lib-client/useBlock'
-import { BsLock, BsUnlock } from 'react-icons/bs'
 
 export const PostDetailContainer = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
@@ -29,10 +31,6 @@ export const PostDetailContainer = () => {
     post_uuid: Post['post_uuid']
   }
   const { post, loading, error } = usePost(post_uuid)
-
-  const handleSelectBlock = (block: number) => {
-    setSelectedBlock(block)
-  }
 
   return Determine({
     error,
@@ -76,80 +74,39 @@ export const PostDetailContainer = () => {
                     ) : (
                       <Icon as={BsUnlock} />
                     )}
-                    <Button
-                      h="auto"
-                      w="full"
-                      px="4"
-                      pb="4"
-                      pt="6"
-                      fontWeight="normal"
-                      bg="gray.50"
-                      position="relative"
-                      role="group"
-                      wordBreak="break-word"
-                      whiteSpace="normal"
-                      onClick={() => handleSelectBlock(block.id)}
-                      border={
-                        block.id === selectedBlock
-                          ? '1px solid indigo'
-                          : '1px solid transparent'
-                      }
-                    >
-                      <BlockCard
-                        key={block.block_uuid}
-                        contributionTotal={Number(block._count.contributions)}
-                        content={block.contributions[0].content}
-                        createdAt={block.contributions[0].createdAt}
-                        username={block.contributions[0].author.username}
-                        likes={block.contributions[0].likes}
-                      />
-                    </Button>
+
+                    <ContributionCard
+                      key={block.block_uuid}
+                      activeBorder={selectedBlock == block.id}
+                      asBlockCard={true}
+                      handleClick={() => setSelectedBlock(block.id)}
+                      contributionTotal={Number(block._count.contributions)}
+                      content={block.contributions[0].content}
+                      createdAt={block.contributions[0].createdAt}
+                      username={block.contributions[0].author.username}
+                      likes={block.contributions[0].likes}
+                    />
                   </HStack>
                 ))}
               </VStack>
             </GridItem>
             <GridItem colSpan={4}>
-              <VStack flexGrow={1} shadow="base" h="full">
+              <VStack
+                flexGrow={1}
+                borderLeft="1px"
+                borderColor="gray.100"
+                h="full"
+                pl={4}
+              >
                 {selectedBlock ? (
                   <ContributionList blockId={selectedBlock} />
                 ) : (
-                  <Paragraph>Select a block</Paragraph>
+                  <Paragraph m="auto 0">Select a block</Paragraph>
                 )}
               </VStack>
             </GridItem>
           </Grid>
         </VStack>
-      </>
-    ) : null,
-  })
-}
-
-const ContributionList = ({ blockId }: { blockId: Block['id'] }) => {
-  const { data, loading, error } = useBlocks(blockId)
-  return Determine({
-    error,
-    loading,
-    component: data ? (
-      <>
-        {data.contributions.map(i => (
-          <VStack
-            w="full"
-            px="4"
-            pb="4"
-            pt="6"
-            fontWeight="normal"
-            bg="gray.50"
-            position="relative"
-            role="group"
-            wordBreak="break-word"
-            whiteSpace="normal"
-            align="flex-start"
-            key={i.contribution_uuid}
-          >
-            <Paragraph>{i.content}</Paragraph>
-            <SmallText>{i.author.username}</SmallText>
-          </VStack>
-        ))}
       </>
     ) : null,
   })

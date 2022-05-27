@@ -1,6 +1,5 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import prisma from '@lib-server/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import prisma from '@lib-server/prisma'
 
 
 export default async function handler(
@@ -8,7 +7,6 @@ export default async function handler(
   res: NextApiResponse
 ) { 
       const data =  await prisma.post.findMany({orderBy: {createdAt: 'desc'}, include: {
-        
         author: {
           select: {username: true}
         },
