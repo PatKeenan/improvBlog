@@ -1,5 +1,5 @@
 import { Paragraph, SmallText } from '@components-common'
-import { useBlocks } from '@lib-client/useBlock'
+import { useBlocks } from '@lib/useBlock'
 import { Determine } from '@components-feat'
 import type { Block } from '@prisma/client'
 import { VStack } from '@chakra-ui/react'

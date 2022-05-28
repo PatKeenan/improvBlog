@@ -1,5 +1,5 @@
 import { Determine } from '@components-feat'
-import { usePosts } from '@lib-client/usePosts'
+import { usePosts } from '@lib/usePosts'
 import { VStack } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import moment from 'moment'

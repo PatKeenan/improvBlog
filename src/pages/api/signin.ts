@@ -2,25 +2,34 @@ import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
-import prisma from "@lib-server/prisma";
+import prisma from "@lib/prisma";
+import { env } from "process";
 
 export default async function Handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { email, password } = req.body;
-  console.log(req)
+  const { email, password, username } = req.body;
+ 
   if (!email || !password) {
     res.status(401);
     res.json({ error: "wrong credentials" });
   }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email
-    },
-  });
-
+  let user;
+  if(!email){
+     user = await prisma.user.findUnique({
+      where: {
+        email: email
+      },
+    });
+  }else{
+    user = await prisma.user.findUnique({
+      where: {
+        username: username
+      },
+    });
+  }
+  
   if (user && bcrypt.compareSync(password, user.password)) {
     const token = jwt.sign(
       {
@@ -35,7 +44,7 @@ export default async function Handler(
     );
     res.setHeader(
       "Set-Cookie",
-      cookie.serialize("IMPROV_ACCESS_TOKEN", token, {
+      cookie.serialize(env.IMPROV_APP_ACCESS_TOKEN as unknown as string, token, {
         httpOnly: true,
         maxAge: 8 * 60 * 60,
         path: "/",

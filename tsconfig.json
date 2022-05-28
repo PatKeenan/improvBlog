@@ -19,8 +19,7 @@
       "@components-core/*": ["components-core/*"],
       "@components-feat": ["components-feat/index.ts"],
       "@components-common": ["components-common/index.ts"],
-      "@lib-client/*": ["lib-client/*"],
-      "@lib-server/*": ["lib-server/*"],
+      "@lib/*": ["lib/*"],
       "@styles/*": ["styles/*"],
       "@utils": ["utils/index.ts"]
     }

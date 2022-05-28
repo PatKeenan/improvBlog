@@ -22,7 +22,6 @@ model User {
   posts         Post[]
   contributions Contribution[]
   profile       Profile?
-  slug          String?        @unique
 }
 
 model Profile {
