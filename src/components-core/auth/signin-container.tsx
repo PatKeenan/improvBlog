@@ -1,22 +1,28 @@
+import { H2, SmallText } from '@components-common'
+import { useForm } from 'react-hook-form'
+import React, { useState } from 'react'
+import { AuthForm } from './auth-form'
+import type { NextPage } from 'next'
+import Link from 'next/link'
 import {
   Flex,
-  Box,
   FormControl,
   Input,
-  Stack,
   Button,
-  useColorModeValue,
   useToast,
   FormLabel,
   Container,
+  FormErrorMessage,
+  VStack,
+  HStack,
+  Link as ChakraLink,
 } from '@chakra-ui/react'
-import type {NextPage} from 'next'
-import React, {useState} from 'react'
 
 export const SignInContainer: NextPage = () => {
   const [loading, setLoading] = useState(false)
 
   const toast = useToast()
+
   const handleLogin = async (e: React.SyntheticEvent) => {
     try {
       setLoading(true)
@@ -35,14 +41,20 @@ export const SignInContainer: NextPage = () => {
       setLoading(false)
     }
   }
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  /*   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    const {email, password} = Object.fromEntries(formData) as {
+    const { email, password } = Object.fromEntries(formData) as {
       email: string
       password: string
     }
-  }
+  } */
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm()
 
   return (
     <Flex
@@ -50,48 +62,63 @@ export const SignInContainer: NextPage = () => {
       w="100vw"
       align={'center'}
       justify={'center'}
-      bg={'gray.800'}
       flexGrow={1}
     >
       <Container>
-        <Stack spacing={8} mx={'auto'} py={12} px={6} minWidth={'400px'}>
-          <Box
-            rounded={'lg'}
-            bg={useColorModeValue('white', 'gray.700')}
-            boxShadow={'lg'}
-            p={8}
-          >
-            <form onSubmit={handleSubmit}>
-              <Stack spacing={4}>
-                <FormControl id="email">
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    placeholder="Enter Email..."
-                    type="email"
-                    name="email"
-                  />
-                </FormControl>
-                <FormControl id="password">
-                  <FormLabel>Password</FormLabel>
-                  <Input type="password" name="password" />
-                </FormControl>
-                <Stack spacing={10}>
-                  <Button
-                    type="submit"
-                    bg={'blue.400'}
-                    color={'white'}
-                    disabled={loading}
-                    _hover={{
-                      bg: 'blue.500',
-                    }}
-                  >
-                    <span>{loading ? 'Loading' : 'Sign In'}</span>
-                  </Button>
-                </Stack>
-              </Stack>
-            </form>
-          </Box>
-        </Stack>
+        <AuthForm title="Sign In To Read Awesome Stuff">
+          <form onSubmit={handleSubmit(() => {})}>
+            <VStack spacing={4}>
+              <FormControl isInvalid={errors.name}>
+                <FormLabel htmlFor="email">Email</FormLabel>
+                <Input
+                  id="email"
+                  placeholder="Email"
+                  {...register('email', {
+                    required: true,
+                    minLength: {
+                      value: 4,
+                      message: 'Minimum length should be 4',
+                    },
+                    pattern:
+                      /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.email && errors.email.message}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={errors.password}>
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <Input
+                  id="password"
+                  placeholder="Password"
+                  {...register('password', {
+                    required: true,
+                    minLength: {
+                      value: 4,
+                      message: 'Minimum length should be 4',
+                    },
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.password && errors.password.message}
+                </FormErrorMessage>
+              </FormControl>
+              <HStack justify={'space-between'} w="full">
+                <SmallText>
+                  Don't have an account?{' '}
+                  <Link href={{ pathname: '/signup' }} passHref>
+                    <ChakraLink color="blue.500">Sign Up</ChakraLink>
+                  </Link>
+                </SmallText>
+
+                <Button variant="solid" colorScheme="blue" type="submit">
+                  Sign In
+                </Button>
+              </HStack>
+            </VStack>
+          </form>
+        </AuthForm>
       </Container>
     </Flex>
   )
