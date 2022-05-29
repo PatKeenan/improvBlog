@@ -10,7 +10,7 @@ interface UsePostTypes extends Posts {
 } */
 
 export const useProfile = (id: string) => {
-  const {data, error} = useSWR<Profile>(`/profile/${id}`, fetcher)
+  const {data, error} = useSWR<Profile>(`/users/${id}`, fetcher)
   return {
     profile: data,
     loading: !data && !error,

@@ -1,4 +1,4 @@
-import { useProfile } from '@lib/useProfile'
+import { useProfile } from '@lib/useUsers'
 import { Avatar } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import faker from '@faker-js/faker'

@@ -67,13 +67,13 @@ export const SignUpContainer: NextPage = () => {
   } = useForm<FormType>(formOptions)
 
   const onSubmit = handleSubmit(async data => {
-    const { data: user, error } = await auth('signup', {
+    const user = await auth('signup', {
       email: data.email,
       password: data.password,
       username: data.username,
     })
-    if (error && !user) {
-      return setError(error.field, { message: error.message })
+    if (user.error) {
+      return setError(user.error.field, { message: user.error.message })
     }
     if (user) {
       return router.push('/')
