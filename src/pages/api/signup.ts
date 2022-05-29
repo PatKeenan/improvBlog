@@ -10,9 +10,7 @@ type ReturnedUser = Omit<User, "password"|"createdAt">
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const salt = bcrypt.genSaltSync();
     const {email, password, username} = req.body;
-
     let user;
-
     try {
         user = await prisma.user.create({
             data: {
@@ -22,8 +20,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
         });
         
-    } catch (error) {
-        res.status(401).json({error});
+    } catch (error: any) {
+         res.status(401).json({error: {
+             field: error.meta.target[0] ?? null,
+             message: error.meta.target[0] ? `${error.meta.target[0]} is already being used.` : 'Something went wrong'
+        }});
         return
     }
     const token = jwt.sign({
@@ -31,14 +32,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: user.id,
         username: username,
         time: Date.now()
-    }, env.JWT_SECRET as unknown as string, 
+    }, process.env.JWT_SECRET as unknown as string, 
     {expiresIn: '8h'});
 
     res.setHeader(
         'Set-Cookie',
-        cookie.serialize(env.IMPROV_APP_ACCESS_TOKEN as unknown as string, token, {
+        cookie.serialize(process.env.JWT_TOKEN_NAME as unknown as string, token, {
             httpOnly: true,
-            maxAge: 8 * 60 * 60,
+            maxAge: 10 * 60 * 60,
             path: '/',
             sameSite: 'lax',
             secure: process.env.NODE_ENV === "production" 

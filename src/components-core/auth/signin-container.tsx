@@ -17,44 +17,47 @@ import {
   HStack,
   Link as ChakraLink,
 } from '@chakra-ui/react'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
+import { auth } from '@lib/auth'
+import { useRouter } from 'next/router'
 
 export const SignInContainer: NextPage = () => {
-  const [loading, setLoading] = useState(false)
-
+  const router = useRouter()
   const toast = useToast()
-
-  const handleLogin = async (e: React.SyntheticEvent) => {
-    try {
-      setLoading(true)
-
-      toast({
-        title: 'Magic Link Sent.',
-        description: "We've beamed a secret link to your email.",
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      })
-    } catch (error) {
-      //@ts-ignore
-      alert(error.error_description || error.message)
-    } finally {
-      setLoading(false)
-    }
+  const formOptions = {
+    resolver: yupResolver(
+      Yup.object().shape({
+        email: Yup.string()
+          .required('Email is required')
+          .email('Must be a valid email'),
+        password: Yup.string()
+          .required('Password is required')
+          .min(6, 'Password must be at least 6 characters'),
+      }),
+    ),
   }
-  /*   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const { email, password } = Object.fromEntries(formData) as {
-      email: string
-      password: string
-    }
-  } */
-
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm()
+  } = useForm(formOptions)
+
+  const onSubmit = handleSubmit(async data => {
+    const user = await auth('signin', {
+      email: data.email,
+      password: data.password,
+    })
+    if (user.error) {
+      return toast({
+        isClosable: true,
+        duration: 2000,
+        title: 'Incorrect Email or Password',
+        status: 'error',
+      })
+    }
+    return router.push('/')
+  })
 
   return (
     <Flex
@@ -66,23 +69,11 @@ export const SignInContainer: NextPage = () => {
     >
       <Container>
         <AuthForm title="Sign In To Read Awesome Stuff">
-          <form onSubmit={handleSubmit(() => {})}>
+          <form onSubmit={onSubmit}>
             <VStack spacing={4}>
               <FormControl isInvalid={errors.name}>
                 <FormLabel htmlFor="email">Email</FormLabel>
-                <Input
-                  id="email"
-                  placeholder="Email"
-                  {...register('email', {
-                    required: true,
-                    minLength: {
-                      value: 4,
-                      message: 'Minimum length should be 4',
-                    },
-                    pattern:
-                      /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
-                  })}
-                />
+                <Input id="email" placeholder="Email" {...register('email')} />
                 <FormErrorMessage>
                   {errors.email && errors.email.message}
                 </FormErrorMessage>
@@ -91,14 +82,9 @@ export const SignInContainer: NextPage = () => {
                 <FormLabel htmlFor="password">Password</FormLabel>
                 <Input
                   id="password"
+                  type="password"
                   placeholder="Password"
-                  {...register('password', {
-                    required: true,
-                    minLength: {
-                      value: 4,
-                      message: 'Minimum length should be 4',
-                    },
-                  })}
+                  {...register('password')}
                 />
                 <FormErrorMessage>
                   {errors.password && errors.password.message}
@@ -112,7 +98,12 @@ export const SignInContainer: NextPage = () => {
                   </Link>
                 </SmallText>
 
-                <Button variant="solid" colorScheme="blue" type="submit">
+                <Button
+                  variant="solid"
+                  colorScheme="blue"
+                  type="submit"
+                  isLoading={isSubmitting}
+                >
                   Sign In
                 </Button>
               </HStack>
