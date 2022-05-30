@@ -1,15 +1,9 @@
-import {Post, Profile, User} from '@prisma/client'
+import {Profile} from '@prisma/client'
 import fetcher from './fetcher'
 import useSWR from 'swr'
 
-/* interface Posts extends Post {
-  _count: {blocks: number; contributions: number}
-}
-interface UsePostTypes extends Posts {
-  author: User
-} */
 
-export const useProfile = (id: string) => {
+export const useUsers = (id: string) => {
   const {data, error} = useSWR<Profile>(`/users/${id}`, fetcher)
   return {
     profile: data,
