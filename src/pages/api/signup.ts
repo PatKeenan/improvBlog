@@ -19,7 +19,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 username
             }
         });
-        
     } catch (error: any) {
          res.status(401).json({error: {
              field: error.meta.target[0] ?? null,

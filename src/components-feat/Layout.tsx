@@ -1,6 +1,8 @@
 import { Box, HStack, VStack } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
 import Link from 'next/link'
+import { useMe } from '@lib/useMe'
+import { Link as ChakraLink } from '@chakra-ui/react'
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
@@ -14,6 +16,7 @@ export function Layout({ children }: { children: ReactNode }) {
 }
 
 const Header = () => {
+  const { user, error } = useMe()
   return (
     <HStack
       w="100%"
@@ -28,7 +31,13 @@ const Header = () => {
       </HStack>
       <Box flexGrow={1}>Search Bar</Box>
       <HStack>
-        <Link href="/signin">Login</Link>
+        {user ? (
+          <Link href={`/users/${user.id}`} passHref>
+            <ChakraLink>{user.username}</ChakraLink>
+          </Link>
+        ) : (
+          <Link href="/signin">Login</Link>
+        )}
       </HStack>
     </HStack>
   )

@@ -7,8 +7,7 @@ import type { NextPage } from 'next'
 export const ProfileContainer: NextPage = () => {
   const router = useRouter()
   const { id } = router.query as unknown as { id: string }
-  const { profile, loading, error } = useUsers(id)
-
+  const { profile, loading, error: userError } = useUsers(id)
   return profile ? (
     <div>
       <Avatar src={profile.profilePic ?? faker.image.cats()} />

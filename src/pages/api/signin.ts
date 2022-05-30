@@ -36,7 +36,7 @@ export default async function Handler(
         email: user.email,
         time: Date.now(),
       },
-      "test",
+      process.env.JWT_SECRET as unknown as string,
       {
         expiresIn: "8h",
       }

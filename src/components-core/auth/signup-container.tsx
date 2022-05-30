@@ -18,7 +18,7 @@ import {
   HStack,
 } from '@chakra-ui/react'
 import React from 'react'
-import { auth } from '@lib/auth'
+import { useAuth } from '@lib/auth'
 import { useRouter } from 'next/router'
 
 type FormType = {
@@ -67,7 +67,7 @@ export const SignUpContainer: NextPage = () => {
   } = useForm<FormType>(formOptions)
 
   const onSubmit = handleSubmit(async data => {
-    const user = await auth('signup', {
+    const user = await useAuth('signup', {
       email: data.email,
       password: data.password,
       username: data.username,

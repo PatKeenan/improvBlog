@@ -1,9 +1,10 @@
 import type { Contribution, User } from '@prisma/client'
 import { Paragraph, SmallText } from '@components-common'
-import { Box, Button, HStack, IconButton, VStack } from '@chakra-ui/react'
+import { Box, Button, HStack, VStack } from '@chakra-ui/react'
 import moment from 'moment'
 import React from 'react'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
+import { useMe } from '@lib/useMe'
 
 export const ContributionCard = ({
   content,
@@ -24,8 +25,12 @@ export const ContributionCard = ({
   activeBorder: boolean
   handleClick?: () => void
 }) => {
+  const { user, loading } = useMe()
+
   const [liked, setLiked] = React.useState(false)
-  const handleLike = () => setLiked(!liked)
+  const handleLike = () => {
+    user ? setLiked(!liked) : null
+  }
   return (
     <Button
       as={asBlockCard ? 'button' : 'div'}

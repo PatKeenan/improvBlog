@@ -4,11 +4,11 @@ import { PostHeader } from '@components-core/posts'
 import type { Block, Post } from '@prisma/client'
 import { BsLock, BsUnlock } from 'react-icons/bs'
 import { Paragraph } from '@components-common'
-import { usePost } from '@lib/usePost'
 import { Determine } from '@components-feat'
-import { BlockCard } from './block-card'
 import { useRouter } from 'next/router'
 import { toCapitalCase } from '@utils'
+import { usePost } from '@lib/usePost'
+import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 
@@ -22,7 +22,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 
-export const PostDetailContainer = () => {
+export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
     null,
   )

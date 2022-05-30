@@ -1,8 +1,6 @@
-import { Paragraph, SmallText } from '@components-common'
 import { useBlocks } from '@lib/useBlock'
 import { Determine } from '@components-feat'
 import type { Block } from '@prisma/client'
-import { VStack } from '@chakra-ui/react'
 import { ContributionCard } from './contribution-card'
 
 export const ContributionList = ({ blockId }: { blockId: Block['id'] }) => {

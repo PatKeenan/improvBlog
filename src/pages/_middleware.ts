@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ['/users'];
-const users = '^/users'
-const containsProtectedRoute = new RegExp(users)
-
+const protectedRoutes = ['/posts/create', '/api/posts/create', '/posts/edit/[id]','/api/posts/edit/[id]', '/users/[id]', '/api/users/[id]' ];
 export default function middleware(req: NextRequest){
-    const path =  req.nextUrl.pathname
     const newUrl = req.nextUrl.clone()
     newUrl.pathname = '/signin'
     const tokenName = process.env.JWT_TOKEN_NAME as string 
     const token = req.cookies[tokenName]
-    if(containsProtectedRoute.test(path)){
+    if(protectedRoutes.find(p => p === req.page.name)){
         if(!token){
            return NextResponse.redirect(newUrl)
         }
