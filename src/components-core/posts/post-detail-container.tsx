@@ -1,33 +1,32 @@
-import { ContributionList } from './contribution-list'
-import { ContributionCard } from './contribution-card'
-import type { Block, Post } from '@prisma/client'
-import { BsLock, BsUnlock } from 'react-icons/bs'
-import { Paragraph } from '@components-common'
-import { Determine } from '@components-feat'
-import { useRouter } from 'next/router'
-import { toCapitalCase } from '@utils'
-import { usePost } from '@lib/usePost'
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import React from 'react'
-
-import { Box, Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react'
-
-import { PostHeader } from './post-header'
-import { useMe } from '@lib/useMe'
+import { Box, Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react';
+import { ContributionList } from './contribution-list';
+import { ContributionCard } from './contribution-card';
+import type { Block, Post } from '@prisma/client';
+import { BsLock, BsUnlock } from 'react-icons/bs';
+import { Paragraph } from '@components-common';
+import { Determine } from '@components-feat';
+import { PostHeader } from './post-header';
+import { useRouter } from 'next/router';
+import { toCapitalCase } from '@utils';
+import { usePost } from '@lib/usePost';
+import type { NextPage } from 'next';
+import { useMe } from '@lib/useMe';
+import Head from 'next/head';
+import React from 'react';
 
 export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
     null,
-  )
-  const router = useRouter()
+  );
+  const router = useRouter();
 
   const { post_uuid } = router.query as unknown as {
-    post_uuid: Post['post_uuid']
-  }
-  const { post, loading, error } = usePost(post_uuid)
-  const { user } = useMe()
+    post_uuid: Post['post_uuid'];
+  };
+  const { post, loading, error } = usePost(post_uuid);
 
+  const { user } = useMe();
+  ////////////////////////////////
   return Determine({
     error,
     loading,
@@ -106,5 +105,5 @@ export const PostDetailContainer: NextPage = () => {
         </VStack>
       </>
     ) : null,
-  })
-}
+  });
+};

@@ -1,20 +1,21 @@
-import { Determine } from '@components-feat'
-import { usePosts } from '@lib/usePosts'
-import { VStack, Button } from '@chakra-ui/react'
-import type { NextPage } from 'next'
-import Link from 'next/link'
-import moment from 'moment'
-import { IoMdAdd } from 'react-icons/io'
+import { VStack, Button } from '@chakra-ui/react';
+import { Determine } from '@components-feat';
+import { usePosts } from '@lib/usePosts';
+import { IoMdAdd } from 'react-icons/io';
+import type { NextPage } from 'next';
+import Link from 'next/link';
+import moment from 'moment';
 import {
   CardContent,
   CardFooter,
   CardTitle,
   SmallText,
   Card,
-} from '@components-common'
+  H1,
+} from '@components-common';
 
 export const PostsContainer: NextPage = () => {
-  const { posts, loading, error } = usePosts()
+  const { posts, loading, error } = usePosts();
   return Determine({
     error,
     loading,
@@ -26,19 +27,25 @@ export const PostsContainer: NextPage = () => {
           </Link>
         </Button>
 
-        {posts.map(i => {
-          return (
-            <Card key={i.post_uuid} link={i.post_uuid}>
-              <CardTitle>{i.title}</CardTitle>
-              <CardContent>{i.plot}</CardContent>
-              <CardFooter>
-                <SmallText>Creator: {i.author.username}</SmallText>
-                <SmallText>Created: {moment(i.createdAt).fromNow()}</SmallText>
-              </CardFooter>
-            </Card>
-          )
-        })}
+        {posts.length > 0 ? (
+          posts.map(i => {
+            return (
+              <Card key={i.post_uuid} link={i.post_uuid}>
+                <CardTitle>{i.title}</CardTitle>
+                <CardContent>{i.plot}</CardContent>
+                <CardFooter>
+                  <SmallText>Creator: {i.author.username}</SmallText>
+                  <SmallText>
+                    Created: {moment(i.createdAt).fromNow()}
+                  </SmallText>
+                </CardFooter>
+              </Card>
+            );
+          })
+        ) : (
+          <H1>No Posts Yet</H1>
+        )}
       </VStack>
     ) : null,
-  })
-}
+  });
+};

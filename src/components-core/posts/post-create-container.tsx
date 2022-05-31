@@ -1,7 +1,11 @@
-import React from 'react'
-import type { NextPage } from 'next'
-import { createPost } from '@lib/mutations'
-import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup';
+import { postMutations } from '@lib/mutations';
+import type { Post } from '@prisma/client';
+import { useForm } from 'react-hook-form';
+import { H2 } from '@components-common';
+import { useRouter } from 'next/router';
+import type { NextPage } from 'next';
+import * as Yup from 'yup';
 import {
   Button,
   Container,
@@ -12,15 +16,11 @@ import {
   Input,
   Textarea,
   VStack,
-} from '@chakra-ui/react'
-import type { Post } from '@prisma/client'
-import * as Yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { H2 } from '@components-common'
-import { useRouter } from 'next/router'
+} from '@chakra-ui/react';
+import React from 'react';
 
 export const PostCreateContainer: NextPage = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const formOptions = {
     resolver: yupResolver(
@@ -29,30 +29,31 @@ export const PostCreateContainer: NextPage = () => {
         plot: Yup.string().required('Plot is required').min(6).max(500),
       }),
     ),
-  }
+  };
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm<{ plot: Post['plot']; title: Post['title'] }>(formOptions)
+  } = useForm<{ plot: Post['plot']; title: Post['title'] }>(formOptions);
 
   const onSubmit = handleSubmit(async data => {
-    const { post, error, message } = await createPost({
+    const { post, error, message } = await postMutations().create({
       plot: data.plot,
       title: data.title,
-    })
+    });
+    console.log(post);
     if (post && isSubmitSuccessful) {
-      router.push(`/posts/${post.post_uuid}`)
+      router.push(`/posts/${post.post_uuid}`);
     }
     if (error) {
-      setError('title', { message: message })
+      setError('title', { message: message });
     }
-  })
+  });
 
   const handleCancel = () => {
-    router.back()
-  }
+    router.back();
+  };
   return (
     <VStack w={'full'} flexGrow={1} p={8}>
       <Container>
@@ -96,5 +97,5 @@ export const PostCreateContainer: NextPage = () => {
         </Container>
       </Container>
     </VStack>
-  )
-}
+  );
+};

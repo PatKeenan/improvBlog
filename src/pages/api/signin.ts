@@ -1,13 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import cookie from "cookie";
-import prisma from "@lib/prisma";
-import { env } from "process";
-import { User } from "@prisma/client";
 import { MakeOptional } from "@lib/ts-utilities";
-
-type ReturnedUser = Omit<User, "password"|"createdAt">
+import { User } from "@prisma/client";
+import prisma from "@lib/prisma";
+import jwt from "jsonwebtoken";
+import { env } from "process";
+import cookie from "cookie";
+import bcrypt from "bcrypt";
 
 export default async function Handler(
   req: NextApiRequest,
@@ -54,6 +52,7 @@ export default async function Handler(
     );
     const userToReturn: MakeOptional<User, "password"> = {...user};
     delete userToReturn["password"]
+    return res.status(200).json(userToReturn);
   }else{
     return res.status(401).json({error: true})
   }

@@ -1,13 +1,13 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import { auth } from '@lib/mutations/auth-mutations'
-import { signInSchema } from '@lib/formValidations'
-import { SmallText } from '@components-common'
-import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
-import { AuthForm } from './auth-form'
-import type { NextPage } from 'next'
+import { yupResolver } from '@hookform/resolvers/yup';
+import { signInSchema } from '@lib/formValidations';
+import { SmallText } from '@components-common';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { AuthForm } from './auth-form';
+import { auth } from '@lib/mutations';
+import type { NextPage } from 'next';
 
-import Link from 'next/link'
+import Link from 'next/link';
 
 import {
   Flex,
@@ -21,12 +21,12 @@ import {
   VStack,
   HStack,
   Link as ChakraLink,
-} from '@chakra-ui/react'
-import React from 'react'
+} from '@chakra-ui/react';
+import React from 'react';
 
 export const SignInContainer: NextPage = () => {
-  const router = useRouter()
-  const toast = useToast()
+  const router = useRouter();
+  const toast = useToast();
 
   const {
     handleSubmit,
@@ -34,23 +34,23 @@ export const SignInContainer: NextPage = () => {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(signInSchema),
-  })
+  });
 
   const onSubmit = handleSubmit(async data => {
     const user = await auth('signin', {
       email: data.email,
       password: data.password,
-    })
+    });
     if (user.error) {
       return toast({
         isClosable: true,
         duration: 2000,
         title: 'Incorrect Email or Password',
         status: 'error',
-      })
+      });
     }
-    return router.push('/')
-  })
+    return router.push('/');
+  });
 
   ///////////////////////////////////////////////
 
@@ -107,8 +107,8 @@ export const SignInContainer: NextPage = () => {
         </AuthForm>
       </Container>
     </Flex>
-  )
-}
+  );
+};
 
 // Change the layout by setting display name and checking in _app.tsx
-SignInContainer.displayName = 'signIn'
+SignInContainer.displayName = 'signIn';

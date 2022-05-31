@@ -1,13 +1,13 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import { auth } from '@lib/mutations/auth-mutations'
-import { signUpSchema } from '@lib/formValidations'
-import { SmallText } from '@components-common'
-import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
-import { AuthForm } from './auth-form'
-import type { NextPage } from 'next'
+import { yupResolver } from '@hookform/resolvers/yup';
+import { signUpSchema } from '@lib/formValidations';
+import { SmallText } from '@components-common';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { AuthForm } from './auth-form';
+import { auth } from '@lib/mutations';
+import type { NextPage } from 'next';
 
-import Link from 'next/link'
+import Link from 'next/link';
 
 import {
   Button,
@@ -22,11 +22,11 @@ import {
   HStack,
   InputLeftAddon,
   InputGroup,
-} from '@chakra-ui/react'
-import React from 'react'
+} from '@chakra-ui/react';
+import React from 'react';
 
 export const SignUpContainer: NextPage = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -34,27 +34,27 @@ export const SignUpContainer: NextPage = () => {
     formState: { errors, isSubmitting },
     setError,
   } = useForm<{
-    username: string
-    email: string
-    password: string
-    confirmPassword: string
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
   }>({
     resolver: yupResolver(signUpSchema),
-  })
+  });
 
   const onSubmit = handleSubmit(async data => {
     const user = await auth('signup', {
       email: data.email,
       password: data.password,
       username: data.username,
-    })
+    });
     if (user.error) {
-      return setError(user.error.field, { message: user.error.message })
+      return setError(user.error.field, { message: user.error.message });
     }
     if (user) {
-      return router.push('/')
+      return router.push('/');
     }
-  })
+  });
 
   ///////////////////////////////////////////////
 
@@ -141,8 +141,8 @@ export const SignUpContainer: NextPage = () => {
         </AuthForm>
       </Container>
     </Flex>
-  )
-}
+  );
+};
 
 // Change the layout by setting display name and checking in _app.tsx
-SignUpContainer.displayName = 'signUp'
+SignUpContainer.displayName = 'signUp';
