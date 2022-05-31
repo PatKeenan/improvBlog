@@ -21,7 +21,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import { auth } from '@lib/mutations/auth-mutations'
 import { useRouter } from 'next/router'
-import { baseSignInSchema } from '@lib/formValidations'
+import { signInSchema } from '@lib/formValidations'
 
 export const SignInContainer: NextPage = () => {
   const router = useRouter()
@@ -32,7 +32,7 @@ export const SignInContainer: NextPage = () => {
     register,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: yupResolver(baseSignInSchema),
+    resolver: yupResolver(signInSchema),
   })
 
   const onSubmit = handleSubmit(async data => {
@@ -49,6 +49,7 @@ export const SignInContainer: NextPage = () => {
       })
     }
     return router.push('/')
+    console.log('Hello')
   })
 
   return (
@@ -63,15 +64,15 @@ export const SignInContainer: NextPage = () => {
         <AuthForm title="Sign In To Read Awesome Stuff">
           <form onSubmit={onSubmit}>
             <VStack spacing={4}>
-              <FormControl isInvalid={errors.email}>
+              <FormControl isInvalid={errors.email as boolean | undefined}>
                 <FormLabel>Email</FormLabel>
                 <Input id="email" placeholder="Email" {...register('email')} />
                 <FormErrorMessage>
                   {errors.email && errors.email.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={errors.password}>
-                <FormLabel htmlFor="password">Password</FormLabel>
+              <FormControl isInvalid={errors.password as boolean | undefined}>
+                <FormLabel>Password</FormLabel>
                 <Input
                   id="password"
                   type="password"

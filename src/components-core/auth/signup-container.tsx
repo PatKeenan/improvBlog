@@ -79,7 +79,6 @@ export const SignUpContainer: NextPage = () => {
                     {...register('username')}
                   />
                 </InputGroup>
-
                 <FormErrorMessage textTransform="capitalize">
                   {errors.username && errors.username.message}
                 </FormErrorMessage>

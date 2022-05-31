@@ -1,11 +1,7 @@
 import * as Yup from 'yup'
 
 
-  export const baseSignInSchema = Yup.object().shape({
-    username: Yup.string()
-      .required('Username is required')
-      .min(4, 'Username must be at least 4 characters long.')
-      .trim(),
+  export const baseAuthSchema = Yup.object().shape({
     email: Yup.string()
       .required('Email is required')
       .email('Must be a valid email')
@@ -18,9 +14,15 @@ import * as Yup from 'yup'
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
         'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
       )
-  })
+      })
 
-  export const signUpSchema = baseSignInSchema.shape({
+  export const signInSchema = baseAuthSchema.shape({})
+
+  export const signUpSchema = Yup.object().shape({
+    username: Yup.string()
+    .required('Username is required')
+    .min(4, 'Username must be at least 4 characters long.')
+    .trim(),
      confirmPassword: Yup.string()
        .required('Password is mandatory')
        .min(6)
