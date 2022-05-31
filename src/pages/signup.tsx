@@ -1,5 +1,1 @@
-import { SignUpContainer } from '@components-core/auth'
-
-SignUpContainer.displayName = 'signUp'
-
-export default SignUpContainer
+export { SignUpContainer as default } from '@components-core/auth'

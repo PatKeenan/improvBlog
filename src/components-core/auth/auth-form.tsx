@@ -1,10 +1,4 @@
-import {
-  Flex,
-  Box,
-  Stack,
-  useColorModeValue,
-  Container,
-} from '@chakra-ui/react'
+import { Box, useColorModeValue } from '@chakra-ui/react'
 import { H2 } from '@components-common'
 import React from 'react'
 
@@ -15,6 +9,7 @@ export const AuthForm = ({
   children: React.ReactNode | React.ReactNode[]
   title: string
 }) => {
+  ///////////////////////////////////////////////
   return (
     <>
       <H2 textAlign={'center'} marginBottom={4} textColor="gray.700">

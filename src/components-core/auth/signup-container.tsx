@@ -1,10 +1,14 @@
+import { yupResolver } from '@hookform/resolvers/yup'
+import { auth } from '@lib/mutations/auth-mutations'
+import { signUpSchema } from '@lib/formValidations'
 import { SmallText } from '@components-common'
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/router'
 import { AuthForm } from './auth-form'
 import type { NextPage } from 'next'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
+
 import Link from 'next/link'
+
 import {
   Button,
   Container,
@@ -20,16 +24,6 @@ import {
   InputGroup,
 } from '@chakra-ui/react'
 import React from 'react'
-import { auth } from '@lib/mutations/auth-mutations'
-import { useRouter } from 'next/router'
-import { signUpSchema } from '@lib/formValidations'
-
-type FormType = {
-  username: string
-  email: string
-  password: string
-  confirmPassword: string
-}
 
 export const SignUpContainer: NextPage = () => {
   const router = useRouter()
@@ -39,7 +33,12 @@ export const SignUpContainer: NextPage = () => {
     register,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<FormType>({
+  } = useForm<{
+    username: string
+    email: string
+    password: string
+    confirmPassword: string
+  }>({
     resolver: yupResolver(signUpSchema),
   })
 
@@ -56,6 +55,8 @@ export const SignUpContainer: NextPage = () => {
       return router.push('/')
     }
   })
+
+  ///////////////////////////////////////////////
 
   return (
     <Flex
@@ -142,3 +143,6 @@ export const SignUpContainer: NextPage = () => {
     </Flex>
   )
 }
+
+// Change the layout by setting display name and checking in _app.tsx
+SignUpContainer.displayName = 'signUp'

@@ -1,1 +1,1 @@
-export {ProfileContainer as default} from '@components-core/profile'
+export { ProfileContainer as default } from '@components-core/profile'

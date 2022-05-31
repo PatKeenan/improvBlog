@@ -1,9 +1,14 @@
-import { H2, SmallText } from '@components-common'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { auth } from '@lib/mutations/auth-mutations'
+import { signInSchema } from '@lib/formValidations'
+import { SmallText } from '@components-common'
 import { useForm } from 'react-hook-form'
-import React, { useState } from 'react'
+import { useRouter } from 'next/router'
 import { AuthForm } from './auth-form'
 import type { NextPage } from 'next'
+
 import Link from 'next/link'
+
 import {
   Flex,
   FormControl,
@@ -17,11 +22,7 @@ import {
   HStack,
   Link as ChakraLink,
 } from '@chakra-ui/react'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
-import { auth } from '@lib/mutations/auth-mutations'
-import { useRouter } from 'next/router'
-import { signInSchema } from '@lib/formValidations'
+import React from 'react'
 
 export const SignInContainer: NextPage = () => {
   const router = useRouter()
@@ -49,8 +50,9 @@ export const SignInContainer: NextPage = () => {
       })
     }
     return router.push('/')
-    console.log('Hello')
   })
+
+  ///////////////////////////////////////////////
 
   return (
     <Flex
@@ -107,3 +109,6 @@ export const SignInContainer: NextPage = () => {
     </Flex>
   )
 }
+
+// Change the layout by setting display name and checking in _app.tsx
+SignInContainer.displayName = 'signIn'

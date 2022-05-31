@@ -1,12 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
+import type { MakeOptional } from "@lib/ts-utilities";
+import type { User } from "@prisma/client";
 import prisma from "@lib/prisma";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import cookie from 'cookie';
-import { env } from "process";
-import { User } from "@prisma/client";
 
-type ReturnedUser = Omit<User, "password"|"createdAt">
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const salt = bcrypt.genSaltSync();
     const {email, password, username} = req.body;
@@ -44,6 +43,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             secure: process.env.NODE_ENV === "production" 
         })
     );
-    const userToReturn: ReturnedUser = {email: user.email, id: user.id, role: user.role, user_uuid: user.user_uuid, username: user.username};
+    
+    const userToReturn: MakeOptional<User, "password"> = {...user};
+    delete userToReturn["password"]
     res.json(userToReturn);
 }
+

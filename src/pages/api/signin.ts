@@ -5,6 +5,7 @@ import cookie from "cookie";
 import prisma from "@lib/prisma";
 import { env } from "process";
 import { User } from "@prisma/client";
+import { MakeOptional } from "@lib/ts-utilities";
 
 type ReturnedUser = Omit<User, "password"|"createdAt">
 
@@ -51,8 +52,8 @@ export default async function Handler(
         secure: process.env.NODE_ENV === "production",
       })
     );
-    const userToReturn: ReturnedUser = {email: user.email, id: user.id, role: user.role, user_uuid: user.user_uuid, username: user.username};
-    return res.status(200).json(userToReturn);
+    const userToReturn: MakeOptional<User, "password"> = {...user};
+    delete userToReturn["password"]
   }else{
     return res.status(401).json({error: true})
   }
