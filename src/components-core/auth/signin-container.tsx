@@ -21,27 +21,19 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import { auth } from '@lib/mutations/auth-mutations'
 import { useRouter } from 'next/router'
+import { baseSignInSchema } from '@lib/formValidations'
 
 export const SignInContainer: NextPage = () => {
   const router = useRouter()
   const toast = useToast()
-  const formOptions = {
-    resolver: yupResolver(
-      Yup.object().shape({
-        email: Yup.string()
-          .required('Email is required')
-          .email('Must be a valid email'),
-        password: Yup.string()
-          .required('Password is required')
-          .min(6, 'Password must be at least 6 characters'),
-      }),
-    ),
-  }
+
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm(formOptions)
+  } = useForm({
+    resolver: yupResolver(baseSignInSchema),
+  })
 
   const onSubmit = handleSubmit(async data => {
     const user = await auth('signin', {
@@ -71,8 +63,8 @@ export const SignInContainer: NextPage = () => {
         <AuthForm title="Sign In To Read Awesome Stuff">
           <form onSubmit={onSubmit}>
             <VStack spacing={4}>
-              <FormControl isInvalid={errors.name}>
-                <FormLabel htmlFor="email">Email</FormLabel>
+              <FormControl isInvalid={errors.email}>
+                <FormLabel>Email</FormLabel>
                 <Input id="email" placeholder="Email" {...register('email')} />
                 <FormErrorMessage>
                   {errors.email && errors.email.message}

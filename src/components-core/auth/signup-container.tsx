@@ -16,10 +16,13 @@ import {
   VStack,
   Link as ChakraLink,
   HStack,
+  InputLeftAddon,
+  InputGroup,
 } from '@chakra-ui/react'
 import React from 'react'
 import { auth } from '@lib/mutations/auth-mutations'
 import { useRouter } from 'next/router'
+import { signUpSchema } from '@lib/formValidations'
 
 type FormType = {
   username: string
@@ -31,40 +34,14 @@ type FormType = {
 export const SignUpContainer: NextPage = () => {
   const router = useRouter()
 
-  const formOptions = {
-    resolver: yupResolver(
-      Yup.object().shape({
-        username: Yup.string()
-          .required('Username is required')
-          .min(4, 'Username must be at least 4 characters long.')
-          .trim(),
-        email: Yup.string()
-          .required('Email is required')
-          .email('Must be a valid email')
-          .trim(),
-        password: Yup.string()
-          .required('Password is mandatory')
-          .min(6, 'Password must be at 3 char long')
-          .trim()
-          .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-            'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
-          ),
-        confirmPassword: Yup.string()
-          .required('Password is mandatory')
-          .min(6)
-          .trim()
-          .oneOf([Yup.ref('password')], 'Passwords does not match'),
-      }),
-    ),
-  }
-
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<FormType>(formOptions)
+  } = useForm<FormType>({
+    resolver: yupResolver(signUpSchema),
+  })
 
   const onSubmit = handleSubmit(async data => {
     const user = await auth('signup', {
@@ -94,11 +71,15 @@ export const SignUpContainer: NextPage = () => {
             <VStack spacing={4}>
               <FormControl isInvalid={errors.username as boolean | undefined}>
                 <FormLabel htmlFor="username">Username</FormLabel>
-                <Input
-                  id="username"
-                  placeholder="Username"
-                  {...register('username')}
-                />
+                <InputGroup>
+                  <InputLeftAddon children="@" />
+                  <Input
+                    id="username"
+                    placeholder="Username"
+                    {...register('username')}
+                  />
+                </InputGroup>
+
                 <FormErrorMessage textTransform="capitalize">
                   {errors.username && errors.username.message}
                 </FormErrorMessage>
