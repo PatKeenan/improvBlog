@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
-import { useAuth } from '@lib/auth'
+import { auth } from '@lib/mutations/auth-mutations'
 import { useRouter } from 'next/router'
 
 export const SignInContainer: NextPage = () => {
@@ -44,7 +44,7 @@ export const SignInContainer: NextPage = () => {
   } = useForm(formOptions)
 
   const onSubmit = handleSubmit(async data => {
-    const user = await useAuth('signin', {
+    const user = await auth('signin', {
       email: data.email,
       password: data.password,
     })

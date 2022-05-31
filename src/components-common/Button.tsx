@@ -1,5 +1,5 @@
-import {Button as ChakraButton} from '@chakra-ui/react'
-import type {ButtonProps} from '@chakra-ui/react'
+import { Button as ChakraButton } from '@chakra-ui/react'
+import type { ButtonProps } from '@chakra-ui/react'
 interface ButtonInterface extends ButtonProps {}
 
 const ButtonBase = (props: ButtonProps) => <ChakraButton {...props} />

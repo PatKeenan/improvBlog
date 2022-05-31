@@ -1,8 +1,10 @@
 import { Determine } from '@components-feat'
 import { usePosts } from '@lib/usePosts'
-import { VStack } from '@chakra-ui/react'
+import { VStack, Button } from '@chakra-ui/react'
 import type { NextPage } from 'next'
+import Link from 'next/link'
 import moment from 'moment'
+import { IoMdAdd } from 'react-icons/io'
 import {
   CardContent,
   CardFooter,
@@ -17,7 +19,13 @@ export const PostsContainer: NextPage = () => {
     error,
     loading,
     component: posts ? (
-      <VStack spacing={4} width="full">
+      <VStack spacing={4} width="full" maxW="7xl" pt={3}>
+        <Button colorScheme="blue" leftIcon={<IoMdAdd />} alignSelf="flex-end">
+          <Link href={'/posts/create'} passHref>
+            Create Post
+          </Link>
+        </Button>
+
         {posts.map(i => {
           return (
             <Card key={i.post_uuid} link={i.post_uuid}>

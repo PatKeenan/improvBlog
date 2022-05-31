@@ -48,7 +48,7 @@ model Post {
   privateMemberIds Int[] // will autofill with current participants
   blocks           Block[]
   contributions    Contribution[]
-  title            String         @db.VarChar(255)
+  title            String         @unique @db.VarChar(255)
   plot             String
   slug             String
 }

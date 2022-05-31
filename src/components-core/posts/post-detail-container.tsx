@@ -1,6 +1,5 @@
 import { ContributionList } from './contribution-list'
 import { ContributionCard } from './contribution-card'
-import { PostHeader } from '@components-core/posts'
 import type { Block, Post } from '@prisma/client'
 import { BsLock, BsUnlock } from 'react-icons/bs'
 import { Paragraph } from '@components-common'
@@ -12,25 +11,22 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 
-import {
-  Box,
-  Button,
-  Grid,
-  GridItem,
-  HStack,
-  Icon,
-  VStack,
-} from '@chakra-ui/react'
+import { Box, Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react'
+
+import { PostHeader } from './post-header'
+import { useMe } from '@lib/useMe'
 
 export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
     null,
   )
   const router = useRouter()
+
   const { post_uuid } = router.query as unknown as {
     post_uuid: Post['post_uuid']
   }
   const { post, loading, error } = usePost(post_uuid)
+  const { user } = useMe()
 
   return Determine({
     error,
@@ -49,12 +45,13 @@ export const PostDetailContainer: NextPage = () => {
           gap={8}
           align="flex-start"
         >
-          <Box h="fit-content">
+          <Box h="fit-content" w="full">
             <PostHeader
               title={post.title}
               plot={post.plot}
               createdAt={post.createdAt}
               username={post.author.username}
+              editable={post.authorId === user?.id ?? false}
             />
           </Box>
           <Grid
