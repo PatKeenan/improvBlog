@@ -32,7 +32,7 @@ import * as Yup from 'yup'
 
   
 
-   export const PostPlotTitleSchema = Yup.object().shape({
+   export const postPlotTitleSchema = Yup.object().shape({
     title: Yup.string().required().min(4).max(255),
     plot: Yup.string().required('Plot is required').min(6).max(500),
   })

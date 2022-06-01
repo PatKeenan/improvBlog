@@ -1,4 +1,4 @@
-import { PostPlotTitleSchema } from '@lib/formValidations';
+import { postPlotTitleSchema } from '@lib/formValidations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { postMutations } from '@lib/mutations';
 import type { Post } from '@prisma/client';
@@ -18,32 +18,45 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import React from 'react';
+import { IoMdCheckmark } from 'react-icons/io';
 
 export const PostCreateContainer: NextPage = () => {
   const router = useRouter();
-
-  const formOptions = {
-    resolver: yupResolver(PostPlotTitleSchema),
-  };
 
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm<{ plot: Post['plot']; title: Post['title'] }>(formOptions);
+  } = useForm({
+    resolver: yupResolver(postPlotTitleSchema),
+  });
 
   const onSubmit = handleSubmit(async data => {
-    const { post, error, message } = await postMutations().create({
+    const {
+      post,
+      error: serverErrors,
+      message,
+    } = await postMutations().create({
       plot: data.plot,
       title: data.title,
     });
-    console.log(post);
-    if (post && isSubmitSuccessful) {
-      router.push(`/posts/${post.post_uuid}`);
+
+    if (post) {
+      setTimeout(() => {
+        router.push(`/posts/${post.post_uuid}`);
+      }, 1000);
     }
-    if (error) {
-      setError('title', { message: message });
+    // validation form the server
+    if (serverErrors && serverErrors.hasOwnProperty('inner')) {
+      serverErrors.inner.forEach((er: { path: string; message: string }) => {
+        console.log(er);
+        setError(er.path, { message: er.message });
+      });
+    }
+    // If returned after validation with error, it's because it failed the unique title check
+    if (serverErrors && !serverErrors.hasOwnProperty('inner')) {
+      setError('title', { message });
     }
   });
 
@@ -80,10 +93,11 @@ export const PostCreateContainer: NextPage = () => {
                 <Button onClick={handleCancel}>Cancel</Button>
                 <Button
                   variant="solid"
-                  colorScheme="blue"
+                  colorScheme={isSubmitSuccessful ? 'green' : 'blue'}
                   type="submit"
                   isLoading={isSubmitting}
                   alignSelf="flex-end"
+                  rightIcon={isSubmitSuccessful ? <IoMdCheckmark /> : undefined}
                 >
                   Create Post
                 </Button>

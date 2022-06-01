@@ -1,5 +1,5 @@
 import type { EditablePostFields, PostIncludingAuthor } from '@models';
-import { PostPlotTitleSchema } from '@lib/formValidations';
+import { postPlotTitleSchema } from '@lib/formValidations';
 import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 import { H1, H5, SmallText } from '@components-common';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -84,7 +84,7 @@ const HeaderEditForm = ({
     reset,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(PostPlotTitleSchema),
+    resolver: yupResolver(postPlotTitleSchema),
   });
 
   const onSubmit = handleSubmit(async data => {
