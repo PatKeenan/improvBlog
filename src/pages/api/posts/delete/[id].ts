@@ -15,15 +15,16 @@ export default validateRoute(async (req, res, user) => {
     if (post && post.authorId !== loggedInUser.id) {
       res
         .status(401)
-        .json({ post: null, error: true, message: 'You are not allowed to edit this post' })
+        .json({ post: null, error: true, message: 'You are not allowed to delete this post' })
       return
     }
 
-    const updatedPost = await prisma.post.update({
+    const updatedPost = await prisma.post.delete({
         where: {
             id: Number(id),
         },
-        data: {...req.body}
+        
+        
     })
     
     if (updatedPost) {
@@ -34,6 +35,6 @@ export default validateRoute(async (req, res, user) => {
   } catch (error: any) {
     throw new Error(error)
   }
-  res.status(401).json({error: 'You are not allowed to update this post'})
+  res.status(401).json({error: 'You are not allowed to delete this post'})
   return
 })
