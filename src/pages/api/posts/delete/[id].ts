@@ -23,8 +23,6 @@ export default validateRoute(async (req, res, user) => {
         where: {
             id: Number(id),
         },
-        
-        
     })
     
     if (updatedPost) {
