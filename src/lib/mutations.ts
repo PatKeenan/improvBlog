@@ -22,10 +22,10 @@ export const postMutations = () =>  {
             return fetcher(baseApi + 'create', {...body, mode: 'create'})
         },
         edit: (postId: Post['id'], body: EditablePostFields) => {
-            return fetcher(baseApi + 'edit/' + postId, body)
+            return fetcher(baseApi + 'edit/' + postId, {id: body})
         },
         remove: (body: {postId: Post['id']}) => {
-            return fetcher(baseApi + 'delete/' + body.postId, {...body, mode: 'remove'})
+            return fetcher(baseApi + 'delete/' + body.postId, {id: body})
         },
     }
 }

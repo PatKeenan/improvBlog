@@ -49,6 +49,14 @@ export const PostDetailContainer: NextPage = () => {
     }
   };
 
+  const handleDelete = async () => {
+    if (post) {
+      await postMutations().remove({ postId: post.id });
+      mutate(undefined);
+      router.push('/posts');
+    }
+  };
+
   ////////////////////////////////
   return Determine({
     error,
@@ -71,6 +79,7 @@ export const PostDetailContainer: NextPage = () => {
             <PostHeader
               post={post}
               handleEditPost={handleEditPost}
+              handleDelete={handleDelete}
               editable={post.authorId === user?.id ?? false}
             />
           </Box>

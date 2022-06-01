@@ -1,6 +1,6 @@
 import type { EditablePostFields, PostIncludingAuthor } from '@models';
 import { postPlotTitleSchema } from '@lib/formValidations';
-import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
+import { IoMdCheckmark, IoMdClose, IoMdTrash } from 'react-icons/io';
 import { H1, H5, SmallText } from '@components-common';
 import { yupResolver } from '@hookform/resolvers/yup';
 import type { Post } from '@prisma/client';
@@ -25,10 +25,12 @@ export const PostHeader = ({
   post,
   editable,
   handleEditPost,
+  handleDelete,
 }: {
   post: PostIncludingAuthor;
   handleEditPost: (body: EditablePostFields) => void;
   editable: boolean;
+  handleDelete: () => void;
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
 
@@ -63,6 +65,13 @@ export const PostHeader = ({
             aria-label="Edit Post"
             icon={<BiEdit />}
             onClick={() => setIsEditing(true)}
+          />
+        ) : null}
+        {editable ? (
+          <IconButton
+            aria-label="Delete Post"
+            icon={<IoMdTrash />}
+            onClick={handleDelete}
           />
         ) : null}
       </HStack>
