@@ -1,21 +1,22 @@
 import { Box, Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react';
-import { ContributionList } from './contribution-list';
-import { ContributionCard } from './contribution-card';
+import { H3, Paragraph } from '@components-common';
 import type { Block, Post } from '@prisma/client';
 import { BsLock, BsUnlock } from 'react-icons/bs';
-import { H1, H3, Paragraph } from '@components-common';
 import { postMutations } from '@lib/mutations';
 import { Determine } from '@components-feat';
 import { EditablePostFields } from '@models';
-import { PostHeader } from './post-header';
 import { useRouter } from 'next/router';
 import { toCapitalCase } from '@utils';
 import { usePost } from '@lib/usePost';
 import type { NextPage } from 'next';
 import { useMe } from '@lib/useMe';
+import {
+  ContributionList,
+  ContributionCard,
+  PostHeader,
+} from '@components-core/posts';
 import Head from 'next/head';
 import React from 'react';
-import posts from 'pages/posts';
 
 export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(

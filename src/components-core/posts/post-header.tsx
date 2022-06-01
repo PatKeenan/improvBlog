@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import type { Post } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { BiEdit } from 'react-icons/bi';
+import Link from 'next/link';
 import moment from 'moment';
 import React from 'react';
 import {
@@ -17,6 +18,7 @@ import {
   IconButton,
   Textarea,
   VStack,
+  Link as ChakraLink,
 } from '@chakra-ui/react';
 
 export const PostHeader = ({
@@ -49,9 +51,12 @@ export const PostHeader = ({
         <Avatar size="xs" />
         <SmallText>
           Created By:{' '}
-          {`${editable ? 'you' : post.author.username} ${moment(
-            post.createdAt,
-          ).fromNow()}`}
+          <Link href={`/users/${post.authorId}`} passHref>
+            <ChakraLink color="cyan.700" fontWeight="semibold">
+              {`${editable ? 'you' : post.author.username}`}
+            </ChakraLink>
+          </Link>{' '}
+          {moment(post.createdAt).fromNow()}
         </SmallText>
         {editable && !isEditing ? (
           <IconButton
