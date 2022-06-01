@@ -18,7 +18,7 @@ import * as Yup from 'yup'
 
   export const signInSchema = baseAuthSchema.shape({})
 
-  export const signUpSchema = Yup.object().shape({
+  export const signUpSchema = signInSchema.shape({
     username: Yup.string()
     .required('Username is required')
     .min(4, 'Username must be at least 4 characters long.')
@@ -29,3 +29,10 @@ import * as Yup from 'yup'
        .trim()
        .oneOf([Yup.ref('password')], 'Passwords does not match'),
    })
+
+  
+
+   export const PostPlotTitleSchema = Yup.object().shape({
+    title: Yup.string().required().min(4).max(255),
+    plot: Yup.string().required('Plot is required').min(6).max(500),
+  })

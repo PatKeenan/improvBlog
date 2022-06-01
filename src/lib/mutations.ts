@@ -1,4 +1,5 @@
 import fetcher from "@lib/fetcher";
+import { EditablePostFields } from "@models";
 
 import type { Block, Contribution, Post } from "@prisma/client";
 
@@ -10,17 +11,18 @@ export const auth = (
     return fetcher(mode, body)
   };
 
+ 
 export const postMutations = () =>  {
     const baseApi = 'posts/';
     return {
         create: (body: {title: Post['title'], plot: Post['plot']}) => {
             return fetcher(baseApi + 'create', {...body, mode: 'create'})
         },
-        edit: (body: {postId: Post['id']}) => {
-            return fetcher(baseApi + 'edit', {...body, mode: 'edit'})
+        edit: (postId: Post['id'], body: EditablePostFields) => {
+            return fetcher(baseApi + 'edit/' + postId, body)
         },
         remove: (body: {postId: Post['id']}) => {
-            return fetcher(baseApi + 'delete', {...body, mode: 'remove'})
+            return fetcher(baseApi + 'delete/' + body.postId, {...body, mode: 'remove'})
         },
     }
 }

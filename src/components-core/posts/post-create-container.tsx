@@ -1,3 +1,4 @@
+import { PostPlotTitleSchema } from '@lib/formValidations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { postMutations } from '@lib/mutations';
 import type { Post } from '@prisma/client';
@@ -5,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { H2 } from '@components-common';
 import { useRouter } from 'next/router';
 import type { NextPage } from 'next';
-import * as Yup from 'yup';
 import {
   Button,
   Container,
@@ -23,13 +23,9 @@ export const PostCreateContainer: NextPage = () => {
   const router = useRouter();
 
   const formOptions = {
-    resolver: yupResolver(
-      Yup.object().shape({
-        title: Yup.string().required('Title is required').min(4).max(255),
-        plot: Yup.string().required('Plot is required').min(6).max(500),
-      }),
-    ),
+    resolver: yupResolver(PostPlotTitleSchema),
   };
+
   const {
     register,
     handleSubmit,

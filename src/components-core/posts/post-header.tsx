@@ -1,61 +1,57 @@
-import { H1, H2, H5, SmallText } from '@components-common'
+import type { EditablePostFields, PostIncludingAuthor } from '@models';
+import { PostPlotTitleSchema } from '@lib/formValidations';
+import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
+import { H1, H5, SmallText } from '@components-common';
+import { yupResolver } from '@hookform/resolvers/yup';
+import type { Post } from '@prisma/client';
+import { useForm } from 'react-hook-form';
+import { BiEdit } from 'react-icons/bi';
+import moment from 'moment';
+import React from 'react';
 import {
   Avatar,
   ButtonGroup,
-  Editable,
-  EditableInput,
-  EditablePreview,
-  EditableTextarea,
   FormControl,
   FormErrorMessage,
   HStack,
   IconButton,
   Textarea,
-  useEditableControls,
   VStack,
-} from '@chakra-ui/react'
-import type { Post, User } from '@prisma/client'
-import moment from 'moment'
-import { useForm, Controller } from 'react-hook-form'
-import { IoMdCheckmark, IoMdClose } from 'react-icons/io'
-import React, { BaseSyntheticEvent } from 'react'
-import { BiEdit } from 'react-icons/bi'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
+} from '@chakra-ui/react';
 
 export const PostHeader = ({
-  title,
-  plot,
-  createdAt,
-  username,
+  post,
   editable,
+  handleEditPost,
 }: {
-  title: Post['title']
-  plot: Post['plot']
-  createdAt: Post['createdAt']
-  username: User['username']
-  editable: boolean
+  post: PostIncludingAuthor;
+  handleEditPost: (body: EditablePostFields) => void;
+  editable: boolean;
 }) => {
-  const [isEditing, setIsEditing] = React.useState(false)
+  const [isEditing, setIsEditing] = React.useState(false);
+
   return (
     <VStack align="flex-start" spacing={6} w="full">
       {isEditing && editable ? (
-        <EditHeader
-          title={title}
-          plot={plot}
-          handleCancel={() => setIsEditing(false)}
+        <HeaderEditForm
+          handleEditPost={handleEditPost}
+          handleClose={() => setIsEditing(false)}
+          title={post.title}
+          plot={post.plot}
         />
       ) : (
         <>
-          <H1>{title}</H1>
-          <H5 fontStyle="italic">{plot}</H5>
+          <H1>{post.title}</H1>
+          <H5 fontStyle="italic">{post.plot}</H5>
         </>
       )}
       <HStack>
         <Avatar size="xs" />
         <SmallText>
           Created By:{' '}
-          {`${editable ? 'you' : username} ${moment(createdAt).fromNow()}`}
+          {`${editable ? 'you' : post.author.username} ${moment(
+            post.createdAt,
+          ).fromNow()}`}
         </SmallText>
         {editable && !isEditing ? (
           <IconButton
@@ -66,37 +62,45 @@ export const PostHeader = ({
         ) : null}
       </HStack>
     </VStack>
-  )
-}
-const EditHeader = ({
+  );
+};
+
+const HeaderEditForm = ({
+  handleEditPost,
+  handleClose,
   title,
   plot,
-  handleCancel,
 }: {
-  title: string
-  plot: string
-  handleCancel: () => void
+  handleEditPost: (body: EditablePostFields) => void;
+  handleClose: () => void;
+  title: Post['title'];
+  plot: Post['plot'];
 }) => {
+  const [loading, setLoading] = React.useState(false);
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(
-      Yup.object().shape({
-        title: Yup.string().required().min(4).max(255),
-        plot: Yup.string().required('Plot is required').min(6).max(500),
-      }),
-    ),
-  })
-  const onCancel = () => {
-    reset()
-    handleCancel()
-  }
+    resolver: yupResolver(PostPlotTitleSchema),
+  });
+
   const onSubmit = handleSubmit(async data => {
-    console.log(data)
-  })
+    setLoading(true);
+    Promise.resolve(handleEditPost(data)).then(() => {
+      setLoading(false);
+      handleClose();
+    });
+  });
+
+  const handleCancel = () => {
+    reset();
+    handleClose();
+  };
+
+  ///////////////////////////////
   return (
     <form onSubmit={onSubmit} style={{ width: '100%' }}>
       <VStack w="full" spacing={4}>
@@ -123,16 +127,17 @@ const EditHeader = ({
             <IconButton
               aria-label="Cancel Edit"
               icon={<IoMdClose />}
-              onClick={onCancel}
+              onClick={handleCancel}
             />
             <IconButton
               aria-label="Submit Edit"
               type="submit"
+              isLoading={loading}
               icon={<IoMdCheckmark />}
             />
           </ButtonGroup>
         </HStack>
       </VStack>
     </form>
-  )
-}
+  );
+};

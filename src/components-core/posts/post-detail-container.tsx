@@ -13,6 +13,8 @@ import type { NextPage } from 'next';
 import { useMe } from '@lib/useMe';
 import Head from 'next/head';
 import React from 'react';
+import { postMutations } from '@lib/mutations';
+import { EditablePostFields } from '@models';
 
 export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
@@ -23,9 +25,28 @@ export const PostDetailContainer: NextPage = () => {
   const { post_uuid } = router.query as unknown as {
     post_uuid: Post['post_uuid'];
   };
-  const { post, loading, error } = usePost(post_uuid);
+  const { post, loading, error, mutate } = usePost(post_uuid);
 
   const { user } = useMe();
+
+  const handleEditPost = async (body: EditablePostFields) => {
+    if (post) {
+      const { updatedPost, loading } = await postMutations().edit(
+        post.id,
+        body,
+      );
+      if (updatedPost && !loading) {
+        const { plot, title, private: isPrivate } = updatedPost;
+        mutate({
+          ...post,
+          plot,
+          title,
+          private: isPrivate,
+        });
+      }
+    }
+  };
+
   ////////////////////////////////
   return Determine({
     error,
@@ -46,10 +67,8 @@ export const PostDetailContainer: NextPage = () => {
         >
           <Box h="fit-content" w="full">
             <PostHeader
-              title={post.title}
-              plot={post.plot}
-              createdAt={post.createdAt}
-              username={post.author.username}
+              post={post}
+              handleEditPost={handleEditPost}
               editable={post.authorId === user?.id ?? false}
             />
           </Box>
@@ -64,7 +83,7 @@ export const PostDetailContainer: NextPage = () => {
             <GridItem colSpan={6}>
               <VStack align={'flex-start'} spacing="6" w="full" m="0 auto">
                 {post.blocks.map(block => (
-                  <HStack w="full">
+                  <HStack w="full" key={block.block_uuid}>
                     {block.frozen ? (
                       <Icon as={BsLock} />
                     ) : (

@@ -20,6 +20,7 @@
       "@components-feat": ["components-feat/index.ts"],
       "@components-common": ["components-common/index.ts"],
       "@lib/*": ["lib/*"],
+      "@models": ["models/index.ts"],
       "@styles/*": ["styles/*"],
       "@utils": ["utils/index.ts"]
     }
