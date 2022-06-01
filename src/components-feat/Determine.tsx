@@ -1,7 +1,3 @@
-import { Box, HStack, Spinner } from '@chakra-ui/react'
-import { H3 } from '@components-common'
-import React from 'react'
-
 /**
  *
  * Determine is used with any component that fetches data using useSWR.
@@ -12,12 +8,16 @@ import React from 'react'
  *  If it get past all of those and theres no data, it will render null
  */
 
+import { Box, HStack, Spinner } from '@chakra-ui/react';
+import { H3 } from '@components-common';
+import React from 'react';
+
 interface DetermineProps<U, V> {
-  component: JSX.Element | null
+  component: JSX.Element | null;
   error: {
-    message: string | null
-  }
-  loading: V
+    message: string | null;
+  };
+  loading: V;
 }
 
 export const Determine = <U extends unknown, V extends unknown>({
@@ -42,7 +42,7 @@ export const Determine = <U extends unknown, V extends unknown>({
           )}
         </HStack>
       </Box>
-    )
+    );
   }
-  return component
-}
+  return component;
+};
