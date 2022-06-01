@@ -1,7 +1,7 @@
-import fetcher from "@lib/fetcher";
-import { EditablePostFields } from "@models";
-
 import type { Block, Contribution, Post } from "@prisma/client";
+import { EditablePostFields } from "@models";
+import fetcher from "@lib/fetcher";
+
 
 
 export const auth = (
@@ -11,6 +11,9 @@ export const auth = (
     return fetcher(mode, body)
   };
 
+export const logout = () => {
+    return fetcher('/logout', {}, {method: "POST"})
+}
  
 export const postMutations = () =>  {
     const baseApi = 'posts/';

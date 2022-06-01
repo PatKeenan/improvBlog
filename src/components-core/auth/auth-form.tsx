@@ -1,13 +1,13 @@
-import { Box, useColorModeValue } from '@chakra-ui/react'
-import { H2 } from '@components-common'
-import React from 'react'
+import { Box, useColorModeValue } from '@chakra-ui/react';
+import { H2 } from '@components-common';
+import React from 'react';
 
 export const AuthForm = ({
   children,
   title,
 }: {
-  children: React.ReactNode | React.ReactNode[]
-  title: string
+  children: React.ReactNode | React.ReactNode[];
+  title: string;
 }) => {
   ///////////////////////////////////////////////
   return (
@@ -26,5 +26,5 @@ export const AuthForm = ({
         {children}
       </Box>
     </>
-  )
-}
+  );
+};

@@ -1,11 +1,20 @@
-export default async function fetcher<T>(url:string, data: T | undefined = undefined ){
+/**
+ * 
+ * Fetcher is used for all data fetching. It assumes the user is doing a get request if no body is passed.
+ * You can override that feature by passing the method in the third optional argument.
+ * 
+ * @param url 
+ * @param data 
+ * @param options - override the method set by default
+ * @returns 
+ */
+export default async function fetcher<T>(url:string, data: T | undefined = undefined, options?: {method?: "POST" | "PUT" |"GET" | "PATCH"}){
     return await fetch(`${window.location.origin}/api/${url}`, {
-        method: data ? "POST" : "GET",
+        method: options?.method ? options.method : data ? "POST" : "GET",
         credentials: "include",
         headers: {
             'Content-Type': "application/json"
         },
         body: JSON.stringify(data) 
     }).then( res => res.json())
-    
 }

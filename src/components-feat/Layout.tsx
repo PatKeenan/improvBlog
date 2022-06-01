@@ -1,8 +1,10 @@
-import { Box, HStack, VStack } from '@chakra-ui/react'
-import type { ReactNode } from 'react'
-import Link from 'next/link'
-import { useMe } from '@lib/useMe'
-import { Link as ChakraLink } from '@chakra-ui/react'
+import { Box, Button, HStack, VStack } from '@chakra-ui/react';
+import type { ReactNode } from 'react';
+import Link from 'next/link';
+import { useMe } from '@lib/useMe';
+import { Link as ChakraLink } from '@chakra-ui/react';
+import { logout } from '@lib/mutations';
+import { useRouter } from 'next/router';
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
@@ -12,11 +14,17 @@ export function Layout({ children }: { children: ReactNode }) {
         {children}
       </VStack>
     </VStack>
-  )
+  );
 }
 
 const Header = () => {
-  const { user, error } = useMe()
+  const { user, error, mutate } = useMe();
+  const router = useRouter();
+  const handleLogout = async () => {
+    await logout();
+    mutate(null);
+    router.push('/signin');
+  };
   return (
     <HStack
       w="100%"
@@ -32,13 +40,18 @@ const Header = () => {
       <Box flexGrow={1}>Search Bar</Box>
       <HStack>
         {user ? (
-          <Link href={`/users/${user.id}`} passHref>
-            <ChakraLink>{user.username}</ChakraLink>
-          </Link>
+          <>
+            <Link href={`/users/${user.id}`} passHref>
+              <ChakraLink>@{user.username}</ChakraLink>
+            </Link>
+            <ChakraLink as={'button'} onClick={handleLogout}>
+              Logout
+            </ChakraLink>
+          </>
         ) : (
           <Link href="/signin">Login</Link>
         )}
       </HStack>
     </HStack>
-  )
-}
+  );
+};
