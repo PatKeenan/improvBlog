@@ -1,4 +1,12 @@
-import { Box, Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Grid,
+  GridItem,
+  HStack,
+  Icon,
+  VStack,
+} from '@chakra-ui/react';
 import { Determine, ResourceNotFound } from '@components-feat';
 import { H3, Paragraph } from '@components-common';
 import type { Block, Post } from '@prisma/client';
@@ -16,7 +24,9 @@ import {
   PostHeader,
 } from '@components-core/posts';
 import Head from 'next/head';
-import React from 'react';
+import React, { useRef } from 'react';
+import { IoMdAdd } from 'react-icons/io';
+import { BlockCard } from './block-card';
 
 export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
@@ -55,6 +65,7 @@ export const PostDetailContainer: NextPage = () => {
       router.push('/posts');
     }
   };
+  const blockRef = useRef();
 
   ////////////////////////////////
 
@@ -95,27 +106,34 @@ export const PostDetailContainer: NextPage = () => {
               <>
                 <GridItem colSpan={6}>
                   <VStack align={'flex-start'} spacing="6" w="full" m="0 auto">
-                    {post.blocks.map(block => (
-                      <HStack w="full" key={block.block_uuid}>
-                        {block.frozen ? (
-                          <Icon as={BsLock} />
-                        ) : (
-                          <Icon as={BsUnlock} />
-                        )}
-
-                        <ContributionCard
-                          key={block.block_uuid}
-                          activeBorder={selectedBlock == block.id}
-                          asBlockCard={true}
-                          handleClick={() => setSelectedBlock(block.id)}
-                          contributionTotal={Number(block._count.contributions)}
-                          content={block.contributions[0].content}
-                          createdAt={block.contributions[0].createdAt}
-                          username={block.contributions[0].author.username}
-                          likes={block.contributions[0].likes}
-                        />
-                      </HStack>
-                    ))}
+                    {post.blocks.map(block => {
+                      return block.contributions.length > 0 ? (
+                        <HStack w="full" key={block.block_uuid}>
+                          {block.frozen ? (
+                            <Icon as={BsLock} />
+                          ) : (
+                            <Icon as={BsUnlock} />
+                          )}
+                          <BlockCard
+                            key={block.block_uuid}
+                            activeBorder={selectedBlock == block.id}
+                            handleClick={() => setSelectedBlock(block.id)}
+                            handleClickAway={() => setSelectedBlock(null)}
+                            contributionTotal={Number(
+                              block._count.contributions,
+                            )}
+                            content={block.contributions[0].content}
+                            createdAt={block.contributions[0].createdAt}
+                            username={block.contributions[0].author.username}
+                            likes={block.contributions[0].likes}
+                          />
+                        </HStack>
+                      ) : (
+                        <Box>
+                          <p>yo</p>
+                        </Box>
+                      );
+                    })}
                   </VStack>
                 </GridItem>
                 <GridItem colSpan={4}>
@@ -159,4 +177,23 @@ export const PostDetailContainer: NextPage = () => {
       />
     ),
   });
+};
+
+const AddContribution = () => {
+  return (
+    <Box
+      border="1px dashed"
+      borderWidth={3}
+      borderColor="gray.200"
+      w="full"
+      p={8}
+      rounded="md"
+      justifyContent="center"
+      display="flex"
+    >
+      <Button leftIcon={<IoMdAdd />} variant="outline" justifySelf="center">
+        Create the First Contribution
+      </Button>
+    </Box>
+  );
 };

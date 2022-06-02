@@ -1,18 +1,19 @@
-import { VStack, Button, LinkBox, LinkOverlay } from '@chakra-ui/react';
+import {
+  VStack,
+  Button,
+  LinkBox,
+  LinkOverlay,
+  Link as ChakraLink,
+  Box,
+  HStack,
+} from '@chakra-ui/react';
 import { Determine } from '@components-feat';
 import { usePosts } from '@lib/usePosts';
 import { IoMdAdd } from 'react-icons/io';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import moment from 'moment';
-import {
-  CardContent,
-  CardFooter,
-  CardTitle,
-  SmallText,
-  Card,
-  H1,
-} from '@components-common';
+import { SmallText, H1, Card, H3, Paragraph } from '@components-common';
 
 export const PostsContainer: NextPage = () => {
   const { posts, loading, error } = usePosts();
@@ -27,7 +28,7 @@ export const PostsContainer: NextPage = () => {
         pt={3}
         maxWidth="container.lg"
       >
-        <Link href={'/posts/create'} as="button">
+        <Link href={'/posts/create'}>
           <Button
             colorScheme="blue"
             leftIcon={<IoMdAdd />}
@@ -40,16 +41,24 @@ export const PostsContainer: NextPage = () => {
         {posts.length > 0 ? (
           posts.map(i => {
             return (
-              <Card key={i.post_uuid} link={i.post_uuid}>
-                <CardTitle>{i.title}</CardTitle>
-                <CardContent>{i.plot}</CardContent>
-                <CardFooter>
-                  <SmallText>Creator: {i.author.username}</SmallText>
-                  <SmallText>
-                    Created: {moment(i.createdAt).fromNow()}
-                  </SmallText>
-                </CardFooter>
-              </Card>
+              <Link href={`/posts/${i.post_uuid}`} passHref={true}>
+                <ChakraLink w="full" _hover={{ textDecoration: 'none' }}>
+                  <Card key={i.post_uuid}>
+                    <VStack align="flex-start" w="full" spacing={4}>
+                      <H3>{i.title}</H3>
+                      <Paragraph textAlign="left" fontStyle="italic">
+                        {i.plot}
+                      </Paragraph>
+                      <HStack>
+                        <SmallText>Creator: {i.author.username}</SmallText>
+                        <SmallText>
+                          Created: {moment(i.createdAt).fromNow()}
+                        </SmallText>
+                      </HStack>
+                    </VStack>
+                  </Card>
+                </ChakraLink>
+              </Link>
             );
           })
         ) : (

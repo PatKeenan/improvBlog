@@ -40,6 +40,9 @@ export default validateRoute(async (req, res, user) => {
         plot: plot,
         title: title,
         slug: slugifedTitle,
+        blocks: {
+          create: {},
+        },
       },
     });
     if (post) {
