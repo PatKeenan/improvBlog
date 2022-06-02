@@ -1,7 +1,7 @@
 import { postPlotTitleSchema } from '@lib/formValidations';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { IoMdCheckmark } from 'react-icons/io';
 import { postMutations } from '@lib/mutations';
-import type { Post } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { H2 } from '@components-common';
 import { useRouter } from 'next/router';
@@ -18,7 +18,6 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import React from 'react';
-import { IoMdCheckmark } from 'react-icons/io';
 
 export const PostCreateContainer: NextPage = () => {
   const router = useRouter();

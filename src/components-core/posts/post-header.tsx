@@ -35,7 +35,7 @@ export const PostHeader = ({
   const [isEditing, setIsEditing] = React.useState(false);
 
   return (
-    <VStack align="flex-start" spacing={6} w="full">
+    <VStack align="flex-start" spacing={6} w="full" maxW="container.lg">
       {isEditing && editable ? (
         <HeaderEditForm
           handleEditPost={handleEditPost}

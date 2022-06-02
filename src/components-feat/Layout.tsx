@@ -11,7 +11,13 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <VStack minH={'100vh'} w={'100vw'} flex={1}>
       <Header />
-      <VStack as="main" display="flex" flexGrow={1} w="100%">
+      <VStack
+        as="main"
+        display="flex"
+        flexGrow={1}
+        w="100%"
+        maxW={'container.xl'}
+      >
         {children}
       </VStack>
     </VStack>

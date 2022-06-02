@@ -1,4 +1,4 @@
-import { VStack, Button } from '@chakra-ui/react';
+import { VStack, Button, LinkBox, LinkOverlay } from '@chakra-ui/react';
 import { Determine } from '@components-feat';
 import { usePosts } from '@lib/usePosts';
 import { IoMdAdd } from 'react-icons/io';
@@ -20,12 +20,22 @@ export const PostsContainer: NextPage = () => {
     error,
     loading,
     component: posts ? (
-      <VStack spacing={4} width="full" maxW="7xl" pt={3}>
-        <Button colorScheme="blue" leftIcon={<IoMdAdd />} alignSelf="flex-end">
-          <Link href={'/posts/create'} passHref>
+      <VStack
+        spacing={4}
+        width="full"
+        maxW="7xl"
+        pt={3}
+        maxWidth="container.lg"
+      >
+        <Link href={'/posts/create'} as="button">
+          <Button
+            colorScheme="blue"
+            leftIcon={<IoMdAdd />}
+            alignSelf="flex-end"
+          >
             Create Post
-          </Link>
-        </Button>
+          </Button>
+        </Link>
 
         {posts.length > 0 ? (
           posts.map(i => {
