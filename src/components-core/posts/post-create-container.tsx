@@ -67,46 +67,45 @@ export const PostCreateContainer: NextPage = () => {
   ////////////////////////////////
   return (
     <VStack w={'full'} flexGrow={1} p={8}>
+      <H2 textAlign="center">Create New Post</H2>
       <Container>
-        <H2 textAlign="left">Create New Post</H2>
-        <Container>
-          <form onSubmit={onSubmit} name="create">
-            <VStack w="full" align="flex-start" spacing={4}>
-              <FormControl isInvalid={errors.title as boolean | undefined}>
-                <FormLabel>Title:</FormLabel>
-                <Input id="title" placeholder="Title" {...register('title')} />
-                <FormErrorMessage>
-                  {errors.title && errors.title.message}
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={errors.plot as boolean | undefined}>
-                <FormLabel>Plot:</FormLabel>
-                <Textarea
-                  id="plot"
-                  placeholder="Plot"
-                  height="200px"
-                  {...register('plot')}
-                />
-                <FormErrorMessage>
-                  {errors.plot && errors.plot.message}
-                </FormErrorMessage>
-              </FormControl>
-              <HStack w="full" justify="space-between">
-                <Button onClick={handleCancel}>Cancel</Button>
-                <Button
-                  variant="solid"
-                  colorScheme={isSubmitSuccessful ? 'green' : 'blue'}
-                  type="submit"
-                  isLoading={isSubmitting}
-                  alignSelf="flex-end"
-                  rightIcon={isSubmitSuccessful ? <IoMdCheckmark /> : undefined}
-                >
-                  Create Post
-                </Button>
-              </HStack>
-            </VStack>
-          </form>
-        </Container>
+        <form onSubmit={onSubmit} name="create">
+          <VStack w="full" align="flex-start" spacing={4}>
+            <FormControl isInvalid={errors.title as boolean | undefined}>
+              <FormLabel>Title:</FormLabel>
+              <Input id="title" placeholder="Title" {...register('title')} />
+              <FormErrorMessage>
+                {errors.title && errors.title.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors.plot as boolean | undefined}>
+              <FormLabel>Plot:</FormLabel>
+              <Textarea
+                id="plot"
+                placeholder="Plot"
+                height="150px"
+                resize={'none'}
+                {...register('plot')}
+              />
+              <FormErrorMessage>
+                {errors.plot && errors.plot.message}
+              </FormErrorMessage>
+            </FormControl>
+            <HStack w="full" justify="space-between">
+              <Button onClick={handleCancel}>Cancel</Button>
+              <Button
+                variant="solid"
+                colorScheme={isSubmitSuccessful ? 'green' : 'blue'}
+                type="submit"
+                isLoading={isSubmitting}
+                alignSelf="flex-end"
+                rightIcon={isSubmitSuccessful ? <IoMdCheckmark /> : undefined}
+              >
+                Create Post
+              </Button>
+            </HStack>
+          </VStack>
+        </form>
       </Container>
     </VStack>
   );

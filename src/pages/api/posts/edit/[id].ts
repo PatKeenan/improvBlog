@@ -18,7 +18,6 @@ export default validateRoute(async (req, res, user) => {
         .json({ post: null, error: true, message: 'You are not allowed to edit this post' })
       return
     }
-
     const updatedPost = await prisma.post.update({
         where: {
             id: Number(id),

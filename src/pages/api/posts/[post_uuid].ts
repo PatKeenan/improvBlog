@@ -45,13 +45,13 @@ export default async function handler(
             }
         })
         if(data){
-            return res.status(200).json(data);
+            return res.status(200).json(data)
+        }else{
+            return res.status(404).json({error: true, message: "Post not found"})
         }
-        
-        return res.status(404).json( {message: `Post ${post_uuid} not found`})
-        
-    } catch (error) {
-        return  res.status(500).json( {message: `An error has occurred`})
+       
+    } catch (error: any) {
+        throw Error(error)
     }
-    
+   
 }

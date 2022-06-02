@@ -9,7 +9,7 @@ export default validateRoute(async (req, res, user) => {
   try {
     await postPlotTitleSchema.validate(req.body, { abortEarly: false });
   } catch (error: any) {
-    return res.json({ error });
+    return res.json(error);
   }
 
   const { title, plot }: { title: Post['title']; plot: Post['plot'] } =
@@ -23,9 +23,7 @@ export default validateRoute(async (req, res, user) => {
     });
     // Check to see if the title is already in use
     if (titleIsAlreadyUsed) {
-      res
-        .status(200)
-        .json({ post: null, error: true, message: 'Title is already taken' });
+      res.status(200).json({ error: true, message: 'Title is already taken' });
       return;
     }
 

@@ -1,9 +1,9 @@
 import { Box, Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react';
+import { Determine, ResourceNotFound } from '@components-feat';
 import { H3, Paragraph } from '@components-common';
 import type { Block, Post } from '@prisma/client';
 import { BsLock, BsUnlock } from 'react-icons/bs';
 import { postMutations } from '@lib/mutations';
-import { Determine } from '@components-feat';
 import { EditablePostFields } from '@models';
 import { useRouter } from 'next/router';
 import { toCapitalCase } from '@utils';
@@ -27,9 +27,9 @@ export const PostDetailContainer: NextPage = () => {
   const { post_uuid } = router.query as unknown as {
     post_uuid: Post['post_uuid'];
   };
-  const { post, loading, error, mutate } = usePost(post_uuid);
 
   const { user } = useMe();
+  const { post, loading, error, mutate } = usePost(post_uuid);
 
   const handleEditPost = async (body: EditablePostFields) => {
     if (post) {
@@ -48,7 +48,6 @@ export const PostDetailContainer: NextPage = () => {
       }
     }
   };
-
   const handleDelete = async () => {
     if (post) {
       await postMutations().remove({ postId: post.id });
@@ -58,6 +57,7 @@ export const PostDetailContainer: NextPage = () => {
   };
 
   ////////////////////////////////
+
   return Determine({
     error,
     loading,
@@ -151,6 +151,12 @@ export const PostDetailContainer: NextPage = () => {
           </Grid>
         </VStack>
       </>
-    ) : null,
+    ) : (
+      <ResourceNotFound
+        message="Post Not Found"
+        href={'/posts'}
+        title="Go Back to Posts?"
+      />
+    ),
   });
 };

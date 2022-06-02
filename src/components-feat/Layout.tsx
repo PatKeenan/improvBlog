@@ -1,10 +1,18 @@
-import { Box, Button, HStack, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  HStack,
+  LinkBox,
+  LinkOverlay,
+  VStack,
+} from '@chakra-ui/react';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { useMe } from '@lib/useMe';
 import { Link as ChakraLink } from '@chakra-ui/react';
 import { logout } from '@lib/mutations';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
@@ -18,7 +26,7 @@ export function Layout({ children }: { children: ReactNode }) {
 }
 
 const Header = () => {
-  const { user, error, mutate } = useMe();
+  const { user, mutate } = useMe();
   const router = useRouter();
   const handleLogout = async () => {
     await logout();
@@ -34,7 +42,13 @@ const Header = () => {
       alignItems="center"
     >
       <HStack spacing="5">
-        <Link href="/">Logo</Link>
+        <LinkBox>
+          <Link href="/" passHref>
+            <LinkOverlay>
+              <Image src="/logo.svg" height={75} width={150} />
+            </LinkOverlay>
+          </Link>
+        </LinkBox>
         <Link href="/posts/">Posts</Link>
       </HStack>
       <Box flexGrow={1}>Search Bar</Box>
