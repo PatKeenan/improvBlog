@@ -23,6 +23,8 @@ export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
     null,
   );
+  const [noResourceMessage, setNoResourceMessage] =
+    React.useState('Post Not Found');
 
   const router = useRouter();
   const { post_uuid } = router.query as unknown as {
@@ -52,13 +54,12 @@ export const PostDetailContainer: NextPage = () => {
 
   const handleDelete = async () => {
     if (post) {
-      const data = await postMutations()
+      await postMutations()
         .remove({ postId: post.id })
         .then(() => {
+          setNoResourceMessage('Successfully delete post');
           mutate(undefined);
         });
-      /*  .finally(() => router.push('/posts')); */
-      console.log(data);
     }
   };
 
@@ -170,7 +171,7 @@ export const PostDetailContainer: NextPage = () => {
       </>
     ) : (
       <ResourceNotFound
-        message="Post Not Found"
+        message={noResourceMessage}
         href={'/posts'}
         title="Go Back to Posts?"
       />

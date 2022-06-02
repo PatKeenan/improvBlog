@@ -3,7 +3,7 @@ import { validateRoute } from '@lib/validateRoute'
 
 export default validateRoute(async (req, res, user) => {
     
-  const loggedInUser  = user.user
+  const loggedInUser  = user
   const id = Number(req.query.id)
   try {
     const post = await prisma.post.findUnique({

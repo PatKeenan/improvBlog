@@ -1,8 +1,7 @@
 import { postPlotTitleSchema } from '@lib/formValidations';
-import prisma from '@lib/prisma';
 import { validateRoute } from '@lib/validateRoute';
 import type { Post } from '@prisma/client';
-import { string } from 'yup';
+import prisma from '@lib/prisma';
 
 export default validateRoute(async (req, res, user) => {
   // Validate Incoming Data before moving on
@@ -28,7 +27,6 @@ export default validateRoute(async (req, res, user) => {
     }
 
     // Create a slug for the post
-    const slugifedTitle = String(title).trim().replace(/\s\s+/g, '-');
 
     const post = await prisma.post.create({
       data: {
@@ -39,7 +37,7 @@ export default validateRoute(async (req, res, user) => {
         },
         plot: plot,
         title: title,
-        slug: slugifedTitle,
+        slug: '',
         blocks: {
           create: {},
         },

@@ -2,7 +2,7 @@ import { validateRoute } from "@lib/validateRoute";
 import cookie from "cookie";
 
 
-export default validateRoute((req, res, user) => {
+export default validateRoute((req, res) => {
   if(req.method === "POST" && req.cookies[process.env["JWT_TOKEN_NAME"] as string]){
     res.setHeader(
       "Set-Cookie",
