@@ -19,8 +19,14 @@ export interface UsePostTypes extends Post {
 
 
 // The api will send back {error: true, message: "Post not found"} if user navigates to a post detail page which does not exist on a dynamic route
-const hasData = <T>(data: T): T | undefined => {
-  return data && data.hasOwnProperty('error') ? undefined : data;
+const hasData = <T>(data: T ): T | undefined => {
+  if(!data){
+    return undefined
+  }
+  if(typeof data === "object" && 'error' in data){
+    return undefined;
+  }
+  return data
 };
 
 export const usePost = (post_uuid: string) => {
@@ -28,7 +34,7 @@ export const usePost = (post_uuid: string) => {
     post_uuid ? `/posts/${post_uuid}` : null,
     fetcher,
   );
-  
+
   return {
     post: hasData(data),
     loading: !data && !error,
