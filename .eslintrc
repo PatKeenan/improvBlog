@@ -2,9 +2,9 @@
   "extends":[ "next/core-web-vitals", "prettier"],
  "rules": {
    "comma-spacing": "warn",
-   "no-unused-vars": "warn",
-   "no-console": "warn",
-   "no-unused-expressions": "warn",
+   "no-unused-vars": "error",
+   "no-console": "error",
+   "no-unused-expressions": "error",
  }
   
 }
