@@ -1,39 +1,30 @@
-import {
-  Box,
-  Button,
-  Grid,
-  GridItem,
-  HStack,
-  Icon,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react';
 import { Determine, ResourceNotFound } from '@components-feat';
 import { H3, Paragraph } from '@components-common';
 import type { Block, Post } from '@prisma/client';
 import { BsLock, BsUnlock } from 'react-icons/bs';
 import { postMutations } from '@lib/mutations';
 import { EditablePostFields } from '@models';
+import { BlockCard } from './block-card';
 import { useRouter } from 'next/router';
 import { toCapitalCase } from '@utils';
 import { usePost } from '@lib/usePost';
 import type { NextPage } from 'next';
 import { useMe } from '@lib/useMe';
+import Head from 'next/head';
 import {
   ContributionList,
-  ContributionCard,
   PostHeader,
+  ContributeButton,
 } from '@components-core/posts';
-import Head from 'next/head';
-import React, { useRef } from 'react';
-import { IoMdAdd } from 'react-icons/io';
-import { BlockCard } from './block-card';
+import React from 'react';
 
 export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
     null,
   );
-  const router = useRouter();
 
+  const router = useRouter();
   const { post_uuid } = router.query as unknown as {
     post_uuid: Post['post_uuid'];
   };
@@ -58,14 +49,18 @@ export const PostDetailContainer: NextPage = () => {
       }
     }
   };
+
   const handleDelete = async () => {
     if (post) {
-      await postMutations().remove({ postId: post.id });
-      mutate(undefined);
-      router.push('/posts');
+      const data = await postMutations()
+        .remove({ postId: post.id })
+        .then(() => {
+          mutate(undefined);
+        });
+      /*  .finally(() => router.push('/posts')); */
+      console.log(data);
     }
   };
-  const blockRef = useRef();
 
   ////////////////////////////////
 
@@ -124,14 +119,18 @@ export const PostDetailContainer: NextPage = () => {
                             )}
                             content={block.contributions[0].content}
                             createdAt={block.contributions[0].createdAt}
-                            username={block.contributions[0].author.username}
+                            username={
+                              user &&
+                              user.username ===
+                                block.contributions[0].author.username
+                                ? user.username
+                                : block.contributions[0].author.username
+                            }
                             likes={block.contributions[0].likes}
                           />
                         </HStack>
                       ) : (
-                        <Box>
-                          <p>yo</p>
-                        </Box>
+                        <ContributeButton message="Add the First Contribution" />
                       );
                     })}
                   </VStack>
@@ -177,23 +176,4 @@ export const PostDetailContainer: NextPage = () => {
       />
     ),
   });
-};
-
-const AddContribution = () => {
-  return (
-    <Box
-      border="1px dashed"
-      borderWidth={3}
-      borderColor="gray.200"
-      w="full"
-      p={8}
-      rounded="md"
-      justifyContent="center"
-      display="flex"
-    >
-      <Button leftIcon={<IoMdAdd />} variant="outline" justifySelf="center">
-        Create the First Contribution
-      </Button>
-    </Box>
-  );
 };

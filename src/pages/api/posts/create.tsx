@@ -34,7 +34,7 @@ export default validateRoute(async (req, res, user) => {
       data: {
         author: {
           connect: {
-            id: user.user.id,
+            id: user.id,
           },
         },
         plot: plot,

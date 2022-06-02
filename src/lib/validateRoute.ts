@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { User } from "@prisma/client";
 import prisma from "./prisma";
 import jwt from 'jsonwebtoken';
+import { MakeOptional } from "./ts-utilities";
 export const validateRoute = (handler: { (req: NextApiRequest, res: NextApiResponse, user: any): any; (arg0: NextApiRequest, arg1: NextApiResponse<any>, arg2: User): any; }) => {
     return async (req: NextApiRequest, res: NextApiResponse)  => {
       const token = req.cookies[process.env.JWT_TOKEN_NAME as unknown as string]
@@ -21,8 +22,9 @@ export const validateRoute = (handler: { (req: NextApiRequest, res: NextApiRespo
        } catch (error) {
         return res.status(401).json({user: null, error: "Not authorized"})
        }
-       const userToReturn: Omit<User, "password" | "createdAt"> = {username: user.username, id: user.id, user_uuid: user.user_uuid, role: user.role,email: user.email } 
-       return handler(req, res, {user: userToReturn, error: null})
+       const userToReturn: MakeOptional<User, "password"> = {...user};
+       delete userToReturn["password"]
+       return handler(req, res, userToReturn)
       }
       return res.status(401).json({user: null, error: "Not authorized"})
     }

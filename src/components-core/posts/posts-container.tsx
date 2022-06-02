@@ -1,19 +1,11 @@
-import {
-  VStack,
-  Button,
-  LinkBox,
-  LinkOverlay,
-  Link as ChakraLink,
-  Box,
-  HStack,
-} from '@chakra-ui/react';
+import { VStack, Button, Link as ChakraLink, HStack } from '@chakra-ui/react';
+import { SmallText, H1, Card, H3, Paragraph } from '@components-common';
 import { Determine } from '@components-feat';
 import { usePosts } from '@lib/usePosts';
 import { IoMdAdd } from 'react-icons/io';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import moment from 'moment';
-import { SmallText, H1, Card, H3, Paragraph } from '@components-common';
 
 export const PostsContainer: NextPage = () => {
   const { posts, loading, error } = usePosts();
@@ -42,8 +34,12 @@ export const PostsContainer: NextPage = () => {
           posts.map(i => {
             return (
               <Link href={`/posts/${i.post_uuid}`} passHref={true}>
-                <ChakraLink w="full" _hover={{ textDecoration: 'none' }}>
-                  <Card key={i.post_uuid}>
+                <ChakraLink
+                  w="full"
+                  _hover={{ textDecoration: 'none' }}
+                  rounded="md"
+                >
+                  <Card as={'a'} key={i.post_uuid}>
                     <VStack align="flex-start" w="full" spacing={4}>
                       <H3>{i.title}</H3>
                       <Paragraph textAlign="left" fontStyle="italic">

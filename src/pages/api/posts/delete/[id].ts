@@ -3,7 +3,7 @@ import { validateRoute } from '@lib/validateRoute'
 
 export default validateRoute(async (req, res, user) => {
     
-  const loggedInUser  = user.user
+  const loggedInUser  = user
   const id = Number(req.query.id)
   try {
     const post = await prisma.post.findUnique({
@@ -15,7 +15,7 @@ export default validateRoute(async (req, res, user) => {
     if (post && post.authorId !== loggedInUser.id) {
       res
         .status(401)
-        .json({ post: null, error: true, message: 'You are not allowed to delete this post' })
+        .json({ post: null, error: true, message: 'You are not allowed to delete this post check 1' })
       return
     }
 
@@ -33,6 +33,6 @@ export default validateRoute(async (req, res, user) => {
   } catch (error: any) {
     throw new Error(error)
   }
-  res.status(401).json({error: 'You are not allowed to delete this post'})
+  res.status(401).json({error: 'You are not allowed to delete this post check 2'})
   return
 })
