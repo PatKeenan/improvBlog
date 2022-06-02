@@ -1,18 +1,11 @@
-import {
-  Box,
-  Button,
-  HStack,
-  LinkBox,
-  LinkOverlay,
-  VStack,
-} from '@chakra-ui/react';
-import type { ReactNode } from 'react';
-import Link from 'next/link';
-import { useMe } from '@lib/useMe';
+import { Box, HStack, LinkBox, LinkOverlay, VStack } from '@chakra-ui/react';
 import { Link as ChakraLink } from '@chakra-ui/react';
-import { logout } from '@lib/mutations';
 import { useRouter } from 'next/router';
+import { logout } from '@lib/mutations';
+import type { ReactNode } from 'react';
+import { useMe } from '@lib/useMe';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

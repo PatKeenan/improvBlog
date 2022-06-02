@@ -50,7 +50,6 @@ export const PostCreateContainer: NextPage = () => {
     // validation form the server
     if (serverErrors && serverErrors.hasOwnProperty('inner')) {
       serverErrors.inner.forEach((er: { path: string; message: string }) => {
-        console.log(er);
         setError(er.path, { message: er.message });
       });
     }
