@@ -29,7 +29,7 @@ const Header = () => {
   const router = useRouter();
   const handleLogout = async () => {
     await logout();
-    mutate(null);
+    mutate(undefined);
     router.push('/signin');
   };
   return (
