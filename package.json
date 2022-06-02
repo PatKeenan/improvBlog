@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "echo testing",
     "prepare": "husky install",
-    "pre-commit": "yarn lint"
+    "pre-commit": "yarn lint",
+    "pre-push": "yarn test"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.8.8",
