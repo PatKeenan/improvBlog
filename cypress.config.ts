@@ -6,6 +6,7 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
+  projectId: "ibef3e",
   component: {
     devServer: {
       framework: "next",
