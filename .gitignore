@@ -35,3 +35,8 @@ yarn-error.log*
 *.tsbuildinfo
 
 .env
+
+videos
+*.mp4
+
+cypress.env.json

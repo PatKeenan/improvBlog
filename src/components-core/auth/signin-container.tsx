@@ -87,7 +87,7 @@ export const SignInContainer: NextPage = () => {
               </FormControl>
               <HStack justify={'space-between'} w="full">
                 <SmallText>
-                  Don't have an account?{' '}
+                  Don`&apos;`t have an account?{' '}
                   <Link href={{ pathname: '/signup' }} passHref>
                     <ChakraLink color="blue.500">Sign Up</ChakraLink>
                   </Link>
