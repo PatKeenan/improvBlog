@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
+    "types": ["cypress", "node"],
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -16,15 +21,36 @@
     "incremental": true,
     "baseUrl": "src",
     "paths": {
-      "@components-core/*": ["components-core/*"],
-      "@components-feat": ["components-feat/index.ts"],
-      "@components-common": ["components-common/index.ts"],
-      "@lib/*": ["lib/*"],
-      "@models": ["models/index.ts"],
-      "@styles/*": ["styles/*"],
-      "@utils": ["utils/index.ts"]
+      "@components-core/*": [
+        "components-core/*"
+      ],
+      "@components-feat": [
+        "components-feat/index.ts"
+      ],
+      "@components-common": [
+        "components-common/index.ts"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@models": [
+        "models/index.ts"
+      ],
+      "@styles/*": [
+        "styles/*"
+      ],
+      "@utils": [
+        "utils/index.ts"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

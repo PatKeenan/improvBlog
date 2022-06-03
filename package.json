@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "cypress run",
-    "test:record": "run cypress run --record $CYPRESS_RECORD_KEY --browser chrome",
+    "test": "cypress run --record false",
+    "test:record": "cypress run --record $CYPRESS_RECORD_KEY --browser chrome",
     "prepare": "husky install",
     "pre-commit": "yarn lint",
     "pre-push": "cypress run"

@@ -1,3 +1,4 @@
+export {}; // silence TS1208 error
 describe('Login.cy.ts', () => {
 
   const basePath = Cypress.env("base_url");
