@@ -90,11 +90,14 @@ export const PostCreateContainer: NextPage = () => {
               </FormErrorMessage>
             </FormControl>
             <HStack w="full" justify="space-between">
-              <Button onClick={handleCancel}>Cancel</Button>
+              <Button onClick={handleCancel} id="cancel-button">
+                Cancel
+              </Button>
               <Button
                 variant="solid"
                 colorScheme={isSubmitSuccessful ? 'green' : 'blue'}
                 type="submit"
+                id="submit-button"
                 isLoading={isSubmitting}
                 alignSelf="flex-end"
                 rightIcon={isSubmitSuccessful ? <IoMdCheckmark /> : undefined}

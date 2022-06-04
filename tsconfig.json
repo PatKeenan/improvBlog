@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "types": ["cypress", "node"],
     "target": "es5",
     "lib": [
       "dom",

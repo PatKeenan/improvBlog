@@ -28,6 +28,7 @@ export const PostHeader = ({
   handleDelete,
 }: {
   post: PostIncludingAuthor;
+  // eslint-disable-next-line no-unused-vars
   handleEditPost: (body: EditablePostFields) => void;
   editable: boolean;
   handleDelete: () => void;
@@ -62,6 +63,7 @@ export const PostHeader = ({
         </SmallText>
         {editable && !isEditing ? (
           <IconButton
+            id="edit-button"
             aria-label="Edit Post"
             icon={<BiEdit />}
             onClick={() => setIsEditing(true)}
@@ -69,6 +71,7 @@ export const PostHeader = ({
         ) : null}
         {editable ? (
           <IconButton
+            id="delete-button"
             aria-label="Delete Post"
             icon={<IoMdTrash />}
             onClick={handleDelete}
@@ -85,6 +88,7 @@ const HeaderEditForm = ({
   title,
   plot,
 }: {
+  // eslint-disable-next-line no-unused-vars
   handleEditPost: (body: EditablePostFields) => void;
   handleClose: () => void;
   title: Post['title'];
@@ -139,11 +143,13 @@ const HeaderEditForm = ({
         <HStack>
           <ButtonGroup>
             <IconButton
+              id="cancel-button"
               aria-label="Cancel Edit"
               icon={<IoMdClose />}
               onClick={handleCancel}
             />
             <IconButton
+              id="submit-button"
               aria-label="Submit Edit"
               type="submit"
               isLoading={loading}

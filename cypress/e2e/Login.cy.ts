@@ -27,4 +27,5 @@ describe('Login.cy.ts', () => {
         cy.get('h2').contains('Create New Post')
       })
   })
+
 })
