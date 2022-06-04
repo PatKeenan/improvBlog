@@ -1,5 +1,5 @@
 export {}; // silence TS1208 error
-describe('Login.cy.ts', () => {
+describe('Logout.cy.ts', () => {
 
   const basePath = Cypress.env("base_url");
   const test_email = Cypress.env("test_email");
@@ -12,9 +12,9 @@ describe('Login.cy.ts', () => {
         url: basePath + '/api/signin',
         body: { email: test_email, password: test_password },
       }).wait(2000).reload()
-      cy.get('#logout-button').click()
+      cy.get('#logout-button').click().wait(2000)
       cy.visit(basePath)
-      cy.get('#login-button')
+      cy.get('a[href="/signin"]').click()
       cy.visit(basePath + '/users/4').wait(2000)
       cy.get('h2').contains("Sign In To Read Awesome Stuff")
   })

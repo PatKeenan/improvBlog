@@ -62,8 +62,8 @@ const Header = () => {
             </ChakraLink>
           </>
         ) : (
-          <Link href="/signin" passHref>
-            <ChakraLink id="login-button">Login</ChakraLink>
+          <Link href="/signin" id="login-button">
+            Login
           </Link>
         )}
       </HStack>

@@ -6,16 +6,13 @@ describe('CreatePost.cy.ts', () => {
   const test_email = Cypress.env("test_email");
   const test_password = Cypress.env("test_password");
   const token = Cypress.env("token");
-
-  beforeEach(()=>{
-    cy.request({
-        method: 'POST',
-        url: basePath + '/api/signin',
-        body: { email: test_email, password: test_password },
-      })
-  })
  
   it('should Create Post', () => {
+    cy.request({
+      method: 'POST',
+      url: basePath + '/api/signin',
+      body: { email: test_email, password: test_password },
+    })
     cy.visit(basePath + '/posts/create').then(()=>{
         cy.get('h2').contains('Create New Post')
       })
@@ -34,6 +31,11 @@ describe('CreatePost.cy.ts', () => {
   })
 
   it('should Edit Post', () => {
+    cy.request({
+      method: 'POST',
+      url: basePath + '/api/signin',
+      body: { email: test_email, password: test_password },
+    })
     cy.get('#edit-button').click()
     cy.get('textarea[name="title"]').clear().type("Testing before delete")
     cy.get('#submit-button').click().wait(4000)
@@ -41,6 +43,11 @@ describe('CreatePost.cy.ts', () => {
 })
 
     it('should Delete Post', () => {
+      cy.request({
+        method: 'POST',
+        url: basePath + '/api/signin',
+        body: { email: test_email, password: test_password },
+      })
         cy.get('#delete-button').click().wait(4000)
         cy.get("h3").contains("Successfully delete post")
     })
