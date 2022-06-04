@@ -44,7 +44,7 @@ const Header = () => {
         <LinkBox>
           <Link href="/" passHref>
             <LinkOverlay>
-              <Image src="/logo.svg" height={75} width={150} />
+              <Image src="/logo.svg" height={75} width={150} alt="Logo" />
             </LinkOverlay>
           </Link>
         </LinkBox>
@@ -57,12 +57,14 @@ const Header = () => {
             <Link href={`/users/${user.id}`} passHref>
               <ChakraLink>@{user.username}</ChakraLink>
             </Link>
-            <ChakraLink as={'button'} onClick={handleLogout}>
+            <ChakraLink as={'button'} onClick={handleLogout} id="logout-button">
               Logout
             </ChakraLink>
           </>
         ) : (
-          <Link href="/signin">Login</Link>
+          <Link href="/signin" passHref>
+            <ChakraLink id="login-button">Login</ChakraLink>
+          </Link>
         )}
       </HStack>
     </HStack>
