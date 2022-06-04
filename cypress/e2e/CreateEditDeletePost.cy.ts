@@ -1,6 +1,6 @@
 import faker from "@faker-js/faker";
 export {}
-describe('CreatePost.cy.ts', () => {
+describe('CreateEditDeletePost.cy.ts', () => {
 
   const basePath = Cypress.env("base_url");
   const test_email = Cypress.env("test_email");
