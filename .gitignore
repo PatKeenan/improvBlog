@@ -40,3 +40,5 @@ videos
 *.mp4
 
 cypress.env.json
+*/screenshots/*
+*/screenshots/*/*.png
