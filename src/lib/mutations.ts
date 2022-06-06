@@ -1,5 +1,5 @@
 import type { Block, Contribution, Post } from "@prisma/client";
-import { EditablePostFields } from "@models";
+import { CreateEditContribution, EditablePostFields } from "@models";
 import fetcher from "@lib/fetcher";
 
 
@@ -19,7 +19,7 @@ export const postMutations = () =>  {
     const baseApi = 'posts/';
     return {
         create: (body: {title: Post['title'], plot: Post['plot']}) => {
-            return fetcher(baseApi + 'create', {...body, mode: 'create'})
+            return fetcher(baseApi + 'create', body)
         },
         edit: (postId: Post['id'], body: EditablePostFields) => {
             return fetcher(baseApi + 'edit/' + postId, body)
@@ -34,13 +34,13 @@ export const blockMutations = () =>  {
     const baseApi = 'blocks/';
     return {
         create: (body: {postId: Post['id']}) => {
-            return fetcher(baseApi + 'create', {...body, mode: 'create'})
+            return fetcher(baseApi + 'create', body)
         },
         remove: (body: {blockId: Block['id']}) => {
-            return fetcher(baseApi + 'delete', {...body, mode: 'remove'})
+            return fetcher(baseApi + 'delete', body)
         },
         toggleLock: (body: {blockId: Block["id"]}) => {
-            return fetcher(baseApi + 'edit', {...body, mode: 'toggleLock'})
+            return fetcher(baseApi + 'edit', body)
         }
     }
 }
@@ -48,14 +48,14 @@ export const blockMutations = () =>  {
 export const contributionMutations = () =>  {
     const baseApi = 'contributions/';
     return {
-        create: (body: {blockId: Block['id']}) => {
-            return fetcher(baseApi + 'create', {...body, mode: 'create'})
+        create: (body: CreateEditContribution)=> {
+            return fetcher(baseApi + 'create', body)
         },
         remove: (body: {contributionId: Contribution['id']}) => {
-            return fetcher(baseApi + 'delete', {...body, mode: 'remove'})
+            return fetcher(baseApi + 'delete', body)
         },
         toggleLike: (body: {contributionId: Contribution["id"]}) => {
-            return fetcher(baseApi + 'edit', {...body, mode: 'toggleLike'})
+            return fetcher(baseApi + 'edit', body)
         }
     }
 }

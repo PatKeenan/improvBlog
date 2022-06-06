@@ -33,7 +33,11 @@ export const PostsContainer: NextPage = () => {
         {posts.length > 0 ? (
           posts.map(i => {
             return (
-              <Link href={`/posts/${i.post_uuid}`} passHref={true}>
+              <Link
+                href={`/posts/${i.post_uuid}`}
+                passHref={true}
+                key={i.post_uuid}
+              >
                 <ChakraLink
                   w="full"
                   _hover={{ textDecoration: 'none' }}

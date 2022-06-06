@@ -36,3 +36,7 @@ import * as Yup from 'yup'
     title: Yup.string().required().min(4).max(255),
     plot: Yup.string().required('Plot is required').min(6).max(500),
   })
+
+  export const contributionSchema = Yup.object().shape({
+    content: Yup.string().required().min(10).max(500)
+  })
