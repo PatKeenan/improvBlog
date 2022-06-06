@@ -19,7 +19,9 @@ import {
   Textarea,
   VStack,
   Link as ChakraLink,
+  Button,
 } from '@chakra-ui/react';
+import { VscEdit } from 'react-icons/vsc';
 
 export const PostHeader = ({
   post,
@@ -56,7 +58,7 @@ export const PostHeader = ({
           <H5 fontStyle="italic">{post.plot}</H5>
         </>
       )}
-      <HStack>
+      <HStack hidden={isEditing}>
         <Avatar size="xs" />
         <SmallText>
           Created By:{' '}
@@ -68,20 +70,24 @@ export const PostHeader = ({
           {moment(post.createdAt).fromNow()}
         </SmallText>
         {editable && !isEditing ? (
-          <IconButton
+          <Button
             id="edit-button"
-            aria-label="Edit Post"
-            icon={<BiEdit />}
+            size="sm"
+            leftIcon={<VscEdit />}
             onClick={() => setIsEditing(true)}
-          />
+          >
+            Edit
+          </Button>
         ) : null}
         {editable ? (
-          <IconButton
+          <Button
             id="delete-button"
-            aria-label="Delete Post"
-            icon={<IoMdTrash />}
+            size="sm"
+            leftIcon={<IoMdTrash />}
             onClick={handleDelete}
-          />
+          >
+            Delete
+          </Button>
         ) : null}
       </HStack>
     </VStack>
@@ -146,21 +152,26 @@ const HeaderEditForm = ({
             {errors.plot && errors.plot.message}
           </FormErrorMessage>
         </FormControl>
-        <HStack>
+        <HStack w="full" justifyContent="flex-end">
           <ButtonGroup>
-            <IconButton
+            <Button
               id="cancel-button"
               aria-label="Cancel Edit"
-              icon={<IoMdClose />}
+              leftIcon={<IoMdClose />}
               onClick={handleCancel}
-            />
-            <IconButton
+            >
+              Cancel
+            </Button>
+            <Button
               id="submit-button"
               aria-label="Submit Edit"
               type="submit"
+              colorScheme="telegram"
               isLoading={loading}
-              icon={<IoMdCheckmark />}
-            />
+              leftIcon={<IoMdCheckmark />}
+            >
+              Save
+            </Button>
           </ButtonGroup>
         </HStack>
       </VStack>

@@ -1,10 +1,11 @@
-import { useBlocks } from '@lib/useBlock'
-import { Determine } from '@components-feat'
-import type { Block } from '@prisma/client'
-import { ContributionCard } from './contribution-card'
+import { ContributionCard } from '@components-core/posts';
+import { Determine } from '@components-feat';
+import type { Block } from '@prisma/client';
+import { useBlocks } from '@lib/useBlock';
 
 export const ContributionList = ({ blockId }: { blockId: Block['id'] }) => {
-  const { data, loading, error } = useBlocks(blockId)
+  const { data, loading, error } = useBlocks(blockId);
+
   return Determine({
     error,
     loading,
@@ -14,13 +15,10 @@ export const ContributionList = ({ blockId }: { blockId: Block['id'] }) => {
           <ContributionCard
             key={contribution.contribution_uuid}
             activeBorder={false}
-            content={contribution.content}
-            createdAt={contribution.createdAt}
-            username={contribution.author.username}
-            likes={contribution.likes}
+            contribution={contribution}
           />
         ))}
       </>
     ) : null,
-  })
-}
+  });
+};

@@ -1,31 +1,31 @@
 import { Card, Paragraph, SmallText } from '@components-common';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import type { Contribution, User } from '@prisma/client';
-import { HStack, VStack } from '@chakra-ui/react';
+import { Button, HStack, VStack } from '@chakra-ui/react';
+import { IoMdTrash } from 'react-icons/io';
+import { VscEdit } from 'react-icons/vsc';
 import { useMe } from '@lib/useMe';
 import moment from 'moment';
 import React from 'react';
 
+interface ContributionType extends Contribution {
+  author: User;
+}
+
 export const ContributionCard = ({
-  content,
-  createdAt,
-  username,
-  likes,
+  contribution,
   activeBorder,
   handleClick,
 }: {
-  content: Contribution['content'];
-  createdAt: Contribution['createdAt'];
-  username: User['username'];
-  likes: Contribution['likes'];
+  contribution: ContributionType;
   activeBorder: boolean;
   handleClick?: () => void;
 }) => {
-  const { user, loading } = useMe();
+  const { user } = useMe();
 
   const [liked, setLiked] = React.useState(false);
   const handleLike = () => {
-    user ? setLiked(!liked) : null;
+    return user && setLiked(!liked);
   };
   return (
     <Card
@@ -42,10 +42,11 @@ export const ContributionCard = ({
         w="full"
         alignItems={'flex-start'}
       >
-        <Paragraph textAlign="left">{content}</Paragraph>
+        <Paragraph textAlign="left">{contribution.content}</Paragraph>
         <HStack align="center" justify="space-between" w="full" spacing="4">
           <SmallText fontWeight="light">
-            Contributed by {username} {moment(createdAt).fromNow()}
+            Contributed by {contribution.author.username}{' '}
+            {moment(contribution.createdAt).fromNow()}
           </SmallText>
 
           <HStack>
@@ -63,9 +64,19 @@ export const ContributionCard = ({
                 style={{ cursor: 'pointer' }}
               />
             )}
-            <SmallText>{likes} Likes</SmallText>
+            <SmallText>{contribution.likes} Likes</SmallText>
           </HStack>
         </HStack>
+        {user?.id === contribution.authorId && (
+          <HStack>
+            <Button size="xs" leftIcon={<VscEdit />}>
+              Edit
+            </Button>
+            <Button size="xs" leftIcon={<IoMdTrash />}>
+              Delete
+            </Button>
+          </HStack>
+        )}
       </VStack>
     </Card>
   );
