@@ -12,7 +12,6 @@ interface BlockCardType extends ButtonProps {
   contributionTotal: number;
   activeBorder: boolean;
   handleClick: () => void;
-  handleClickAway: () => void;
 }
 
 export const BlockCard = ({
@@ -23,7 +22,7 @@ export const BlockCard = ({
   likes,
   activeBorder,
   handleClick,
-  handleClickAway,
+
   ...rest
 }: BlockCardType) => (
   <Card

@@ -16,22 +16,23 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react';
+import { useContributionStore } from '@lib/useContributionStore';
 
 export const ContributionModal = ({
-  isOpen,
   onClose,
   hasPost,
   post_uuid,
   post_id,
   block_id,
 }: {
-  isOpen: boolean;
   hasPost: boolean;
   onClose: () => void;
   post_uuid: string;
   post_id: number;
   block_id: number;
 }) => {
+  const { isOpen, contentToEdit } = useContributionStore();
+
   const {
     register,
     handleSubmit,
@@ -64,7 +65,8 @@ export const ContributionModal = ({
       }
     }
   });
-
+  /*   const handleEditContribution = () => {};
+   */
   return (
     <Modal
       isOpen={isOpen}
@@ -83,7 +85,12 @@ export const ContributionModal = ({
           <VStack w="full" spacing={4} align="flex-start">
             <FormControl isInvalid={errors.content}>
               <FormLabel>Contribution</FormLabel>
-              <Textarea id="content-textarea" h="36" {...register('content')} />
+              <Textarea
+                id="content-textarea"
+                h="36"
+                defaultValue={contentToEdit ? contentToEdit : ''}
+                {...register('content')}
+              />
               <FormErrorMessage>
                 {errors.content && errors.content.message}
               </FormErrorMessage>

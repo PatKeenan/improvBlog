@@ -7,6 +7,7 @@ import { VscEdit } from 'react-icons/vsc';
 import { useMe } from '@lib/useMe';
 import moment from 'moment';
 import React from 'react';
+import { useContributionStore } from '@lib/useContributionStore';
 
 interface ContributionType extends Contribution {
   author: User;
@@ -22,7 +23,7 @@ export const ContributionCard = ({
   handleClick?: () => void;
 }) => {
   const { user } = useMe();
-
+  const { toggleEdit } = useContributionStore();
   const [liked, setLiked] = React.useState(false);
   const handleLike = () => {
     return user && setLiked(!liked);
@@ -69,7 +70,17 @@ export const ContributionCard = ({
         </HStack>
         {user?.id === contribution.authorId && (
           <HStack>
-            <Button size="xs" leftIcon={<VscEdit />}>
+            <Button
+              size="xs"
+              leftIcon={<VscEdit />}
+              onClick={() =>
+                toggleEdit({
+                  content: contribution.content,
+                  blockId: contribution.blockId,
+                  contributionId: contribution.id,
+                })
+              }
+            >
               Edit
             </Button>
             <Button size="xs" leftIcon={<IoMdTrash />}>

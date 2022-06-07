@@ -19,12 +19,12 @@ import {
 } from '@components-core/posts';
 import React from 'react';
 import { Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react';
+import { useContributionStore } from '@lib/useContributionStore';
 
 export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
     null,
   );
-  const [modalOpen, setModelOpen] = React.useState(false);
   const [noResourceMessage, setNoResourceMessage] =
     React.useState('Post Not Found');
 
@@ -35,6 +35,7 @@ export const PostDetailContainer: NextPage = () => {
 
   const { user } = useMe();
   const { post, loading, error, mutate } = usePost(post_uuid);
+  const { toggleModal } = useContributionStore();
 
   const handleEditPost = async (body: EditablePostFields) => {
     if (post) {
@@ -100,12 +101,11 @@ export const PostDetailContainer: NextPage = () => {
             overflow="scroll"
           >
             <ContributionModal
-              onClose={() => setModelOpen(false)}
+              onClose={toggleModal}
               hasPost={post ? true : false}
               post_id={post.id}
               post_uuid={post.post_uuid}
               block_id={selectedBlock ?? post.blocks[0].id}
-              isOpen={modalOpen}
             />
             {post.blocks.length > 0 && (
               <>
@@ -126,7 +126,6 @@ export const PostDetailContainer: NextPage = () => {
                               key={block.block_uuid}
                               activeBorder={selectedBlock == block.id}
                               handleClick={() => setSelectedBlock(block.id)}
-                              handleClickAway={() => setSelectedBlock(null)}
                               contributionTotal={Number(
                                 block._count.contributions,
                               )}
@@ -148,7 +147,7 @@ export const PostDetailContainer: NextPage = () => {
                         return (
                           <ContributeButton
                             message="Add the First Contribution"
-                            handleClick={() => setModelOpen(true)}
+                            handleClick={toggleModal}
                           />
                         );
                       }
