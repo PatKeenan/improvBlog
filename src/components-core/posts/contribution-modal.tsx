@@ -65,8 +65,11 @@ export const ContributionModal = ({
       }
     }
   });
-  /*   const handleEditContribution = () => {};
-   */
+
+  const handleCloseModel = () => {
+    reset();
+    onClose();
+  };
   return (
     <Modal
       isOpen={isOpen}
@@ -98,10 +101,7 @@ export const ContributionModal = ({
             <HStack w="full" justify="space-between">
               <Button
                 type="reset"
-                onClick={() => {
-                  reset();
-                  onClose();
-                }}
+                onClick={handleCloseModel}
                 id="content-submit-button"
               >
                 Cancel

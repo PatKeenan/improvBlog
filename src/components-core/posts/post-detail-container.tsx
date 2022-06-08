@@ -1,5 +1,6 @@
 import { postMutations } from '@lib/mutations';
 import { Determine, ResourceNotFound } from '@components-feat';
+import { chakra } from '@chakra-ui/react';
 import { H3, Paragraph } from '@components-common';
 import { BsLock, BsUnlock } from 'react-icons/bs';
 import type { Block, Post } from '@prisma/client';
@@ -35,7 +36,7 @@ export const PostDetailContainer: NextPage = () => {
 
   const { user } = useMe();
   const { post, loading, error, mutate } = usePost(post_uuid);
-  const { toggleModal } = useContributionStore();
+  const { toggleModalOpen, toggleModalClosed } = useContributionStore();
 
   const handleEditPost = async (body: EditablePostFields) => {
     if (post) {
@@ -77,13 +78,16 @@ export const PostDetailContainer: NextPage = () => {
           <title>{toCapitalCase(post.title)}</title>
           <meta name="description" content={post.plot} />
         </Head>
-        <VStack
+        <chakra.div
           width="full"
-          h="full"
-          flexGrow={1}
+          display="flex"
+          flexDirection="column"
           p={10}
-          gap={8}
-          align="flex-start"
+          overflow="hidden"
+          minH="calc(100vh - 75px)"
+          maxH="calc(100vh - 75px)"
+          marginInlineStart="auto"
+          marginInlineEnd="auto"
         >
           <PostHeader
             post={post}
@@ -95,13 +99,14 @@ export const PostDetailContainer: NextPage = () => {
           <Grid
             templateColumns="repeat(10,1fr)"
             w="full"
+            height="100%"
+            overflow="hidden"
+            flex="auto"
             p={2}
             gap={8}
-            flexGrow={1}
-            overflow="scroll"
           >
             <ContributionModal
-              onClose={toggleModal}
+              onClose={toggleModalClosed}
               hasPost={post ? true : false}
               post_id={post.id}
               post_uuid={post.post_uuid}
@@ -109,14 +114,26 @@ export const PostDetailContainer: NextPage = () => {
             />
             {post.blocks.length > 0 && (
               <>
-                <GridItem colSpan={6}>
-                  <VStack align={'flex-start'} spacing="6" w="full" m="0 auto">
+                <GridItem colSpan={6} overflow="hidden">
+                  <VStack
+                    height="100%"
+                    align="flex-start"
+                    spacing="6"
+                    overflow="auto"
+                    flex="auto"
+                    p={2}
+                    className="yooo"
+                  >
                     {post.blocks.map(block => {
                       // All posts start out with an empty block on creation
                       // If there are contributions, do not show the "Be the first to contribute" Card
                       if (block.contributions.length > 0) {
                         return (
-                          <HStack w="full" key={block.block_uuid}>
+                          <HStack
+                            w="full"
+                            key={block.block_uuid}
+                            alignItems="center"
+                          >
                             {block.frozen ? (
                               <Icon as={BsLock} />
                             ) : (
@@ -147,20 +164,21 @@ export const PostDetailContainer: NextPage = () => {
                         return (
                           <ContributeButton
                             message="Add the First Contribution"
-                            handleClick={toggleModal}
+                            handleClick={toggleModalOpen}
                           />
                         );
                       }
                     })}
                   </VStack>
                 </GridItem>
-                <GridItem colSpan={4}>
+                <GridItem colSpan={4} overflow="auto" p={2}>
                   <VStack
                     flexGrow={1}
                     borderLeft="1px"
                     borderColor="gray.100"
-                    h="full"
+                    h="100%"
                     pl={4}
+                    position="relative"
                   >
                     {selectedBlock ? (
                       <ContributionList blockId={selectedBlock} />
@@ -170,7 +188,7 @@ export const PostDetailContainer: NextPage = () => {
                   </VStack>
                 </GridItem>
               </>
-            )}{' '}
+            )}
             {post.blocks.length === 0 && (
               <GridItem colSpan={10} placeItems="center">
                 <VStack
@@ -186,7 +204,7 @@ export const PostDetailContainer: NextPage = () => {
               </GridItem>
             )}
           </Grid>
-        </VStack>
+        </chakra.div>
       </>
     ) : (
       <ResourceNotFound

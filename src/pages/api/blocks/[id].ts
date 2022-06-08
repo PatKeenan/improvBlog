@@ -3,27 +3,23 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const blockId = req.query.id;
-    const block = await prisma.block.findUnique({
+    const contributions = await prisma.contribution.findMany({
         where: {
-            id: Number(blockId)
+            blockId: Number(blockId)
+        },
+        orderBy: {
+            likes: 'desc'
         },
         include: {
-            contributions: {
-                orderBy: {
-                    likes: "desc"
-                },
-                include: {
-                    author: {
-                        select: {
-                            username: true
-                        }
-                    }
+            author: {
+                select: {
+                    username: true
                 }
             }
         }
     })
-    if(block){
-       return  res.status(200).json(block)
+    if(contributions){
+       return  res.status(200).json(contributions)
     }
-    return  res.status(404).json({ error: true, message: "Block not found" })
+    return  res.status(404).json({ error: true, message: "Contributions not found" })
 }

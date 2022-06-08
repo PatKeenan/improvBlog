@@ -1,4 +1,4 @@
-import { Box, HStack, LinkBox, LinkOverlay, VStack } from '@chakra-ui/react';
+import { Box, HStack, LinkBox, LinkOverlay, chakra } from '@chakra-ui/react';
 import { Link as ChakraLink } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { logout } from '@lib/mutations';
@@ -9,18 +9,20 @@ import Link from 'next/link';
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
-    <VStack minH={'100vh'} w={'100vw'} flex={1}>
+    <>
       <Header />
-      <VStack
-        as="main"
-        display="flex"
-        flexGrow={1}
-        w="100%"
-        maxW={'container.xl'}
+      <chakra.main
+        display="block"
+        w="full"
+        maxW="8xl"
+        position="relative"
+        marginInlineStart="auto"
+        marginInlineEnd="auto"
+        minHeight={'calc(100vh - 75px)'}
       >
         {children}
-      </VStack>
-    </VStack>
+      </chakra.main>
+    </>
   );
 }
 
@@ -37,7 +39,11 @@ const Header = () => {
       w="100%"
       shadow="base"
       p={4}
-      h={{ base: '75px' }}
+      h={75}
+      position="sticky"
+      bg="white"
+      zIndex={99}
+      top={0}
       alignItems="center"
     >
       <HStack spacing="5">

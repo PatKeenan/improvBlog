@@ -1,23 +1,33 @@
-import { ContributionCard } from '@components-core/posts';
+import { ContributionCard, ContributeButton } from '@components-core/posts';
 import { Determine } from '@components-feat';
 import type { Block } from '@prisma/client';
-import { useBlocks } from '@lib/useBlock';
+import { useContributions } from '@lib/useContributions';
+import { Box, VStack } from '@chakra-ui/react';
+import { useContributionStore } from '@lib/useContributionStore';
 
 export const ContributionList = ({ blockId }: { blockId: Block['id'] }) => {
-  const { data, loading, error } = useBlocks(blockId);
-
+  const { contributions, loading, error } = useContributions(blockId);
+  const { toggleModalOpen } = useContributionStore();
   return Determine({
     error,
     loading,
-    component: data ? (
+    component: contributions ? (
       <>
-        {data.contributions.map(contribution => (
-          <ContributionCard
-            key={contribution.contribution_uuid}
-            activeBorder={false}
-            contribution={contribution}
+        <Box w="full">
+          <ContributeButton
+            message="Add Contribution"
+            handleClick={toggleModalOpen}
           />
-        ))}
+        </Box>
+        <VStack w="full" overflow="auto" h="100%">
+          {contributions.map(contribution => (
+            <ContributionCard
+              key={contribution.contribution_uuid}
+              activeBorder={false}
+              contribution={contribution}
+            />
+          ))}
+        </VStack>
       </>
     ) : null,
   });
