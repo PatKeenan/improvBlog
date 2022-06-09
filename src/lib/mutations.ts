@@ -54,6 +54,9 @@ export const contributionMutations = () =>  {
         remove: (body: {contributionId: Contribution['id']}) => {
             return fetcher(baseApi + 'delete/' + body.contributionId, body)
         },
+        edit: (body: {contributionId: Contribution['id'] | null, content: Contribution['content']}) => {
+            return fetcher(body.contributionId ? baseApi + `edit/${body.contributionId}` : null, {content: body.content})
+        },
         toggleLike: (body: {contributionId: Contribution["id"]}) => {
             return fetcher(baseApi + 'edit', body)
         }

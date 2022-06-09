@@ -12,7 +12,7 @@ import { Box, HStack, Spinner } from '@chakra-ui/react';
 import { H3 } from '@components-common';
 import React from 'react';
 
-interface DetermineProps<U, V> {
+interface DetermineProps<V> {
   component: JSX.Element | null;
   error: {
     message: string | null;
@@ -20,15 +20,20 @@ interface DetermineProps<U, V> {
   loading: V;
 }
 
-export const Determine = <U extends unknown, V extends unknown>({
+export const Determine = <V extends unknown>({
   error,
   loading,
   component,
-}: DetermineProps<U, V>) => {
+}: DetermineProps<V>) => {
   if (loading || error) {
     return (
-      <Box display="flex" w="full" placeItems="center" h="full" flexGrow={1}>
-        <HStack flexGrow={1} justify="center" spacing={3}>
+      <Box
+        display="flex"
+        w="full"
+        placeItems="center"
+        height="calc(100vh - 75px)"
+      >
+        <HStack justify="center" spacing={3} h="100%" w="100%">
           {loading && !error ? (
             <>
               <H3>Loading</H3>

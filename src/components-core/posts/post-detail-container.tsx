@@ -122,7 +122,6 @@ export const PostDetailContainer: NextPage = () => {
                     overflow="auto"
                     flex="auto"
                     p={2}
-                    className="yooo"
                   >
                     {post.blocks.map(block => {
                       // All posts start out with an empty block on creation
@@ -181,7 +180,7 @@ export const PostDetailContainer: NextPage = () => {
                     position="relative"
                   >
                     {selectedBlock ? (
-                      <ContributionList blockId={selectedBlock} />
+                      <ContributionList blockId={selectedBlock} user={user} />
                     ) : (
                       <Paragraph m="auto 0">Select a block</Paragraph>
                     )}

@@ -77,7 +77,7 @@ export const ContributionCard = ({
                 toggleEdit({
                   content: contribution.content,
                   blockId: contribution.blockId,
-                  contributionId: contribution.id,
+                  selectedContributionId: contribution.id,
                 })
               }
             >

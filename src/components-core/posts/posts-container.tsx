@@ -17,8 +17,10 @@ export const PostsContainer: NextPage = () => {
         spacing={4}
         width="full"
         maxW="7xl"
-        pt={3}
-        maxWidth="container.lg"
+        p={3}
+        marginInlineStart="auto"
+        marginInlineEnd="auto"
+        position="relative"
       >
         <Link href={'/posts/create'}>
           <Button

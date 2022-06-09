@@ -1,11 +1,11 @@
 import type { EditablePostFields, PostIncludingAuthor } from '@models';
-import { postPlotTitleSchema } from '@lib/formValidations';
 import { IoMdCheckmark, IoMdClose, IoMdTrash } from 'react-icons/io';
+import { postPlotTitleSchema } from '@lib/formValidations';
 import { H1, H5, SmallText } from '@components-common';
 import { yupResolver } from '@hookform/resolvers/yup';
 import type { Post } from '@prisma/client';
 import { useForm } from 'react-hook-form';
-import { BiEdit } from 'react-icons/bi';
+import { VscEdit } from 'react-icons/vsc';
 import Link from 'next/link';
 import moment from 'moment';
 import React from 'react';
@@ -15,13 +15,11 @@ import {
   FormControl,
   FormErrorMessage,
   HStack,
-  IconButton,
   Textarea,
   VStack,
   Link as ChakraLink,
   Button,
 } from '@chakra-ui/react';
-import { VscEdit } from 'react-icons/vsc';
 
 export const PostHeader = ({
   post,
@@ -38,13 +36,7 @@ export const PostHeader = ({
   const [isEditing, setIsEditing] = React.useState(false);
 
   return (
-    <VStack
-      align="flex-start"
-      spacing={6}
-      w="full"
-      maxW="container.lg"
-      h="fit-content"
-    >
+    <VStack align="flex-start" spacing={6} w="full" h="fit-content">
       {isEditing && editable ? (
         <HeaderEditForm
           handleEditPost={handleEditPost}
@@ -133,7 +125,12 @@ const HeaderEditForm = ({
   ///////////////////////////////
   return (
     <form onSubmit={onSubmit} style={{ width: '100%' }}>
-      <VStack w="full" spacing={4}>
+      <VStack
+        w="full"
+        spacing={4}
+        marginInlineStart="auto"
+        marginInlineEnd="auto"
+      >
         <FormControl isInvalid={errors.title}>
           <Textarea
             defaultValue={title}
@@ -152,7 +149,7 @@ const HeaderEditForm = ({
             {errors.plot && errors.plot.message}
           </FormErrorMessage>
         </FormControl>
-        <HStack w="full" justifyContent="flex-end">
+        <HStack w="full">
           <ButtonGroup>
             <Button
               id="cancel-button"

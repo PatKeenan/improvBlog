@@ -1,6 +1,7 @@
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useContributionStore } from '@lib/useContributionStore';
 import { contributionSchema } from '@lib/formValidations';
 import { contributionMutations } from '@lib/mutations';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useSWRConfig } from 'swr';
 import React from 'react';
@@ -16,7 +17,6 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react';
-import { useContributionStore } from '@lib/useContributionStore';
 
 export const ContributionModal = ({
   onClose,
@@ -31,7 +31,8 @@ export const ContributionModal = ({
   post_id: number;
   block_id: number;
 }) => {
-  const { isOpen, contentToEdit } = useContributionStore();
+  const { isOpen, contentToEdit, selectedContributionId } =
+    useContributionStore();
 
   const {
     register,
@@ -66,6 +67,18 @@ export const ContributionModal = ({
     }
   });
 
+  const handleEditContribution = handleSubmit(async data => {
+    if (hasPost) {
+      const { updatedContribution, error: serverErrorsEdit } =
+        await contributionMutations().edit({
+          contributionId: selectedContributionId,
+          content: data.content,
+        });
+      mutate(`/blocks/${block_id}`);
+      handleCloseModel();
+    }
+  });
+
   const handleCloseModel = () => {
     reset();
     onClose();
@@ -82,7 +95,9 @@ export const ContributionModal = ({
       <ModalContent px={8} py={6}>
         <form
           name="create-contribution"
-          onSubmit={handleAddContribution}
+          onSubmit={
+            contentToEdit ? handleEditContribution : handleAddContribution
+          }
           style={{ width: '100%' }}
         >
           <VStack w="full" spacing={4} align="flex-start">
