@@ -1,7 +1,14 @@
+import { contributionSchema } from '@lib/formValidations';
 import prisma from '@lib/prisma'
 import { validateRoute } from '@lib/validateRoute'
 
 export default validateRoute(async (req, res, user) => {
+    // Validate Incoming Data before moving on
+    try {
+      await contributionSchema.validate(req.body, { abortEarly: false });
+    } catch (error: any) {
+      return res.json({error: error});
+    }
     
   const loggedInUser  = user
   const id = Number(req.query.id)

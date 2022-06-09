@@ -40,9 +40,7 @@ export const ContributionModal = ({
     reset,
     setError,
     formState: { isSubmitting, errors },
-  } = useForm({
-    resolver: yupResolver(contributionSchema),
-  });
+  } = useForm({ resolver: yupResolver(contributionSchema) });
 
   const { mutate } = useSWRConfig();
 
@@ -74,8 +72,19 @@ export const ContributionModal = ({
           contributionId: selectedContributionId,
           content: data.content,
         });
-      mutate(`/blocks/${block_id}`);
-      handleCloseModel();
+
+      if (updatedContribution) {
+        mutate(`/blocks/${block_id}`);
+        handleCloseModel();
+      }
+      // validation form the server
+      if (serverErrorsEdit && serverErrorsEdit.hasOwnProperty('inner')) {
+        serverErrorsEdit.inner.forEach(
+          (er: { path: string; message: string }) => {
+            setError(er.path, { message: er.message });
+          },
+        );
+      }
     }
   });
 
