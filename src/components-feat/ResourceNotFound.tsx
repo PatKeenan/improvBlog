@@ -14,14 +14,14 @@ export const ResourceNotFound = ({
 }) => (
   <VStack
     w="full"
-    h="full"
+    height="calc(100vh - 75px)"
     spacing={3}
     align="center"
     justify="center"
     flexGrow={1}
   >
     <H3 fontWeight={'semibold'}>{message}</H3>
-    <Image src={'/not-found.svg'} height={400} width={400} />
+    <Image src={'/not-found.svg'} height={400} width={400} alt={message} />
 
     <Link href={href}>
       <Button colorScheme="blue">{title}</Button>

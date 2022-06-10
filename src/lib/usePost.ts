@@ -29,7 +29,7 @@ const hasData = <T>(data: T ): T | undefined => {
   return data
 };
 
-export const usePost = (post_uuid: string) => {
+export const usePost = (post_uuid: Post["post_uuid"]) => {
   const { data, error, mutate } = useSWR<UsePostTypes>(
     post_uuid ? `/posts/${post_uuid}` : null,
     fetcher,

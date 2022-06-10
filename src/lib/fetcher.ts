@@ -8,12 +8,12 @@
  * @param options - override the method set by default
  * @returns 
  */
-export default async function fetcher<T>(url:string | null, data: T | undefined = undefined, options?: {method?: "POST" | "PUT" |"GET" | "PATCH"}){
+export default async function fetcher<T>(url:string | null, data: T | undefined = undefined, method: "POST" | "PUT" | "GET" | "PATCH" | "DELETE" = "GET"){
     if(!url){
         return {error: "Missing params in the fetch call"}
     }
     return await fetch(`${window.location.origin}/api/${url}`, {
-        method: options?.method ? options.method : data ? "POST" : "GET",
+        method: method,
         credentials: "include",
         headers: {
             'Content-Type': "application/json"

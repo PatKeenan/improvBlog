@@ -59,7 +59,7 @@ export const PostDetailContainer: NextPage = () => {
   const handleDelete = async () => {
     if (post) {
       await postMutations()
-        .remove({ postId: post.id })
+        .remove(post.post_uuid)
         .then(() => {
           setNoResourceMessage('Successfully delete post');
           mutate(undefined);
