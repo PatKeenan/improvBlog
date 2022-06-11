@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { postPlotTitleSchema } from '@lib/formValidations'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { validateToken } from '@lib/validateToken'
 import { Post } from '@prisma/client'
@@ -80,36 +81,47 @@ const getPost = async (post_uuid: string) => {
 
 
 const editPost = async (requestBody: NextApiRequest["body"], userId: number, post_uuid: Post['post_uuid']) => {
-  try {
+    // Validate the incoming fields
+    try {
+        await postPlotTitleSchema.validate(requestBody, { abortEarly: false });
+    } catch (error: any) {
+        return {
+        status: 409,
+        data: {updatedPost: null, error}
+        };
+    }  
+    // Check to see if the signed in user can edit this post
+    try {
     const post = await prisma.post.findUnique({
       where: {
         post_uuid: post_uuid
       },
     })
-    // Check to see if the signed in user can edit this post
     if (post && post.authorId !== userId) {
       return {
           status: 401,
           data: { post: null, error: true, message: 'You are not allowed to edit this post' }
       }
+    }} catch(error:any){
+        throw new Error(error)
     }
-    const updatedPost = await prisma.post.update({
-        where: {
-            post_uuid: post_uuid,
-        },
-        data: {...requestBody}
-    })
-    
-    if (updatedPost) {
-      return {
-          status: 200,
-          data: { updatedPost: updatedPost, error: false, message: null }
-      }
+    // Update the post if the user is allowed
+    try {
+        const updatedPost = await prisma.post.update({
+            where: {
+                post_uuid: post_uuid,
+            },
+            data: {...requestBody}
+        })
+        return {
+            status: 200,
+            data: { updatedPost: updatedPost, error: false, message: null }
+        }
+        
+    } catch (error: any) {
+        throw new Error(error)
     }
 
-  } catch (error: any) {
-    throw new Error(error)
-  }
 }
 
 

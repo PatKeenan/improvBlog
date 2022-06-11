@@ -3,6 +3,7 @@ import { IoMdCheckmark, IoMdClose, IoMdTrash } from 'react-icons/io';
 import { postPlotTitleSchema } from '@lib/formValidations';
 import { H1, H5, SmallText } from '@components-common';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { postMutations } from '@lib/mutations';
 import type { Post } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { VscEdit } from 'react-icons/vsc';
@@ -20,11 +21,11 @@ import {
   Link as ChakraLink,
   Button,
 } from '@chakra-ui/react';
+import { useSWRConfig } from 'swr';
 
 export const PostHeader = ({
   post,
   editable,
-  handleEditPost,
   handleDelete,
 }: {
   post: PostIncludingAuthor;
@@ -38,12 +39,7 @@ export const PostHeader = ({
   return (
     <VStack align="flex-start" spacing={6} w="full" h="fit-content">
       {isEditing && editable ? (
-        <HeaderEditForm
-          handleEditPost={handleEditPost}
-          handleClose={() => setIsEditing(false)}
-          title={post.title}
-          plot={post.plot}
-        />
+        <HeaderEditForm handleClose={() => setIsEditing(false)} post={post} />
       ) : (
         <>
           <H1>{post.title}</H1>
@@ -87,34 +83,40 @@ export const PostHeader = ({
 };
 
 const HeaderEditForm = ({
-  handleEditPost,
   handleClose,
-  title,
-  plot,
+  post,
 }: {
-  // eslint-disable-next-line no-unused-vars
-  handleEditPost: (body: EditablePostFields) => void;
   handleClose: () => void;
-  title: Post['title'];
-  plot: Post['plot'];
+  post: Post;
 }) => {
-  const [loading, setLoading] = React.useState(false);
-
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(postPlotTitleSchema),
-  });
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({ resolver: yupResolver(postPlotTitleSchema) });
+
+  const { mutate } = useSWRConfig();
 
   const onSubmit = handleSubmit(async data => {
-    setLoading(true);
-    Promise.resolve(handleEditPost(data)).then(() => {
-      setLoading(false);
-      handleClose();
-    });
+    if (post) {
+      const { updatedPost, error: serverErrorsEdit } =
+        await postMutations().edit(post.post_uuid, data);
+
+      if (serverErrorsEdit && serverErrorsEdit.hasOwnProperty('inner')) {
+        serverErrorsEdit.inner.forEach(
+          (er: { path: string; message: string }) => {
+            setError(er.path, { message: er.message });
+          },
+        );
+      }
+
+      if (updatedPost) {
+        mutate(`posts/${post.post_uuid}`);
+        handleClose();
+      }
+    }
   });
 
   const handleCancel = () => {
@@ -133,7 +135,7 @@ const HeaderEditForm = ({
       >
         <FormControl isInvalid={errors.title}>
           <Textarea
-            defaultValue={title}
+            defaultValue={post.title}
             {...register('title')}
             fontWeight="bold"
             fontSize="4xl"
@@ -144,7 +146,7 @@ const HeaderEditForm = ({
           </FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={errors.plot}>
-          <Textarea defaultValue={plot} {...register('plot')} />
+          <Textarea defaultValue={post.plot} {...register('plot')} />
           <FormErrorMessage>
             {errors.plot && errors.plot.message}
           </FormErrorMessage>
@@ -164,7 +166,7 @@ const HeaderEditForm = ({
               aria-label="Submit Edit"
               type="submit"
               colorScheme="telegram"
-              isLoading={loading}
+              isLoading={isSubmitting}
               leftIcon={<IoMdCheckmark />}
             >
               Save

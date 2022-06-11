@@ -41,7 +41,7 @@ export const PostDetailContainer: NextPage = () => {
   const handleEditPost = async (body: EditablePostFields) => {
     if (post) {
       const { updatedPost, loading } = await postMutations().edit(
-        post.id,
+        post.post_uuid,
         body,
       );
       if (updatedPost && !loading) {

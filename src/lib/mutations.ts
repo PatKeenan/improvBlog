@@ -21,10 +21,10 @@ export const postMutations = () =>  {
         create: (body: {title: Post['title'], plot: Post['plot']}) => {
             return fetcher(baseApi, body, "POST")
         },
-        edit: (postId: Post['id'], body: EditablePostFields) => {
-            return fetcher(baseApi + 'edit/' + postId, body, "POST")
+        edit: (post_uuid: Post["post_uuid"], body: EditablePostFields) => {
+            return fetcher(baseApi + `/${post_uuid}`, body, "PATCH")
         },
-        remove: (post_uuid: string) => {
+        remove: (post_uuid: Post["post_uuid"]) => {
             return fetcher(baseApi + `/${post_uuid}`, {}, "DELETE")
         },
     }
@@ -55,7 +55,7 @@ export const contributionMutations = () =>  {
             return fetcher(baseApi + '/' + body.contributionId, {}, "DELETE")
         },
         edit: (body: {contributionId: Contribution['id'] | null, content: Contribution['content']}) => {
-            return fetcher(body.contributionId ? baseApi + `edit/${body.contributionId}` : null, {content: body.content})
+            return fetcher(baseApi + `/${body.contributionId}`, {content: body.content, type: "updateContent"}, "PATCH")
         },
         toggleLike: (body: {contributionId: Contribution["id"]}) => {
             return fetcher(baseApi + 'edit', body)
