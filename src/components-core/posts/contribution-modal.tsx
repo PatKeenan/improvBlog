@@ -54,7 +54,8 @@ export const ContributionModal = ({
         });
       if (contribution) {
         mutate(`/posts/${post_uuid}`);
-        onClose();
+        mutate(`/blocks/${block_id}`);
+        handleCloseModel();
       }
       // validation form the server
       if (serverErrors && serverErrors.hasOwnProperty('inner')) {

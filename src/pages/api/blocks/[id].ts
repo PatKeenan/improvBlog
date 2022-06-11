@@ -7,9 +7,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: {
             blockId: Number(blockId)
         },
-        orderBy: {
+        orderBy: [{
             likes: 'desc'
-        },
+        }, {createdAt: "asc"}],
         include: {
             author: {
                 select: {
