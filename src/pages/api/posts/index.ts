@@ -8,8 +8,6 @@ import prisma from '@lib/prisma'
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const token = req.cookies[process.env.JWT_TOKEN_NAME as unknown as string]
     
-    
-  
     switch(req.method){
         case "GET":{
             const data = await getPosts();
@@ -49,6 +47,7 @@ const getPosts = async () => {
 
 // Extracted the createPost function so it' easier to follow
 async function createPost(req: NextApiRequest, user:any): Promise<{status: number, data: any} | undefined>  {
+  // Validate the request before moving on
   try {
     await postPlotTitleSchema.validate(req.body, { abortEarly: false });
   } catch (error: any) {
@@ -59,20 +58,26 @@ async function createPost(req: NextApiRequest, user:any): Promise<{status: numbe
   }
   const { title, plot }: { title: Post['title']; plot: Post['plot'] } =
     req.body;
+   // Check to see if the title is already in use
   try {
     const titleIsAlreadyUsed = await prisma.post.findUnique({
       where: {
         title: title,
       },
     });
-    // Check to see if the title is already in use
+    
     if (titleIsAlreadyUsed) {
       return{
         status: 200,
         data: { error: true, message: 'Title is already taken' }
       };
     }
-    // Create a slug for the post
+  } catch (error: any) {
+    throw new Error(error);
+  }
+  
+  // Create the post if title is not in use
+  try {
     const post = await prisma.post.create({
       data: {
         author: {
@@ -88,13 +93,11 @@ async function createPost(req: NextApiRequest, user:any): Promise<{status: numbe
         },
       },
     });
-    if (post) {
-      return {
-        status: 200,
-        data: { post: post, error: false, message: null }
-      };
-    }
+    return {
+      status: 201,
+      data: { post: post, error: false, message: null }
+    };
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error)
   }
 }

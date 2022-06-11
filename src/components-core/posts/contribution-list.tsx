@@ -9,9 +9,11 @@ import { useRouter } from 'next/router';
 export const ContributionList = ({
   blockId,
   user,
+  post_uuid,
 }: {
   blockId: Block['id'];
   user: User | undefined;
+  post_uuid: string;
 }) => {
   const { contributions, loading, error } = useContributions(blockId);
   const { toggleModalOpen } = useContributionStore();
@@ -22,6 +24,7 @@ export const ContributionList = ({
     }
     return router.push('/signin');
   };
+
   return Determine({
     error,
     loading,
@@ -39,6 +42,7 @@ export const ContributionList = ({
               key={contribution.contribution_uuid}
               activeBorder={false}
               contribution={contribution}
+              post_uuid={post_uuid}
             />
           ))}
         </VStack>

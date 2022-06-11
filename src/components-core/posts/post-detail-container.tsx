@@ -1,11 +1,13 @@
-import { postMutations } from '@lib/mutations';
+import { Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react';
+import { useContributionStore } from '@lib/useContributionStore';
 import { Determine, ResourceNotFound } from '@components-feat';
-import { chakra } from '@chakra-ui/react';
 import { H3, Paragraph } from '@components-common';
 import { BsLock, BsUnlock } from 'react-icons/bs';
 import type { Block, Post } from '@prisma/client';
+import { postMutations } from '@lib/mutations';
 import { EditablePostFields } from '@models';
 import { BlockCard } from './block-card';
+import { chakra } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { toCapitalCase } from '@utils';
 import { usePost } from '@lib/usePost';
@@ -19,8 +21,6 @@ import {
   ContributeButton,
 } from '@components-core/posts';
 import React from 'react';
-import { Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react';
-import { useContributionStore } from '@lib/useContributionStore';
 
 export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
@@ -180,7 +180,11 @@ export const PostDetailContainer: NextPage = () => {
                     position="relative"
                   >
                     {selectedBlock ? (
-                      <ContributionList blockId={selectedBlock} user={user} />
+                      <ContributionList
+                        blockId={selectedBlock}
+                        user={user}
+                        post_uuid={post.post_uuid}
+                      />
                     ) : (
                       <Paragraph m="auto 0">Select a block</Paragraph>
                     )}

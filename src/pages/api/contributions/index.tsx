@@ -11,6 +11,11 @@ export default async function handler(
   const token = req.cookies[process.env.JWT_TOKEN_NAME as unknown as string];
 
   switch (req.method) {
+    case 'GET': {
+      const { blockId } = req.body;
+      const data = await getContributions(Number(blockId));
+      return res.status(data.status).json(data.data);
+    }
     case 'POST': {
       const user = validateToken(token);
       if (!user) {
@@ -26,6 +31,30 @@ export default async function handler(
     }
   }
 }
+
+const getContributions = async (blockId: number) => {
+  try {
+    const contributions = await prisma.contribution.findMany({
+      where: {
+        id: Number(blockId),
+      },
+      orderBy: [{ likes: 'desc' }, { createdAt: 'asc' }],
+      include: {
+        author: {
+          select: {
+            username: true,
+          },
+        },
+      },
+    });
+    return {
+      status: 200,
+      data: contributions,
+    };
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
 
 const createContribution = async (
   req: NextApiRequest,

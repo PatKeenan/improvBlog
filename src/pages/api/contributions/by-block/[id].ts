@@ -1,11 +1,11 @@
-import prisma from "@lib/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
+import prisma from "@lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
-    const {id} = req.query
+    const {id} = req.query 
     switch(req.method){
         case "GET": {
-            const data = await getBlockContributions(Number(id))
+            const data = await getContributionsByBlock(Number(id))
             return res.status(data.status).json(data.data)
         }
         default: {
@@ -17,28 +17,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 
-const getBlockContributions = async (blockId: number) => {
+const getContributionsByBlock = async (blockId: number) => {
     try {
-        const block = await prisma.block.findUnique({
+        const contributions = await prisma.contribution.findMany({
             where: {
-                id: Number(blockId)
+                blockId: Number(blockId)
             },
-            select: {
-                contributions: {
-                    orderBy: [{likes: 'desc'}, {createdAt: "asc"}],
-                    include: {
-                        author: {
-                            select: {
-                                username: true
-                            }
-                        }
+            orderBy: [
+                {likes: 'desc'}, 
+                {createdAt: "asc"}
+            ],
+            include: {
+                author: {
+                    select: {
+                        username: true
                     }
                 }
             }
         })
         return {
             status: 200,
-            data: block?.contributions
+            data: contributions
         }
         
     } catch (error: any) {

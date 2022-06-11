@@ -54,7 +54,7 @@ export const ContributionModal = ({
         });
       if (contribution) {
         mutate(`/posts/${post_uuid}`);
-        mutate(`/blocks/${block_id}`);
+        mutate(`/contributions/by-block/${contribution.blockId}`);
         handleCloseModel();
       }
       // validation form the server
@@ -75,7 +75,8 @@ export const ContributionModal = ({
         });
 
       if (updatedContribution) {
-        mutate(`/blocks/${block_id}`);
+        mutate(`/posts/${post_uuid}`);
+        mutate(`/contributions/by-block/${updatedContribution.blockId}`);
         handleCloseModel();
       }
       // validation form the server

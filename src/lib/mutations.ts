@@ -52,7 +52,7 @@ export const contributionMutations = () =>  {
             return fetcher(baseApi, body, "POST")
         },
         remove: (body: {contributionId: Contribution['id']}) => {
-            return fetcher(baseApi + 'delete/' + body.contributionId, body, "DELETE")
+            return fetcher(baseApi + '/' + body.contributionId, {}, "DELETE")
         },
         edit: (body: {contributionId: Contribution['id'] | null, content: Contribution['content']}) => {
             return fetcher(body.contributionId ? baseApi + `edit/${body.contributionId}` : null, {content: body.content})

@@ -7,7 +7,7 @@ interface ContributionsType extends Contribution {
     author: User
 }
 export const useContributions = (blockId: number) => {
-  const {data, error} = useSWR<ContributionsType[]>(`/blocks/${blockId}`, fetcher)
+  const {data, error} = useSWR<ContributionsType[]>(`/contributions/by-block/${blockId}`, fetcher)
   return {
     contributions: data,
     loading: !data && !error,
