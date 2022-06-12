@@ -1,8 +1,8 @@
-import type { EditablePostFields, PostIncludingAuthor } from '@models';
 import { IoMdCheckmark, IoMdClose, IoMdTrash } from 'react-icons/io';
 import { postPlotTitleSchema } from '@lib/formValidations';
 import { H1, H5, SmallText } from '@components-common';
 import { yupResolver } from '@hookform/resolvers/yup';
+import type { PostIncludingAuthor } from '@models';
 import { postMutations } from '@lib/mutations';
 import type { Post } from '@prisma/client';
 import { useForm } from 'react-hook-form';
@@ -30,7 +30,6 @@ export const PostHeader = ({
 }: {
   post: PostIncludingAuthor;
   // eslint-disable-next-line no-unused-vars
-  handleEditPost: (body: EditablePostFields) => void;
   editable: boolean;
   handleDelete: () => void;
 }) => {
@@ -111,9 +110,14 @@ const HeaderEditForm = ({
           },
         );
       }
-
       if (updatedPost) {
-        mutate(`posts/${post.post_uuid}`);
+        const { plot, title, isPrivate } = updatedPost;
+        mutate(`/posts/${post.post_uuid}`, {
+          ...post,
+          plot,
+          title,
+          private: isPrivate,
+        });
         handleClose();
       }
     }

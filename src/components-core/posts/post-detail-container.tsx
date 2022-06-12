@@ -4,7 +4,6 @@ import { Determine, ResourceNotFound } from '@components-feat';
 import { BsLock, BsUnlock } from 'react-icons/bs';
 import type { Block, Post } from '@prisma/client';
 import { Paragraph } from '@components-common';
-import { EditablePostFields } from '@models';
 import { BlockCard } from './block-card';
 import { chakra } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
@@ -48,24 +47,6 @@ export const PostDetailContainer: NextPage = () => {
   const { user } = useMe();
   const { post, loading, error, mutate } = usePost(post_uuid);
   const { toggleModalClosed } = useContributionStore();
-
-  const handleEditPost = async (body: EditablePostFields) => {
-    if (post) {
-      const { updatedPost, loading } = await postMutations().edit(
-        post.post_uuid,
-        body,
-      );
-      if (updatedPost && !loading) {
-        const { plot, title, private: isPrivate } = updatedPost;
-        mutate({
-          ...post,
-          plot,
-          title,
-          private: isPrivate,
-        });
-      }
-    }
-  };
 
   const handleDelete = async () => {
     if (post) {
@@ -113,7 +94,6 @@ export const PostDetailContainer: NextPage = () => {
         >
           <PostHeader
             post={post}
-            handleEditPost={handleEditPost}
             handleDelete={handleDelete}
             editable={post.authorId === user?.id ?? false}
           />
