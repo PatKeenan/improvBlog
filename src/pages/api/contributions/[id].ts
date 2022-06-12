@@ -1,8 +1,8 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import { contributionSchema } from "@lib/formValidations";
-import prisma from "@lib/prisma";
 import { validateToken } from "@lib/validateToken";
 import { Contribution } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
+import prisma from "@lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const {id} = req.query

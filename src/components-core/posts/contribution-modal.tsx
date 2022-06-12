@@ -23,15 +23,13 @@ export const ContributionModal = ({
   hasPost,
   post_uuid,
   post_id,
-  block_id,
 }: {
   hasPost: boolean;
   onClose: () => void;
   post_uuid: string;
   post_id: number;
-  block_id: number;
 }) => {
-  const { isOpen, contentToEdit, selectedContributionId } =
+  const { isOpen, contentToEdit, selectedContributionId, selectedBlock } =
     useContributionStore();
 
   const {
@@ -49,7 +47,7 @@ export const ContributionModal = ({
       const { contribution, error: serverErrors } =
         await contributionMutations().create({
           postId: post_id,
-          blockId: block_id,
+          blockId: selectedBlock,
           content: data.content,
         });
       if (contribution) {

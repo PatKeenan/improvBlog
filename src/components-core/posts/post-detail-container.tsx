@@ -1,10 +1,9 @@
-import { Grid, GridItem, HStack, Icon, VStack } from '@chakra-ui/react';
 import { useContributionStore } from '@lib/useContributionStore';
+import { blockMutations, postMutations } from '@lib/mutations';
 import { Determine, ResourceNotFound } from '@components-feat';
-import { H3, Paragraph } from '@components-common';
 import { BsLock, BsUnlock } from 'react-icons/bs';
 import type { Block, Post } from '@prisma/client';
-import { postMutations } from '@lib/mutations';
+import { Paragraph } from '@components-common';
 import { EditablePostFields } from '@models';
 import { BlockCard } from './block-card';
 import { chakra } from '@chakra-ui/react';
@@ -13,14 +12,24 @@ import { toCapitalCase } from '@utils';
 import { usePost } from '@lib/usePost';
 import type { NextPage } from 'next';
 import { useMe } from '@lib/useMe';
-import Head from 'next/head';
 import {
   ContributionList,
   PostHeader,
   ContributionModal,
-  ContributeButton,
 } from '@components-core/posts';
+import Head from 'next/head';
+
+import {
+  Box,
+  Button,
+  Grid,
+  GridItem,
+  HStack,
+  Icon,
+  VStack,
+} from '@chakra-ui/react';
 import React from 'react';
+import { useSWRConfig } from 'swr';
 
 export const PostDetailContainer: NextPage = () => {
   const [selectedBlock, setSelectedBlock] = React.useState<null | Block['id']>(
@@ -29,6 +38,8 @@ export const PostDetailContainer: NextPage = () => {
   const [noResourceMessage, setNoResourceMessage] =
     React.useState('Post Not Found');
 
+  const { mutate: mutateConfig } = useSWRConfig();
+
   const router = useRouter();
   const { post_uuid } = router.query as unknown as {
     post_uuid: Post['post_uuid'];
@@ -36,7 +47,7 @@ export const PostDetailContainer: NextPage = () => {
 
   const { user } = useMe();
   const { post, loading, error, mutate } = usePost(post_uuid);
-  const { toggleModalOpen, toggleModalClosed } = useContributionStore();
+  const { toggleModalClosed } = useContributionStore();
 
   const handleEditPost = async (body: EditablePostFields) => {
     if (post) {
@@ -64,6 +75,17 @@ export const PostDetailContainer: NextPage = () => {
           setNoResourceMessage('Successfully delete post');
           mutate(undefined);
         });
+    }
+  };
+
+  const handleAddBlock = async () => {
+    if (post) {
+      const { newBlock } = await blockMutations().create({
+        postId: post?.id,
+      });
+      if (newBlock) {
+        mutateConfig(`/posts/${post_uuid}`);
+      }
     }
   };
 
@@ -110,7 +132,6 @@ export const PostDetailContainer: NextPage = () => {
               hasPost={post ? true : false}
               post_id={post.id}
               post_uuid={post.post_uuid}
-              block_id={selectedBlock ?? post.blocks[0].id}
             />
             {post.blocks.length > 0 && (
               <>
@@ -159,15 +180,48 @@ export const PostDetailContainer: NextPage = () => {
                           </HStack>
                         );
                       } else {
-                        // If there are no contributions, show the "Be the first to contribute" Card
+                        // If there are no contributions, show the empty card
                         return (
-                          <ContributeButton
-                            message="Add the First Contribution"
-                            handleClick={toggleModalOpen}
-                          />
+                          <HStack
+                            alignItems="center"
+                            key={block.block_uuid}
+                            width="full"
+                          >
+                            {block.frozen ? (
+                              <Icon as={BsLock} />
+                            ) : (
+                              <Icon as={BsUnlock} />
+                            )}
+                            <Box
+                              as="button"
+                              bg="gray.50"
+                              _hover={{ bg: 'gray.200' }}
+                              _active={{ bg: 'gray.200' }}
+                              w="full"
+                              rounded="md"
+                              h={'83.59px'}
+                              border={
+                                selectedBlock === block.id
+                                  ? '1px solid indigo'
+                                  : '1px solid transparent'
+                              }
+                              onClick={() => setSelectedBlock(block.id)}
+                            >
+                              <Paragraph>Crickets...</Paragraph>
+                            </Box>
+                          </HStack>
                         );
                       }
                     })}
+                    {user?.id == post.authorId ? (
+                      <Button
+                        onClick={handleAddBlock}
+                        w="full"
+                        variant="outline"
+                      >
+                        Add Block
+                      </Button>
+                    ) : null}
                   </VStack>
                 </GridItem>
                 <GridItem colSpan={4} overflow="auto" p={2}>
@@ -191,20 +245,6 @@ export const PostDetailContainer: NextPage = () => {
                   </VStack>
                 </GridItem>
               </>
-            )}
-            {post.blocks.length === 0 && (
-              <GridItem colSpan={10} placeItems="center">
-                <VStack
-                  h="full"
-                  w="full"
-                  display="flex"
-                  justifyContent="center"
-                >
-                  <H3 textAlign="center" mt={-40}>
-                    No Blocks Yet
-                  </H3>
-                </VStack>
-              </GridItem>
             )}
           </Grid>
         </chakra.div>

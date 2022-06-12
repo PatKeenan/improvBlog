@@ -34,7 +34,7 @@ export const blockMutations = () =>  {
     const baseApi = 'blocks/';
     return {
         create: (body: {postId: Post['id']}) => {
-            return fetcher(baseApi + 'create', body, "POST")
+            return fetcher(baseApi, body, "POST")
         },
         remove: (body: {blockId: Block['id']}) => {
             return fetcher(baseApi + 'delete', body, "DELETE")

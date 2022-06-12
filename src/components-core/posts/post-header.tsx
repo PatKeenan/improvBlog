@@ -7,6 +7,7 @@ import { postMutations } from '@lib/mutations';
 import type { Post } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { VscEdit } from 'react-icons/vsc';
+import { useSWRConfig } from 'swr';
 import Link from 'next/link';
 import moment from 'moment';
 import React from 'react';
@@ -21,7 +22,6 @@ import {
   Link as ChakraLink,
   Button,
 } from '@chakra-ui/react';
-import { useSWRConfig } from 'swr';
 
 export const PostHeader = ({
   post,

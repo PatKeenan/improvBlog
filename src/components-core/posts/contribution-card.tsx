@@ -1,15 +1,15 @@
 import { useContributionStore } from '@lib/useContributionStore';
 import { Card, Paragraph, SmallText } from '@components-common';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
-import type { Contribution, User } from '@prisma/client';
 import { Button, HStack, VStack } from '@chakra-ui/react';
+import type { Contribution, User } from '@prisma/client';
+import { contributionMutations } from '@lib/mutations';
 import { IoMdTrash } from 'react-icons/io';
 import { VscEdit } from 'react-icons/vsc';
+import { useSWRConfig } from 'swr';
 import { useMe } from '@lib/useMe';
 import moment from 'moment';
 import React from 'react';
-import { contributionMutations } from '@lib/mutations';
-import { useSWRConfig } from 'swr';
 
 interface ContributionType extends Contribution {
   author: User;
@@ -26,6 +26,7 @@ export const ContributionCard = ({
   handleClick?: () => void;
   post_uuid: string;
 }) => {
+  const [deleteLoading, setDeleteLoading] = React.useState(false);
   const { user } = useMe();
   const { toggleEdit } = useContributionStore();
   const [liked, setLiked] = React.useState(false);
@@ -34,6 +35,7 @@ export const ContributionCard = ({
   };
   const { mutate } = useSWRConfig();
   const handleDelete = async () => {
+    setDeleteLoading(true);
     const data = await contributionMutations().remove({
       contributionId: contribution.id,
     });
@@ -41,6 +43,7 @@ export const ContributionCard = ({
       mutate(`/contributions/by-block/${contribution.blockId}`);
       mutate(`/posts/${post_uuid}`);
     }
+    setDeleteLoading(false);
   };
 
   return (
@@ -98,7 +101,12 @@ export const ContributionCard = ({
             >
               Edit
             </Button>
-            <Button size="xs" leftIcon={<IoMdTrash />} onClick={handleDelete}>
+            <Button
+              size="xs"
+              leftIcon={<IoMdTrash />}
+              onClick={handleDelete}
+              isLoading={deleteLoading}
+            >
               Delete
             </Button>
           </HStack>

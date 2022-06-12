@@ -1,9 +1,9 @@
 import { ContributionCard, ContributeButton } from '@components-core/posts';
-import { Determine } from '@components-feat';
-import type { Block, User } from '@prisma/client';
-import { useContributions } from '@lib/useContributions';
-import { Box, VStack } from '@chakra-ui/react';
 import { useContributionStore } from '@lib/useContributionStore';
+import { useContributions } from '@lib/useContributions';
+import type { Block, User } from '@prisma/client';
+import { Box, VStack } from '@chakra-ui/react';
+import { Determine } from '@components-feat';
 import { useRouter } from 'next/router';
 
 export const ContributionList = ({
@@ -20,7 +20,7 @@ export const ContributionList = ({
   const router = useRouter();
   const handleClickAdd = () => {
     if (user) {
-      return toggleModalOpen();
+      return toggleModalOpen(blockId);
     }
     return router.push('/signin');
   };

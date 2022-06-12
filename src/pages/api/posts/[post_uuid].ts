@@ -58,9 +58,10 @@ const getPost = async (post_uuid: string) => {
                         },
                         contributions: {
                             take: 1,
-                            orderBy: {
-                                likes: 'desc'
-                            },
+                            orderBy: [
+                                {likes: 'desc'}, 
+                                {createdAt: "asc"}
+                            ],
                             include: {
                                 author: {select: {username: true}}
                             },
@@ -96,6 +97,9 @@ const editPost = async (requestBody: NextApiRequest["body"], userId: number, pos
       where: {
         post_uuid: post_uuid
       },
+      select: {
+          authorId: true
+      }
     })
     if (post && post.authorId !== userId) {
       return {
@@ -131,6 +135,9 @@ const deletePost = async (userId: number, post_uuid: Post['post_uuid']) =>{
         where: {
           post_uuid: post_uuid
         },
+        select: {
+            authorId: true
+        }
       })
       if(post?.authorId !== userId){
           return {status: 403, data: {error: true, message: 'Not Authorized'}}
