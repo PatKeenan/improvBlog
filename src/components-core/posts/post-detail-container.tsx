@@ -37,6 +37,7 @@ export const PostDetailContainer: NextPage = () => {
   const [noResourceMessage, setNoResourceMessage] =
     React.useState('Post Not Found');
 
+  const [blockLoading, setBlockLoading] = React.useState(false);
   const { mutate: mutateConfig } = useSWRConfig();
 
   const router = useRouter();
@@ -60,14 +61,16 @@ export const PostDetailContainer: NextPage = () => {
   };
 
   const handleAddBlock = async () => {
+    setBlockLoading(true);
     if (post) {
       const { newBlock } = await blockMutations().create({
         postId: post?.id,
       });
       if (newBlock) {
-        mutateConfig(`/posts/${post_uuid}`);
+        mutateConfig(`/posts/${post_uuid}`, {});
       }
     }
+    setBlockLoading(false);
   };
 
   ////////////////////////////////
@@ -197,7 +200,9 @@ export const PostDetailContainer: NextPage = () => {
                       <Button
                         onClick={handleAddBlock}
                         w="full"
+                        h="40px"
                         variant="outline"
+                        isLoading={blockLoading}
                       >
                         Add Block
                       </Button>

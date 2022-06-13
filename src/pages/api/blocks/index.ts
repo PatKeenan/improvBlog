@@ -49,7 +49,7 @@ const createBlock = async (postId: number, user: any) => {
         })
         return {
             status: 200,
-            data: {block: newBlock, error: false, message: null}
+            data: {newBlock: newBlock, error: false, message: null}
         }
     } catch (error: any) {
         throw new Error(error)
