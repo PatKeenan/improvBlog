@@ -67,7 +67,7 @@ export const PostDetailContainer: NextPage = () => {
         postId: post?.id,
       });
       if (newBlock) {
-        mutateConfig(`/posts/${post_uuid}`, {});
+        mutateConfig(`/posts/${post_uuid}`);
       }
     }
     setBlockLoading(false);
