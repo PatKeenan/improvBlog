@@ -1,22 +1,22 @@
 import { postPlotTitleSchema } from '@lib/formValidations';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { validateToken } from '@lib/validateToken';
 import { Post } from '@prisma/client';
 import prisma from '@lib/prisma'
+import { getSession } from 'next-auth/react';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
-    const token = req.cookies[process.env.JWT_TOKEN_NAME as unknown as string]
-    
     switch(req.method){
         case "GET":{
             const data = await getPosts();
             return res.status(data.status).json(data.data)
         }
         case "POST": {
-            const user = validateToken(token)
-            if(!user) return res.status(401).send({error: true, message: "Not authorized"})
-            const data = await createPost(req, user)
+            const session = await getSession({req})
+            
+            if(!session) return res.status(401).send({error: true, message: "Not authorized"})
+            
+            const data = await createPost(req, session.user)
             return res.status(data?.status ?? 500).json(data?.data ?? null)
         }
         default: {
@@ -29,7 +29,7 @@ const getPosts = async () => {
   try {
     const data =  await prisma.post.findMany({orderBy: {createdAt: 'desc'}, include: {
       author: {
-        select: {username: true}
+        select: {name: true}
       },
       _count : {
         select: {blocks: true, contributions: true }
@@ -82,7 +82,7 @@ async function createPost(req: NextApiRequest, user:any): Promise<{status: numbe
       data: {
         author: {
           connect: {
-            id: user.id,
+            email: user.email,
           },
         },
         plot: plot,

@@ -52,7 +52,7 @@ export const PostsContainer: NextPage = () => {
                         {i.plot}
                       </Paragraph>
                       <HStack>
-                        <SmallText>Creator: {i.author.username}</SmallText>
+                        <SmallText>Creator: {i.author.name}</SmallText>
                         <SmallText>
                           Created: {moment(i.createdAt).fromNow()}
                         </SmallText>

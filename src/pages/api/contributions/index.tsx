@@ -1,14 +1,14 @@
 import { contributionSchema } from '@lib/formValidations';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { validateToken } from '@lib/validateToken';
 import { CreateEditContribution } from '@models';
 import prisma from '@lib/prisma';
+import { getSession } from 'next-auth/react';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const token = req.cookies[process.env.JWT_TOKEN_NAME as unknown as string];
+  const user = await getSession({ req });
 
   switch (req.method) {
     case 'GET': {
@@ -17,11 +17,11 @@ export default async function handler(
       return res.status(data.status).json(data.data);
     }
     case 'POST': {
-      const user = validateToken(token);
       if (!user) {
         return res.status(401).send({ error: true, message: 'Not authorized' });
       }
-      const data = await createContribution(req, user);
+
+      const data = await createContribution(req, user.user);
       return res.status(data?.status ?? 500).json(data?.data ?? null);
     }
     default: {
@@ -42,7 +42,7 @@ const getContributions = async (blockId: number) => {
       include: {
         author: {
           select: {
-            username: true,
+            name: true,
           },
         },
       },
@@ -61,6 +61,7 @@ const createContribution = async (
   user: any,
 ): Promise<{ status: number; data: any } | undefined> => {
   // Validate the schema before calling the api
+
   try {
     await contributionSchema.validate(req.body, { abortEarly: false });
   } catch (error: any) {
@@ -68,7 +69,6 @@ const createContribution = async (
   }
   try {
     const { postId, blockId, content }: CreateEditContribution = req.body;
-
     const contribution = await prisma.contribution.create({
       data: {
         postId: postId,

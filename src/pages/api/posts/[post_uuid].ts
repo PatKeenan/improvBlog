@@ -43,7 +43,7 @@ const getPost = async (post_uuid: string) => {
             include: {
                 author: {
                     select: {
-                        username: true
+                        name: true
                     }
                 },
                 blocks: {
@@ -63,7 +63,7 @@ const getPost = async (post_uuid: string) => {
                                 {createdAt: "asc"}
                             ],
                             include: {
-                                author: {select: {username: true}}
+                                author: {select: {name: true}}
                             },
                             
                         }

@@ -153,9 +153,9 @@ export const PostDetailContainer: NextPage = () => {
                               createdAt={block.contributions[0].createdAt}
                               username={
                                 user &&
-                                user.username ===
+                                user.name ===
                                   block.contributions[0].author.username
-                                  ? user.username
+                                  ? user.name
                                   : block.contributions[0].author.username
                               }
                               likes={block.contributions[0].likes}

@@ -51,7 +51,7 @@ export const PostHeader = ({
           Created By:{' '}
           <Link href={`/users/${post.authorId}`} passHref>
             <ChakraLink color="cyan.700" fontWeight="semibold">
-              {`${editable ? 'you' : post.author.username}`}
+              {`${editable ? 'you' : post.author.name}`}
             </ChakraLink>
           </Link>{' '}
           {moment(post.createdAt).fromNow()}

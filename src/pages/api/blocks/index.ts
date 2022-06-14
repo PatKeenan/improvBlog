@@ -1,17 +1,17 @@
 import prisma from "@lib/prisma";
-import { validateToken } from "@lib/validateToken";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
-  const token = req.cookies[process.env.JWT_TOKEN_NAME as unknown as string];
-    
+ 
+    const user = await getSession({req})
     switch(req.method){
         case "POST": {
-            const user = validateToken(token);
+           
       if (!user) {
         return res.status(401).send({ error: true, message: 'Not authorized' });
       }
-            const data = await createBlock(req.body.postId, user)
+            const data = await createBlock(req.body.postId, user.user)
             return res.status(data?.status ?? 500).json(data?.data ?? null)
         }
         default: {

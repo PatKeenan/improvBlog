@@ -1,42 +1,53 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { signInSchema } from '@lib/formValidations';
-import { SmallText } from '@components-common';
-import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { AuthForm } from './auth-form';
-import { auth } from '@lib/mutations';
+
 import type { NextPage } from 'next';
+import { FcGoogle } from 'react-icons/fc';
 
-import Link from 'next/link';
-
-import {
-  Flex,
-  FormControl,
-  Input,
-  Button,
-  useToast,
-  FormLabel,
-  Container,
-  FormErrorMessage,
-  VStack,
-  HStack,
-  Link as ChakraLink,
-} from '@chakra-ui/react';
+import { Flex, Button, Container } from '@chakra-ui/react';
 import React from 'react';
+import {
+  getProviders,
+  signIn,
+  useSession,
+  LiteralUnion,
+  ClientSafeProvider,
+} from 'next-auth/react';
+import { BuiltInProviderType } from 'next-auth/providers';
 
 export const SignInContainer: NextPage = () => {
   const router = useRouter();
-  const toast = useToast();
 
-  const {
+  const [providers, setProviders] = React.useState<Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  > | null>();
+
+  const { data: session, status } = useSession();
+
+  React.useEffect(() => {
+    const setTheProviders = async () => {
+      const setUpProviders = await getProviders();
+      setProviders(setUpProviders);
+    };
+    setTheProviders();
+  }, []);
+
+  React.useEffect(() => {
+    if (session) {
+      router.push('/');
+    }
+  });
+
+  /* const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(signInSchema),
-  });
+  }); */
 
-  const onSubmit = handleSubmit(async data => {
+  /*  const onSubmit = handleSubmit(async data => {
     const user = await auth('signin', {
       email: data.email,
       password: data.password,
@@ -50,11 +61,13 @@ export const SignInContainer: NextPage = () => {
       });
     }
     return router.push('/');
-  });
+  }); */
 
   ///////////////////////////////////////////////
 
-  return (
+  return status === 'loading' ? (
+    <p>Loading...</p>
+  ) : (
     <Flex
       h={'100vh'}
       w="100vw"
@@ -64,7 +77,7 @@ export const SignInContainer: NextPage = () => {
     >
       <Container>
         <AuthForm title="Sign In To Read Awesome Stuff">
-          <form onSubmit={onSubmit}>
+          {/* <form onSubmit={onSubmit}>
             <VStack spacing={4}>
               <FormControl isInvalid={errors.email as boolean | undefined}>
                 <FormLabel>Email</FormLabel>
@@ -103,7 +116,17 @@ export const SignInContainer: NextPage = () => {
                 </Button>
               </HStack>
             </VStack>
-          </form>
+          </form> */}
+          <Flex w="full">
+            <Button
+              marginInlineStart="auto"
+              marginInlineEnd="auto"
+              leftIcon={<FcGoogle />}
+              onClick={() => signIn(providers?.google.id)}
+            >
+              Continue with google
+            </Button>
+          </Flex>
         </AuthForm>
       </Container>
     </Flex>

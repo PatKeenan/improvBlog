@@ -8,32 +8,35 @@
  * signUp: @components-core/auth/signup-container
  *
  */
+import { SessionProvider } from 'next-auth/react';
 
-import { ChakraProvider, CSSReset, extendTheme } from '@chakra-ui/react'
-import { ErrorBoundary, Layout } from '@components-feat'
-import type { AppProps } from 'next/app'
-import '../styles/globals.css'
+import { ChakraProvider, CSSReset, extendTheme } from '@chakra-ui/react';
+import { ErrorBoundary, Layout } from '@components-feat';
+import type { AppProps } from 'next/app';
+import '../styles/globals.css';
 
-const customTheme = extendTheme()
+const customTheme = extendTheme();
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const authComponents = ['signIn', 'signUp']
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  const authComponents = ['signIn', 'signUp'];
   ///////////////////////////////////////////////
 
   return (
-    <ChakraProvider theme={customTheme}>
-      <CSSReset />
-      <ErrorBoundary fallback={<p>An application error has occurred</p>}>
-        {authComponents.includes(Component.displayName as string) ? (
-          <Component {...pageProps} />
-        ) : (
-          <Layout>
+    <SessionProvider session={session}>
+      <ChakraProvider theme={customTheme}>
+        <CSSReset />
+        <ErrorBoundary fallback={<p>An application error has occurred</p>}>
+          {authComponents.includes(Component.displayName as string) ? (
             <Component {...pageProps} />
-          </Layout>
-        )}
-      </ErrorBoundary>
-    </ChakraProvider>
-  )
+          ) : (
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          )}
+        </ErrorBoundary>
+      </ChakraProvider>
+    </SessionProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;

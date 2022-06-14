@@ -30,7 +30,7 @@ const getContributionsByBlock = async (blockId: number) => {
             include: {
                 author: {
                     select: {
-                        username: true
+                        name: true
                     }
                 }
             }

@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { contributionSchema } from "@lib/formValidations";
-import { validateToken } from "@lib/validateToken";
 import { Contribution } from "@prisma/client";
+import { getSession } from "next-auth/react";
 import prisma from "@lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const {id} = req.query
-    const token = req.cookies[process.env.JWT_TOKEN_NAME as unknown as string]
+   const user = await getSession({req})
 
     switch(req.method){
         case "GET": {
@@ -14,18 +14,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(data.status).json(data.data)
         }
         case "DELETE": {
-            const user = validateToken(token)
             if(!user) return res.status(401).send({error: true, message: "Not authorized"})
-            const data = await deleteContribution(Number(id), user)
+            const data = await deleteContribution(Number(id), user.user)
             return res.status(data.status).json(data.data)
         }
         case "PATCH": {
-            const user = validateToken(token)
             if(!user) return res.status(401).send({error: true, message: "Not authorized"})
             //Check to see if the incoming request is to update the content or like the contribution
             if(req.body.type == "updateContent"){
                 delete req.body.type
-                const data = await updateContribution(Number(id), user, req.body.content )
+                const data = await updateContribution(Number(id), user.user, req.body.content )
                 return res.status(data.status).json(data.data)
             }
             //TODO: Add handler for liking contributions        
@@ -120,7 +118,7 @@ const getContribution = async (id: number) => {
             include: {
                 author: {
                     select: {
-                        username: true
+                        name: true
                     }
                 }
             }

@@ -1,11 +1,17 @@
-import { Box, HStack, LinkBox, LinkOverlay, chakra } from '@chakra-ui/react';
-import { Link as ChakraLink } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import { logout } from '@lib/mutations';
+import { LoginButton } from '@components-common';
+import { useSession } from 'next-auth/react';
 import type { ReactNode } from 'react';
-import { useMe } from '@lib/useMe';
 import Image from 'next/image';
 import Link from 'next/link';
+import {
+  Box,
+  HStack,
+  LinkBox,
+  LinkOverlay,
+  chakra,
+  Avatar,
+  Link as ChakraLink,
+} from '@chakra-ui/react';
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
@@ -27,13 +33,7 @@ export function Layout({ children }: { children: ReactNode }) {
 }
 
 const Header = () => {
-  const { user, mutate } = useMe();
-  const router = useRouter();
-  const handleLogout = async () => {
-    await logout();
-    mutate(undefined);
-    router.push('/signin');
-  };
+  const { data: session } = useSession();
   return (
     <HStack
       w="100%"
@@ -58,21 +58,17 @@ const Header = () => {
       </HStack>
       <Box flexGrow={1}>Search Bar</Box>
       <HStack>
-        {user ? (
+        {session && session.user ? (
           <>
-            <Link href={`/users/${user.id}`} passHref>
-              <ChakraLink>@{user.username}</ChakraLink>
+            {/* @ts-ignore */}
+            <Link href={`/users/${session.user?.id ?? ''}`} passHref>
+              <ChakraLink>{session.user.name}</ChakraLink>
             </Link>
-            <ChakraLink as={'button'} onClick={handleLogout} id="logout-button">
-              Logout
-            </ChakraLink>
+            <Avatar src={session.user?.image ?? ''} size="sm" />
           </>
-        ) : (
-          <Link href="/signin" id="login-button">
-            Login
-          </Link>
-        )}
+        ) : null}
       </HStack>
+      <LoginButton />
     </HStack>
   );
 };
