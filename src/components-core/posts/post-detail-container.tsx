@@ -151,13 +151,7 @@ export const PostDetailContainer: NextPage = () => {
                               )}
                               content={block.contributions[0].content}
                               createdAt={block.contributions[0].createdAt}
-                              username={
-                                user &&
-                                user.name ===
-                                  block.contributions[0].author.username
-                                  ? user.name
-                                  : block.contributions[0].author.username
-                              }
+                              username={block.contributions[0].author.name}
                               likes={block.contributions[0].likes}
                             />
                           </HStack>

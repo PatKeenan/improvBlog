@@ -7,7 +7,7 @@ import moment from 'moment';
 interface BlockCardType extends ButtonProps {
   content: Contribution['content'];
   createdAt: Contribution['createdAt'];
-  username: User['username'];
+  username: User['name'];
   likes: Contribution['likes'];
   contributionTotal: number;
   activeBorder: boolean;
