@@ -2,9 +2,9 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import bcrypt from 'bcrypt'
 import {faker} from "@faker-js/faker"
 
-const prisma = new PrismaClient
 
-const roundOne: Prisma.UserCreateInput[] = [{email:'patkeenan@gmail.com' ,
+
+/* const roundOne: Prisma.UserCreateInput[] = [{email:'patkeenan@gmail.com' ,
 username: 'Patrick',
 password: '123456789',
 role: 'SUPER_USER'
@@ -58,4 +58,4 @@ run()
 })
 .finally(async () => {
     await prisma.$disconnect()
-})
+}) */
