@@ -3,7 +3,7 @@ import fetcher from './fetcher';
 import useSWR from 'swr';
 
 interface UserType extends Contribution {
-  author: Pick<User, 'username'>;
+  author: Pick<User, 'name'>;
 }
 
 interface BlockType extends Block {
