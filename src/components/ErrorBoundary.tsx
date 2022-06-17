@@ -1,4 +1,4 @@
-import React, { ErrorInfo, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 interface ErrorBoundaryProps {
   fallback: ReactNode;
@@ -13,9 +13,8 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
       error,
     };
   }
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch() {
     // You can use your own error logging service here
-    console.log({ error, errorInfo });
   }
   render() {
     if (this.state.hasError) {
