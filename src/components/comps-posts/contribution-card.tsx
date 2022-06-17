@@ -1,5 +1,5 @@
 import { useContributionStore } from '@lib/useContributionStore';
-import { Card, Paragraph, SmallText } from '@components-common';
+import { Card, Paragraph, SmallText } from '@components';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { Button, HStack, VStack } from '@chakra-ui/react';
 import type { Contribution, User } from '@prisma/client';

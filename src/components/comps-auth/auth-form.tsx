@@ -1,5 +1,5 @@
 import { Box, useColorModeValue } from '@chakra-ui/react';
-import { H2 } from '@components-common';
+import { H2 } from '@components';
 import React from 'react';
 
 export const AuthForm = ({

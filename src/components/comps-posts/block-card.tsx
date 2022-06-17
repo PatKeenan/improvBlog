@@ -1,4 +1,4 @@
-import { Card, Paragraph, SmallText } from '@components-common';
+import { Card, Paragraph, SmallText } from '@components';
 import { Box, HStack, VStack } from '@chakra-ui/react';
 import type { ButtonProps } from '@chakra-ui/react';
 import { Contribution, User } from '@prisma/client';
@@ -22,7 +22,6 @@ export const BlockCard = ({
   likes,
   activeBorder,
   handleClick,
-
   ...rest
 }: BlockCardType) => (
   <Card

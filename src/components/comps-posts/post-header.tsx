@@ -1,10 +1,9 @@
 import { IoMdCheckmark, IoMdClose, IoMdTrash } from 'react-icons/io';
 import { postPlotTitleSchema } from '@lib/formValidations';
-import { H1, H5, SmallText } from '@components-common';
+import { H1, H5, SmallText } from '@components';
 import { yupResolver } from '@hookform/resolvers/yup';
-import type { PostIncludingAuthor } from '@models';
 import { postMutations } from '@lib/mutations';
-import type { Post } from '@prisma/client';
+import type { Post, User } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { VscEdit } from 'react-icons/vsc';
 import { useSWRConfig } from 'swr';
@@ -23,12 +22,16 @@ import {
   Button,
 } from '@chakra-ui/react';
 
+interface PostReturnedByTrpcQuery extends Post {
+  author: { name: User['name'] };
+}
+
 export const PostHeader = ({
   post,
   editable,
   handleDelete,
 }: {
-  post: PostIncludingAuthor;
+  post: PostReturnedByTrpcQuery;
   // eslint-disable-next-line no-unused-vars
   editable: boolean;
   handleDelete: () => void;

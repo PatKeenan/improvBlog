@@ -1,25 +1,25 @@
-import { ContributionCard, ContributeButton } from '@components-core/posts';
+import { ContributionCard, ContributeButton } from '@components/comps-posts';
 import { useContributionStore } from '@lib/useContributionStore';
 import { useContributions } from '@lib/useContributions';
-import type { Block, User } from '@prisma/client';
+import type { Block } from '@prisma/client';
 import { Box, VStack } from '@chakra-ui/react';
-import { Determine } from '@components-feat';
+import { Determine } from '@components';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 export const ContributionList = ({
   blockId,
-  user,
   post_uuid,
 }: {
   blockId: Block['id'];
-  user: User | undefined;
   post_uuid: string;
 }) => {
   const { contributions, loading, error } = useContributions(blockId);
   const { toggleModalOpen } = useContributionStore();
   const router = useRouter();
+  const { data: session } = useSession();
   const handleClickAdd = () => {
-    if (user) {
+    if (session?.user) {
       return toggleModalOpen(blockId);
     }
     return router.push('/signin');

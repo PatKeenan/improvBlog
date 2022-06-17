@@ -9,14 +9,12 @@
  */
 
 import { Box, HStack, Spinner } from '@chakra-ui/react';
-import { H3 } from '@components-common';
+import { H3 } from '@components';
 import React from 'react';
 
 interface DetermineProps<V> {
   component: JSX.Element | null;
-  error: {
-    message: string | null;
-  };
+  error: boolean;
   loading: V;
 }
 
@@ -42,7 +40,6 @@ export const Determine = <V extends unknown>({
           ) : (
             <>
               <H3>Error:</H3>
-              <H3>{error.message}</H3>
             </>
           )}
         </HStack>

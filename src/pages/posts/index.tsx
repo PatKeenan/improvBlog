@@ -1,17 +1,16 @@
 import { VStack, Button, Link as ChakraLink, HStack } from '@chakra-ui/react';
-import { SmallText, H1, Card, H3, Paragraph } from '@components-common';
-import { Determine } from '@components-feat';
-import { usePosts } from '@lib/usePosts';
+import { SmallText, H1, Card, H3, Paragraph, Determine } from '@components';
 import { IoMdAdd } from 'react-icons/io';
 import type { NextPage } from 'next';
+import { trpc } from '@lib/trpc';
 import Link from 'next/link';
 import moment from 'moment';
 
-export const PostsContainer: NextPage = () => {
-  const { posts, loading, error } = usePosts();
+export const Posts: NextPage = () => {
+  const { data: posts, isError, isLoading } = trpc.useQuery(['posts.all']);
   return Determine({
-    error,
-    loading,
+    error: isError,
+    loading: isLoading,
     component: posts ? (
       <VStack
         spacing={4}
@@ -70,3 +69,5 @@ export const PostsContainer: NextPage = () => {
     ) : null,
   });
 };
+
+export default Posts;

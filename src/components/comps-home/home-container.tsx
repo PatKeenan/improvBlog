@@ -7,7 +7,7 @@ import {
   VStack,
   Link as ChakraLink,
 } from '@chakra-ui/react';
-import { H1, H2, H5, Paragraph, SmallText } from '@components-common';
+import { H1, H2, H5, Paragraph, SmallText } from '@components';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { HomeContainer } from '@components-core/home';
+import { HomeContainer } from '@components-core/home-comps';
 
 describe('Home Page', () => {
   it('renders a heading', () => {

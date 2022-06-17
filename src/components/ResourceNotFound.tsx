@@ -1,5 +1,5 @@
 import { Button, VStack } from '@chakra-ui/react';
-import { H3 } from '@components-common';
+import { H3 } from '@components';
 import Image from 'next/image';
 import Link from 'next/link';
 

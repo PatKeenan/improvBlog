@@ -20,14 +20,11 @@
     "incremental": true,
     "baseUrl": "src",
     "paths": {
-      "@components-core/*": [
-        "components-core/*"
+      "@components/*": [
+        "components/*"
       ],
-      "@components-feat": [
-        "components-feat/index.ts"
-      ],
-      "@components-common": [
-        "components-common/index.ts"
+      "@components": [
+        "components/index.ts"
       ],
       "@lib/*": [
         "lib/*"
