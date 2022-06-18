@@ -1,7 +1,7 @@
 import { postPlotTitleSchema } from '@lib/formValidations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import type { SubmitHandler } from 'react-hook-form';
-import { PostByIDInput } from 'server/routers/posts';
+import { PostByIDInput } from 'server/routers/posts.router';
 import { IoMdCheckmark } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
 import { H2 } from '@components';
@@ -34,7 +34,6 @@ export const PostCreate: NextPage = () => {
   const { createPost } = usePost();
 
   const { mutate, isLoading, isSuccess } = createPost({ onSuccesFunc: reset });
-
   const onSubmit: SubmitHandler<PostByIDInput> = async data => {
     mutate({
       title: data.title,

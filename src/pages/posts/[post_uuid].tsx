@@ -1,9 +1,9 @@
 import { useContributionStore } from '@lib/useContributionStore';
-import { blockMutations, postMutations } from '@lib/mutations';
 import { Determine, ResourceNotFound, Paragraph } from '@components';
 import { BlockCard } from '@components/comps-posts/block-card';
 import { BsLock, BsUnlock } from 'react-icons/bs';
 import type { Block, Post } from '@prisma/client';
+import { blockMutations } from '@lib/mutations';
 import { useSession } from 'next-auth/react';
 import { chakra } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
@@ -24,11 +24,11 @@ import {
   PostHeader,
   ContributionModal,
 } from '@components/comps-posts';
+import { usePosts } from '@lib/usePosts';
 import Head from 'next/head';
-import { usePost } from '@lib/usePost';
 
 export const PostDetailContainer: NextPage = () => {
-  const [noResourceMessage, setNoResourceMessage] = useState('Post Not Found'); // Sets the message after a post get's deleted.
+  const [noResourceMessage] = useState('Post Not Found'); // Sets the message after a post get's deleted.
 
   const [selectedBlock, setSelectedBlock] = useState<null | Block['id']>(null);
   const [blockLoading, setBlockLoading] = useState(false);
@@ -42,19 +42,13 @@ export const PostDetailContainer: NextPage = () => {
 
   const { data: session } = useSession();
 
-  const { getPost } = usePost();
+  const { getPost, deletePost } = usePosts();
 
   const { data, isError, isLoading } = getPost(post_uuid);
+  const { mutate } = deletePost();
 
-  const handleDelete = async () => {
-    if (data) {
-      await postMutations()
-        .remove(post_uuid)
-        .then(() => {
-          setNoResourceMessage('Successfully delete post');
-          /*   mutate(undefined); */
-        });
-    }
+  const handleDelete = () => {
+    mutate({ post_uuid });
   };
 
   const handleAddBlock = async () => {

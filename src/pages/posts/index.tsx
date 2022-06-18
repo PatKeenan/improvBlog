@@ -2,12 +2,13 @@ import { VStack, Button, Link as ChakraLink, HStack } from '@chakra-ui/react';
 import { SmallText, H1, Card, H3, Paragraph, Determine } from '@components';
 import { IoMdAdd } from 'react-icons/io';
 import type { NextPage } from 'next';
-import { trpc } from '@lib/trpc';
 import Link from 'next/link';
 import moment from 'moment';
+import { usePosts } from '@lib/usePosts';
 
 export const Posts: NextPage = () => {
-  const { data: posts, isError, isLoading } = trpc.useQuery(['posts.all']);
+  const { getPosts } = usePosts();
+  const { data: posts, isError, isLoading } = getPosts();
   return Determine({
     error: isError,
     loading: isLoading,

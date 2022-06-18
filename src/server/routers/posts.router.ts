@@ -1,3 +1,8 @@
+/**
+ * 
+ * All The logic from this file is used in the usePost hook. 
+ * 
+ */
 import { postPlotTitleSchema } from "@lib/formValidations";
 import { TRPCError } from "@trpc/server";
 import { createRouter } from "server/createRouter";
@@ -13,7 +18,7 @@ export const postsRouter = createRouter()
 .middleware(async ({ meta, next, ctx }) => {
   // only check authorization if enabled
   if (meta?.hasAuth && !ctx.session?.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED", message: "You're not allowed to Do this sucker!" });
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "You need to sign in to perform this action" });
   }
   return next()
 })
@@ -31,7 +36,7 @@ export const postsRouter = createRouter()
   }
 })
 /////////////////////////////////////////////////
-.query('byId', {
+.query('single', {
   input: yup.object({
     post_uuid: yup.string().required()
   }),
@@ -79,12 +84,7 @@ export const postsRouter = createRouter()
       hasAuth: true
     },
     async resolve({ctx, input}){
-     /*  if(!ctx.session || !ctx.session?.user){
-        throw new TRPCError({
-          code: "FORBIDDEN"
-        })
-      } */
-        const {id} = ctx.session.user
+        const {id} = ctx.session!.user
         return ctx.prisma.post.create({
         data: {
           slug: '',
@@ -103,3 +103,66 @@ export const postsRouter = createRouter()
     }
   }
 )
+/////////////////////////////////////////////////
+.mutation('update', {
+  input: yup.object({
+    title: yup.string().min(4).optional(),
+    plot: yup.string().min(4).optional(),
+    post_uuid: yup.string().required()
+  }),
+  meta: {
+    hasAuth: true,
+  },
+  async resolve({ctx, input}){
+    const content: Partial<typeof input> = {...input}
+    const {post_uuid} = content as Partial<typeof input> ;
+    delete content['post_uuid']
+    
+    const targetPost = await ctx.prisma.post.findUnique({
+      where: {
+        post_uuid: post_uuid
+      }
+    })
+    if(!targetPost || targetPost.authorId !== ctx.session?.user.id){
+      throw new TRPCError({
+        code: "FORBIDDEN"
+      })
+    }
+    return await ctx.prisma.post.update({
+      where: {
+        post_uuid: post_uuid
+      },
+      data: {
+        ...content
+      }
+    })
+  
+  }
+})
+/////////////////////////////////////////////////
+.mutation('deleteById', {
+  input: yup.object({
+    post_uuid: yup.string().required()
+  }),
+  meta: {
+    hasAuth: true
+  },
+  async resolve({ctx, input}){
+    const targetPost = await ctx.prisma.post.findUnique({
+      where: {
+        post_uuid: input.post_uuid
+      }
+    })
+    if(targetPost?.authorId !== ctx.session?.user.id){
+      throw new TRPCError({
+        code: "FORBIDDEN"
+      })
+    }else {
+      return await ctx.prisma.post.delete({
+        where: {
+          post_uuid: input.post_uuid
+        }
+      })
+    }
+  }
+})

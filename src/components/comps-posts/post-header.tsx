@@ -1,12 +1,12 @@
 import { IoMdCheckmark, IoMdClose, IoMdTrash } from 'react-icons/io';
+import { PostByIDInput } from 'server/routers/posts.router';
 import { postPlotTitleSchema } from '@lib/formValidations';
-import { H1, H5, SmallText } from '@components';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { postMutations } from '@lib/mutations';
 import type { Post, User } from '@prisma/client';
-import { useForm } from 'react-hook-form';
+import { H1, H5, SmallText } from '@components';
 import { VscEdit } from 'react-icons/vsc';
-import { useSWRConfig } from 'swr';
+import { usePosts } from '@lib/usePosts';
 import Link from 'next/link';
 import moment from 'moment';
 import React from 'react';
@@ -95,37 +95,22 @@ const HeaderEditForm = ({
     register,
     handleSubmit,
     reset,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm({ resolver: yupResolver(postPlotTitleSchema) });
+    formState: { errors },
+  } = useForm<PostByIDInput>({ resolver: yupResolver(postPlotTitleSchema) });
 
-  const { mutate } = useSWRConfig();
+  /*  const { mutate } = useSWRConfig(); */
 
-  const onSubmit = handleSubmit(async data => {
-    if (post) {
-      const { updatedPost, error: serverErrorsEdit } =
-        await postMutations().edit(post.post_uuid, data);
-
-      if (serverErrorsEdit && serverErrorsEdit.hasOwnProperty('inner')) {
-        serverErrorsEdit.inner.forEach(
-          (er: { path: string; message: string }) => {
-            setError(er.path, { message: er.message });
-          },
-        );
-      }
-      if (updatedPost) {
-        const { plot, title, isPrivate } = updatedPost;
-        mutate(`/posts/${post.post_uuid}`, {
-          ...post,
-          plot,
-          title,
-          private: isPrivate,
-        });
-        handleClose();
-      }
-    }
+  const { mutate, isLoading } = usePosts().updatePost({
+    onSuccesFunc: handleClose,
   });
 
+  const onSubmit: SubmitHandler<PostByIDInput> = async data => {
+    mutate({
+      title: data.title,
+      plot: data.plot,
+      post_uuid: post.post_uuid,
+    });
+  };
   const handleCancel = () => {
     reset();
     handleClose();
@@ -133,14 +118,14 @@ const HeaderEditForm = ({
 
   ///////////////////////////////
   return (
-    <form onSubmit={onSubmit} style={{ width: '100%' }}>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
       <VStack
         w="full"
         spacing={4}
         marginInlineStart="auto"
         marginInlineEnd="auto"
       >
-        <FormControl isInvalid={errors.title}>
+        <FormControl isInvalid={errors.title as boolean | undefined}>
           <Textarea
             defaultValue={post.title}
             {...register('title')}
@@ -152,7 +137,7 @@ const HeaderEditForm = ({
             {errors.title && errors.title.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={errors.plot}>
+        <FormControl isInvalid={errors.plot as boolean | undefined}>
           <Textarea defaultValue={post.plot} {...register('plot')} />
           <FormErrorMessage>
             {errors.plot && errors.plot.message}
@@ -173,7 +158,7 @@ const HeaderEditForm = ({
               aria-label="Submit Edit"
               type="submit"
               colorScheme="telegram"
-              isLoading={isSubmitting}
+              isLoading={isLoading}
               leftIcon={<IoMdCheckmark />}
             >
               Save
