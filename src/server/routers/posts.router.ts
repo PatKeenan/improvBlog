@@ -7,11 +7,8 @@ import { postPlotTitleSchema } from "@lib/formValidations";
 import { TRPCError } from "@trpc/server";
 import { createRouter } from "server/createRouter";
 import * as yup from 'yup'
+import {z} from 'zod'
 
-export interface PostByIDInput {
-  title: string;
-  plot: string ;
-}
 
 export const postsRouter = createRouter()
 /////////////////////////////////////////////////
@@ -37,8 +34,8 @@ export const postsRouter = createRouter()
 })
 /////////////////////////////////////////////////
 .query('single', {
-  input: yup.object({
-    post_uuid: yup.string().required()
+  input: z.object({
+    post_uuid: z.string().min(6)
   }),
   async resolve({ctx, input}){
     return await ctx.prisma.post.findUnique({

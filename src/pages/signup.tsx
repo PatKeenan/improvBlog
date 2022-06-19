@@ -1,4 +1,4 @@
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { signUpSchema } from '@lib/formValidations';
 import { SmallText } from '@components';
 import { useForm } from 'react-hook-form';
@@ -38,7 +38,7 @@ export const SignUpContainer: NextPage = () => {
     password: string;
     confirmPassword: string;
   }>({
-    resolver: yupResolver(signUpSchema),
+    resolver: zodResolver(signUpSchema),
   });
 
   const onSubmit = handleSubmit(async data => {

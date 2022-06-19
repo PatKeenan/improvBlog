@@ -1,7 +1,7 @@
 import { useContributionStore } from '@lib/useContributionStore';
 import { contributionSchema } from '@lib/formValidations';
 import { contributionMutations } from '@lib/mutations';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useSWRConfig } from 'swr';
 import React from 'react';
@@ -38,7 +38,7 @@ export const ContributionModal = ({
     reset,
     setError,
     formState: { isSubmitting, errors },
-  } = useForm({ resolver: yupResolver(contributionSchema) });
+  } = useForm({ resolver: zodResolver(contributionSchema) });
 
   const { mutate } = useSWRConfig();
 

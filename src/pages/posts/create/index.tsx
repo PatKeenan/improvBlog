@@ -1,7 +1,5 @@
-import { postPlotTitleSchema } from '@lib/formValidations';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { PostPlotTitleSchema, postPlotTitleSchema } from '@lib/formValidations';
 import type { SubmitHandler } from 'react-hook-form';
-import { PostByIDInput } from 'server/routers/posts.router';
 import { IoMdCheckmark } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
 import { H2 } from '@components';
@@ -19,7 +17,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import React from 'react';
-import { usePost } from '@lib/usePost';
+import { usePosts } from '@lib/usePosts';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export const PostCreate: NextPage = () => {
   const router = useRouter();
@@ -29,12 +28,14 @@ export const PostCreate: NextPage = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<PostByIDInput>({ resolver: yupResolver(postPlotTitleSchema) });
+  } = useForm<PostPlotTitleSchema>({
+    resolver: zodResolver(postPlotTitleSchema),
+  });
 
-  const { createPost } = usePost();
+  const { createPost } = usePosts();
 
   const { mutate, isLoading, isSuccess } = createPost({ onSuccesFunc: reset });
-  const onSubmit: SubmitHandler<PostByIDInput> = async data => {
+  const onSubmit: SubmitHandler<PostPlotTitleSchema> = async data => {
     mutate({
       title: data.title,
       plot: data.plot,

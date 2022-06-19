@@ -1,42 +1,33 @@
-import * as Yup from 'yup'
+import {z} from 'zod'
 
 
-  export const baseAuthSchema = Yup.object().shape({
-    email: Yup.string()
-      .required('Email is required')
-      .email('Must be a valid email')
-      .trim(),
-    password: Yup.string()
-      .required('Password is mandatory')
-      .min(6, 'Password must be at 3 char long')
-      .trim()
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
-      )
-      })
+export const signInSchema = z.object({
+  email: z.string().email().trim(),
+  password: z.string().min(6).trim().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+   'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character')
+})
+export type SignInSchema = z.infer<typeof signInSchema>
 
-  export const signInSchema = baseAuthSchema.shape({})
+export const signUpSchema = signInSchema.extend({
+  username: z.string()
+  .min(4, 'Username must be at least 4 characters long.')
+  .trim(),
+  confirmPassword: z.string()
+  }).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"], // path of error
+})
+export type SignUpSchema = z.infer<typeof signUpSchema>
 
-  export const signUpSchema = signInSchema.shape({
-    username: Yup.string()
-    .required('Username is required')
-    .min(4, 'Username must be at least 4 characters long.')
-    .trim(),
-     confirmPassword: Yup.string()
-       .required('Password is mandatory')
-       .min(6)
-       .trim()
-       .oneOf([Yup.ref('password')], 'Passwords does not match'),
-   })
 
-  
+export const postPlotTitleSchema = z.object({
+  title: z.string().min(6, {message: "Title must be at least 6 characters long."}).max(255, {message: "Title must be less than 255 characters."}),
+  plot: z.string().min(6, {message: "Plot must be at least 6 characters long."}).max(500, {message: "Plot must be less than 500 characters."}),
+})
+export type PostPlotTitleSchema = z.infer<typeof postPlotTitleSchema>
 
-   export const postPlotTitleSchema = Yup.object({
-    title: Yup.string().required().min(4).max(255),
-    plot: Yup.string().required('Plot is required').min(6).max(500),
-   })
 
-  export const contributionSchema = Yup.object().shape({
-    content: Yup.string().required().min(10).max(500)
-  })
+export const contributionSchema = z.object({
+  content: z.string().min(10).max(500)
+})
+export type ContributionSchema = z.infer<typeof contributionSchema>

@@ -1,8 +1,8 @@
 import { IoMdCheckmark, IoMdClose, IoMdTrash } from 'react-icons/io';
-import { PostByIDInput } from 'server/routers/posts.router';
+import type { PostPlotTitleSchema } from '@lib/formValidations';
 import { postPlotTitleSchema } from '@lib/formValidations';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import type { Post, User } from '@prisma/client';
 import { H1, H5, SmallText } from '@components';
 import { VscEdit } from 'react-icons/vsc';
@@ -96,7 +96,9 @@ const HeaderEditForm = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<PostByIDInput>({ resolver: yupResolver(postPlotTitleSchema) });
+  } = useForm<PostPlotTitleSchema>({
+    resolver: zodResolver(postPlotTitleSchema),
+  });
 
   /*  const { mutate } = useSWRConfig(); */
 
@@ -104,7 +106,7 @@ const HeaderEditForm = ({
     onSuccesFunc: handleClose,
   });
 
-  const onSubmit: SubmitHandler<PostByIDInput> = async data => {
+  const onSubmit: SubmitHandler<PostPlotTitleSchema> = async data => {
     mutate({
       title: data.title,
       plot: data.plot,
