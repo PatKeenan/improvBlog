@@ -1,9 +1,8 @@
 import { useContributionStore } from '@lib/useContributionStore';
 import { contributionSchema } from '@lib/formValidations';
-import { contributionMutations } from '@lib/mutations';
+import { useContributions } from '@lib/useContributions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useSWRConfig } from 'swr';
 import React from 'react';
 import {
   Button,
@@ -36,55 +35,37 @@ export const ContributionModal = ({
     register,
     handleSubmit,
     reset,
-    setError,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm({ resolver: zodResolver(contributionSchema) });
 
-  const { mutate } = useSWRConfig();
+  const { createContrib, updateContrib } = useContributions(post_uuid);
+
+  const { mutate: createMutation, isLoading: createContribLoading } =
+    createContrib({
+      onSuccesFunc: () => handleCloseModel(),
+    });
+
+  const { mutate: updateMutation, isLoading: updateContribLoading } =
+    updateContrib({
+      onSuccessFunc: () => handleCloseModel(),
+    });
 
   const handleAddContribution = handleSubmit(async data => {
     if (hasPost) {
-      const { contribution, error: serverErrors } =
-        await contributionMutations().create({
-          postId: post_id,
-          blockId: selectedBlock,
-          content: data.content,
-        });
-      if (contribution) {
-        mutate(`/posts/${post_uuid}`);
-        mutate(`/contributions/by-block/${contribution.blockId}`);
-        handleCloseModel();
-      }
-      // validation form the server
-      if (serverErrors && serverErrors.hasOwnProperty('inner')) {
-        serverErrors.inner.forEach((er: { path: string; message: string }) => {
-          setError(er.path, { message: er.message });
-        });
-      }
+      createMutation({
+        blockId: selectedBlock,
+        postId: post_id,
+        content: data.content,
+      });
     }
   });
 
   const handleEditContribution = handleSubmit(async data => {
-    if (hasPost) {
-      const { updatedContribution, error: serverErrorsEdit } =
-        await contributionMutations().edit({
-          contributionId: selectedContributionId,
-          content: data.content,
-        });
-
-      if (updatedContribution) {
-        mutate(`/posts/${post_uuid}`);
-        mutate(`/contributions/by-block/${updatedContribution.blockId}`);
-        handleCloseModel();
-      }
-      // validation form the server
-      if (serverErrorsEdit && serverErrorsEdit.hasOwnProperty('inner')) {
-        serverErrorsEdit.inner.forEach(
-          (er: { path: string; message: string }) => {
-            setError(er.path, { message: er.message });
-          },
-        );
-      }
+    if (hasPost && selectedContributionId) {
+      updateMutation({
+        id: selectedContributionId,
+        content: data.content,
+      });
     }
   });
 
@@ -133,7 +114,7 @@ export const ContributionModal = ({
               <Button
                 type="submit"
                 id="content-submit-button"
-                isLoading={isSubmitting}
+                isLoading={createContribLoading || updateContribLoading}
                 colorScheme="blue"
               >
                 Submit

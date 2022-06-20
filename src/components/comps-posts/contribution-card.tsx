@@ -1,19 +1,14 @@
 import { useContributionStore } from '@lib/useContributionStore';
-import { Card, Paragraph, SmallText } from '@components';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { Button, HStack, VStack } from '@chakra-ui/react';
-import type { Contribution, User } from '@prisma/client';
-import { contributionMutations } from '@lib/mutations';
+import { useContributions } from '@lib/useContributions';
+import { Card, Paragraph, SmallText } from '@components';
+import type { Contribution } from '@prisma/client';
 import { IoMdTrash } from 'react-icons/io';
 import { VscEdit } from 'react-icons/vsc';
-import { useSWRConfig } from 'swr';
 import { useMe } from '@lib/useMe';
 import moment from 'moment';
 import React from 'react';
-
-interface ContributionType extends Contribution {
-  author: User;
-}
 
 export const ContributionCard = ({
   contribution,
@@ -21,29 +16,27 @@ export const ContributionCard = ({
   handleClick,
   post_uuid,
 }: {
-  contribution: ContributionType;
+  contribution: Contribution & {
+    author: {
+      name: string | null;
+    };
+  };
   activeBorder: boolean;
   handleClick?: () => void;
   post_uuid: string;
 }) => {
-  const [deleteLoading, setDeleteLoading] = React.useState(false);
   const { user } = useMe();
   const { toggleEdit } = useContributionStore();
   const [liked, setLiked] = React.useState(false);
+  const { deleteContrib } = useContributions(post_uuid);
+  const { mutate, isLoading } = deleteContrib();
+
   const handleLike = () => {
     return user && setLiked(!liked);
   };
-  const { mutate } = useSWRConfig();
+
   const handleDelete = async () => {
-    setDeleteLoading(true);
-    const data = await contributionMutations().remove({
-      contributionId: contribution.id,
-    });
-    if (data) {
-      mutate(`/contributions/by-block/${contribution.blockId}`);
-      mutate(`/posts/${post_uuid}`);
-    }
-    setDeleteLoading(false);
+    mutate({ id: contribution.id });
   };
 
   return (
@@ -105,7 +98,7 @@ export const ContributionCard = ({
               size="xs"
               leftIcon={<IoMdTrash />}
               onClick={handleDelete}
-              isLoading={deleteLoading}
+              isLoading={isLoading}
             >
               Delete
             </Button>

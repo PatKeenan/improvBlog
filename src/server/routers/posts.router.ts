@@ -6,8 +6,7 @@
 import { postPlotTitleSchema } from "@lib/formValidations";
 import { TRPCError } from "@trpc/server";
 import { createRouter } from "server/createRouter";
-import * as yup from 'yup'
-import {z} from 'zod'
+import {string, z} from 'zod'
 
 
 export const postsRouter = createRouter()
@@ -100,12 +99,10 @@ export const postsRouter = createRouter()
     }
   }
 )
-/////////////////////////////////////////////////
+////////////////////////////////////////////////
 .mutation('update', {
-  input: yup.object({
-    title: yup.string().min(4).optional(),
-    plot: yup.string().min(4).optional(),
-    post_uuid: yup.string().required()
+  input: postPlotTitleSchema.extend({
+    post_uuid: string()
   }),
   meta: {
     hasAuth: true,
@@ -138,8 +135,8 @@ export const postsRouter = createRouter()
 })
 /////////////////////////////////////////////////
 .mutation('deleteById', {
-  input: yup.object({
-    post_uuid: yup.string().required()
+  input: z.object({
+    post_uuid: z.string()
   }),
   meta: {
     hasAuth: true

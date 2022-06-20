@@ -100,8 +100,6 @@ const HeaderEditForm = ({
     resolver: zodResolver(postPlotTitleSchema),
   });
 
-  /*  const { mutate } = useSWRConfig(); */
-
   const { mutate, isLoading } = usePosts().updatePost({
     onSuccesFunc: handleClose,
   });

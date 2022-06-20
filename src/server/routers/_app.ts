@@ -4,7 +4,8 @@
  import { createRouter } from '../createRouter';
  import { postsRouter } from './posts.router';
  import superjson from 'superjson';
-import { ValidationError } from 'yup';
+import { ZodError } from 'zod';
+import { contributionRouter } from './contributions.router';
  
  /**
   * Create your application's root router
@@ -23,8 +24,8 @@ import { ValidationError } from 'yup';
       ...shape,
       data: {
         ...shape.data,
-        yupError:
-          error.cause instanceof ValidationError
+        zodError:
+          error.cause instanceof ZodError
             ? error.cause
             : null,
       }
@@ -36,8 +37,9 @@ import { ValidationError } from 'yup';
    })
    
    /**
-    * Merge `postRouter` under `post.`
+    * Merge `postRouter` under `posts.`
     */
-   .merge('posts.', postsRouter);
+   .merge('posts.', postsRouter)
+   .merge('contributions.', contributionRouter)
  
  export type AppRouter = typeof appRouter;

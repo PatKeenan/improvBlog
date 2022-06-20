@@ -14,7 +14,12 @@ export const ContributionList = ({
   blockId: Block['id'];
   post_uuid: string;
 }) => {
-  const { contributions, loading, error } = useContributions(blockId);
+  const { getAllByBlock } = useContributions(post_uuid);
+  const {
+    data: contributions,
+    isError: error,
+    isLoading: loading,
+  } = getAllByBlock(blockId);
   const { toggleModalOpen } = useContributionStore();
   const router = useRouter();
   const { data: session } = useSession();
