@@ -7,7 +7,6 @@ import { blockMutations } from '@lib/mutations';
 import { useSession } from 'next-auth/react';
 import { chakra } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { toCapitalCase } from '@utils';
 import type { NextPage } from 'next';
 import {
   Box,
@@ -32,8 +31,6 @@ export const PostDetailContainer: NextPage = () => {
 
   const [selectedBlock, setSelectedBlock] = useState<null | Block['id']>(null);
   const [blockLoading, setBlockLoading] = useState(false);
-
-  const { toggleModalClosed } = useContributionStore();
 
   const router = useRouter();
   const { post_uuid } = router.query as unknown as {
@@ -64,6 +61,8 @@ export const PostDetailContainer: NextPage = () => {
     setBlockLoading(false);
   };
 
+  const { toggleModalClosed } = useContributionStore();
+
   ////////////////////////////////
 
   return Determine({
@@ -72,7 +71,7 @@ export const PostDetailContainer: NextPage = () => {
     component: data ? (
       <>
         <Head>
-          <title>{toCapitalCase(data.title)}</title>
+          <title>{data.title}</title>
           <meta name="description" content={data.plot} />
         </Head>
         <chakra.div
@@ -143,7 +142,7 @@ export const PostDetailContainer: NextPage = () => {
                               content={block.contributions[0].content}
                               createdAt={block.contributions[0].createdAt}
                               username={block.contributions[0].author.name}
-                              likes={block.contributions[0].likes}
+                              likes={block.contributions[0]._count.likes}
                             />
                           </HStack>
                         );
@@ -192,6 +191,7 @@ export const PostDetailContainer: NextPage = () => {
                         Add Block
                       </Button>
                     ) : null}
+                    {data.blocks.length > 1 && <LoadMore />}
                   </VStack>
                 </GridItem>
                 <GridItem colSpan={4} overflow="auto" p={2}>
@@ -205,6 +205,7 @@ export const PostDetailContainer: NextPage = () => {
                   >
                     {selectedBlock ? (
                       <ContributionList
+                        postId={data.id}
                         blockId={selectedBlock}
                         post_uuid={data.post_uuid}
                       />
@@ -229,3 +230,7 @@ export const PostDetailContainer: NextPage = () => {
 };
 
 export default PostDetailContainer;
+
+const LoadMore = () => {
+  return <Button w="full">Load More</Button>;
+};

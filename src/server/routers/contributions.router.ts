@@ -18,19 +18,29 @@ export const contributionRouter = createRouter()
     resolve({ctx, input}){
         return ctx.prisma.contribution.findMany({
             where: {
-                blockId: input.blockId
+                blockId: input.blockId,
             },
             orderBy: [
-                {likes: 'desc'}, 
-                {createdAt: "asc"}
+                {likes: {
+                    _count: 'desc'
+                }},
+                {createdAt: 'asc'}
             ],
             include: {
                 author: {
                     select: {
                         name: true
                     }
+                },
+                likes: true,
+                _count: {
+                    select: {
+                        likes: true
+                    }
                 }
+                
             }
+        
         })
     }
 })
@@ -113,5 +123,66 @@ export const contributionRouter = createRouter()
                 }
             })
         }
+    }
+})
+.mutation('like', {
+    input: z.object({
+        postId: z.number(),
+        blockId: z.number(),
+        contributionId: z.number()
+    }),
+    meta: {
+        hasAuth: true
+    },
+    async resolve({ctx, input}){
+        return await ctx.prisma.like.create({
+            data: {
+                contribution: {
+                    connect:{
+                        id: input.contributionId
+                    }
+                },
+                block: {
+                    connect: {
+                        id: input.blockId
+                    }
+                },
+                post: {
+                    connect: {
+                        id: input.postId
+                    }
+                },
+                user: {
+                    connect: {
+                        id: ctx.session!.user.id
+                    }
+                }
+            }
+        })
+    }
+})
+.mutation('unlike', {
+    input: z.object({
+        likedID: z.number()
+    }),
+    meta: {
+        hasAuth: true
+    },
+    async resolve({ctx, input}){
+        const target = await ctx.prisma.like.findUnique({
+            where:{
+                id: input.likedID
+            }
+        })
+        if( target?.likerId !== ctx.session?.user.id){
+            throw new TRPCError({
+                code: "FORBIDDEN"
+            })
+        }
+        return await ctx.prisma.like.delete({
+            where: {
+                id: input.likedID
+            }
+        })
     }
 })

@@ -15,7 +15,11 @@ export const usePosts = () => {
 
   return {
     // GET POSTS
-    getPosts: () => trpc.useQuery(['posts.all']),
+    getPosts: () =>
+      trpc.useInfiniteQuery(['posts.all', { limit: 2 }], {
+        keepPreviousData: true,
+        getNextPageParam: lastPage => lastPage.nextCursor,
+      }),
     // GET POST
     getPost: (post_uuid: Post['post_uuid']) =>
       trpc.useQuery(['posts.single', { post_uuid }]),

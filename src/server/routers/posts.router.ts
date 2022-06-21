@@ -19,16 +19,38 @@ export const postsRouter = createRouter()
   return next()
 })
 .query('all', {
-  async resolve({ctx}){
-    return ctx.prisma.post.findMany({orderBy: {createdAt: 'desc'}, include: {
-      author: {
-        select: {name: true}
-      },
-      _count : {
-        select: {blocks: true, contributions: true }
-      },
-    }})
+  input: z.object({
+    limit: z.number().min(1).max(100).nullish(),
+    cursor: z.number().nullish(),
+  }),
+  async resolve({ctx, input}){
+    const limit = input.limit ?? 2
+    const {cursor} = input
+    const posts = await ctx.prisma.post.findMany({
+      orderBy: {
+        id: "desc"
+      }, 
+      take: limit + 1 ,
+      cursor: cursor ? { id: cursor } : undefined,
     
+      include: {
+        author: {
+          select: {name: true}
+        },
+        _count : {
+          select: {blocks: true, contributions: true }
+        },
+      }
+  })
+    let nextCursor: typeof cursor | null = null;
+        if (posts.length > limit) {
+          const nextItem = posts.pop()
+          nextCursor = nextItem!.id;
+        }
+    return{
+      posts,
+      nextCursor
+    }
   }
 })
 /////////////////////////////////////////////////
@@ -60,11 +82,18 @@ export const postsRouter = createRouter()
                   contributions: {
                       take: 1,
                       orderBy: [
-                          {likes: 'desc'}, 
-                          {createdAt: "asc"}
+                        {likes: {
+                          _count: 'desc'
+                      }},
+                      {createdAt: 'asc'}
                       ],
                       include: {
-                          author: {select: {name: true}}
+                          author: {select: {name: true}},
+                          _count:{
+                            select: {
+                              likes: true
+                            }
+                          }
                       },           
                   }
               }

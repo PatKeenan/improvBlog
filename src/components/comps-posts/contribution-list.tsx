@@ -10,9 +10,11 @@ import { useSession } from 'next-auth/react';
 export const ContributionList = ({
   blockId,
   post_uuid,
+  postId,
 }: {
   blockId: Block['id'];
   post_uuid: string;
+  postId: number;
 }) => {
   const { getAllByBlock } = useContributions(post_uuid);
   const {
@@ -25,7 +27,7 @@ export const ContributionList = ({
   const { data: session } = useSession();
   const handleClickAdd = () => {
     if (session?.user) {
-      return toggleModalOpen(blockId);
+      return toggleModalOpen(blockId, postId);
     }
     return router.push('/signin');
   };
@@ -48,6 +50,8 @@ export const ContributionList = ({
               activeBorder={false}
               contribution={contribution}
               post_uuid={post_uuid}
+              postId={postId}
+              blockId={blockId}
             />
           ))}
         </VStack>

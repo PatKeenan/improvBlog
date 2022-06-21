@@ -54,6 +54,36 @@ export const useContributions = (post_uuid: string) => {
             isClosable: true,
           })
         }
-      })
+      }),
+     likeContrib: () => trpc.useMutation(['contributions.like'], {
+      onSuccess: data => {
+        utils.invalidateQueries(['contributions.byBlock', {blockId: data.blockId}]).then(()=>{
+          utils.invalidateQueries(['posts.single', {post_uuid}])
+        })
+      },
+      onError: error => {
+        toast({
+          position: 'top',
+          status: 'error',
+          description: error.message,
+          isClosable: true,
+        })
+      }
+     }),
+     unlike: () => trpc.useMutation(['contributions.unlike'], {
+      onSuccess: data => {
+        utils.invalidateQueries(['contributions.byBlock', {blockId: data.blockId}]).then(()=>{
+          utils.invalidateQueries(['posts.single', {post_uuid}])
+        })
+      },
+      onError: error => {
+        toast({
+          position: 'top',
+          status: 'error',
+          description: error.message,
+          isClosable: true,
+        })
+      }
+     })
   }
 } 

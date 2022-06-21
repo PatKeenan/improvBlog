@@ -39,19 +39,33 @@ model Session {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  user_uuid     String         @unique @default(uuid())
-  createdAt     DateTime       @default(now())
-  name          String?
-  email         String?        @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
-  contributions Contribution[]
-  profile       Profile?
-  role          Role           @default(USER)
+  id                 Int            @id @default(autoincrement())
+  user_uuid          String         @unique @default(uuid())
+  createdAt          DateTime       @default(now())
+  name               String?
+  email              String?        @unique
+  emailVerified      DateTime?
+  image              String?
+  accounts           Account[]
+  sessions           Session[]
+  posts              Post[]
+  contributions      Contribution[]
+  likedContributions Like[]
+  profile            Profile?
+  role               Role           @default(USER)
+}
+
+model Like {
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  likerId        Int
+  user           User         @relation(fields: [likerId], references: [id], onDelete: Cascade)
+  contributionId Int
+  contribution   Contribution @relation(fields: [contributionId], references: [id], onDelete: Cascade)
+  blockId        Int
+  block          Block        @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  postId         Int
+  post           Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -76,30 +90,32 @@ model Profile {
 }
 
 model Post {
-  id               Int            @id @default(autoincrement())
-  post_uuid        String         @unique @default(uuid())
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  authorId         Int
-  author           User           @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  private          Boolean        @default(false)
-  privateMemberIds Int[] // will autofill with current participants
-  blocks           Block[]
-  contributions    Contribution[]
-  title            String         @unique @db.VarChar(255)
-  plot             String
-  slug             String
+  id                 Int            @id @default(autoincrement())
+  post_uuid          String         @unique @default(uuid())
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  authorId           Int
+  author             User           @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  private            Boolean        @default(false)
+  privateMemberIds   Int[] // will autofill with current participants
+  blocks             Block[]
+  contributions      Contribution[]
+  title              String         @unique @db.VarChar(255)
+  plot               String
+  slug               String
+  likedContributions Like[]
 }
 
 model Block {
-  id            Int            @id @default(autoincrement())
-  block_uuid    String         @unique @default(uuid())
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  postId        Int
-  frozen        Boolean        @default(false)
-  Post          Post           @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  contributions Contribution[]
+  id                 Int            @id @default(autoincrement())
+  block_uuid         String         @unique @default(uuid())
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  postId             Int
+  frozen             Boolean        @default(false)
+  Post               Post           @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  contributions      Contribution[]
+  likedContributions Like[]
 }
 
 model Contribution {
@@ -110,11 +126,11 @@ model Contribution {
   authorId          Int
   author            User     @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   content           String
-  likes             Int      @default(0)
   blockId           Int
   block             Block    @relation(fields: [blockId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   postId            Int
   Post              Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  likes             Like[]
 }
 
 enum Role {

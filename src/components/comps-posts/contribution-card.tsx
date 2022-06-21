@@ -4,9 +4,9 @@ import { Button, HStack, VStack } from '@chakra-ui/react';
 import { useContributions } from '@lib/useContributions';
 import { Card, Paragraph, SmallText } from '@components';
 import type { Contribution } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 import { IoMdTrash } from 'react-icons/io';
 import { VscEdit } from 'react-icons/vsc';
-import { useMe } from '@lib/useMe';
 import moment from 'moment';
 import React from 'react';
 
@@ -15,24 +15,53 @@ export const ContributionCard = ({
   activeBorder,
   handleClick,
   post_uuid,
+  postId,
+  blockId,
 }: {
   contribution: Contribution & {
     author: {
       name: string | null;
     };
+    likes: any[];
   };
   activeBorder: boolean;
   handleClick?: () => void;
   post_uuid: string;
+  postId: number;
+  blockId: number;
 }) => {
-  const { user } = useMe();
+  const { data: session } = useSession();
   const { toggleEdit } = useContributionStore();
-  const [liked, setLiked] = React.useState(false);
-  const { deleteContrib } = useContributions(post_uuid);
-  const { mutate, isLoading } = deleteContrib();
+  const [isLiked, setIsLiked] = React.useState(
+    contribution.likes.includes(session?.user.id),
+  );
 
-  const handleLike = () => {
-    return user && setLiked(!liked);
+  React.useEffect(() => {
+    const likerIds = contribution.likes.map(i => i.likerId);
+    const userIDInLikerIds = likerIds.includes(session?.user.id);
+    setIsLiked(userIDInLikerIds);
+  }, [contribution.likes, session?.user.id]);
+
+  const { deleteContrib, likeContrib, unlike } = useContributions(post_uuid);
+  const { mutate, isLoading } = deleteContrib();
+  const { mutate: like } = likeContrib();
+  const { mutate: unlikeContrib } = unlike();
+
+  const handleUnlikeContrib = async () => {
+    const targetId = contribution.likes.filter(
+      i => i.likerId === session?.user.id,
+    );
+    if (targetId) {
+      return unlikeContrib({ likedID: targetId[0].id });
+    }
+  };
+
+  const handleLikeContrib = async () => {
+    like({
+      postId: postId,
+      blockId: blockId,
+      contributionId: contribution.id,
+    });
   };
 
   const handleDelete = async () => {
@@ -62,9 +91,9 @@ export const ContributionCard = ({
           </SmallText>
 
           <HStack>
-            {liked ? (
+            {isLiked ? (
               <AiFillHeart
-                onClick={handleLike}
+                onClick={handleUnlikeContrib}
                 style={{
                   cursor: 'pointer',
                   fill: 'var(--chakra-colors-blue-200)',
@@ -72,14 +101,14 @@ export const ContributionCard = ({
               />
             ) : (
               <AiOutlineHeart
-                onClick={handleLike}
+                onClick={handleLikeContrib}
                 style={{ cursor: 'pointer' }}
               />
             )}
-            <SmallText>{contribution.likes} Likes</SmallText>
+            <SmallText>{contribution.likes.length}</SmallText>
           </HStack>
         </HStack>
-        {user?.id === contribution.authorId && (
+        {session?.user?.id === contribution.authorId && (
           <HStack>
             <Button
               size="xs"
