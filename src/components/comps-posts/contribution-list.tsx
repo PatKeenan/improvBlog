@@ -1,11 +1,11 @@
 import { ContributionCard, ContributeButton } from '@components/comps-posts';
 import { useContributionStore } from '@lib/useContributionStore';
 import { useContributions } from '@lib/useContributions';
+import { Box, Button, VStack } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
 import type { Block } from '@prisma/client';
-import { Box, VStack } from '@chakra-ui/react';
 import { Determine } from '@components';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 
 export const ContributionList = ({
   blockId,
@@ -17,11 +17,10 @@ export const ContributionList = ({
   postId: number;
 }) => {
   const { getAllByBlock } = useContributions(post_uuid);
-  const {
-    data: contributions,
-    isError: error,
-    isLoading: loading,
-  } = getAllByBlock(blockId);
+
+  const { data, isError, fetchNextPage, isLoading, isFetching, hasNextPage } =
+    getAllByBlock(blockId);
+
   const { toggleModalOpen } = useContributionStore();
   const router = useRouter();
   const { data: session } = useSession();
@@ -33,9 +32,9 @@ export const ContributionList = ({
   };
 
   return Determine({
-    error,
-    loading,
-    component: contributions ? (
+    error: isError,
+    loading: isLoading,
+    component: data?.pages ? (
       <>
         <Box w="full">
           <ContributeButton
@@ -44,16 +43,26 @@ export const ContributionList = ({
           />
         </Box>
         <VStack w="full" overflow="auto" h="100%">
-          {contributions.map(contribution => (
-            <ContributionCard
-              key={contribution.contribution_uuid}
-              activeBorder={false}
-              contribution={contribution}
-              post_uuid={post_uuid}
-              postId={postId}
-              blockId={blockId}
-            />
-          ))}
+          {data.pages.map(page => {
+            return page.contributions.map(contribution => (
+              <ContributionCard
+                key={contribution.contribution_uuid}
+                activeBorder={false}
+                contribution={contribution}
+                post_uuid={post_uuid}
+                postId={postId}
+                blockId={blockId}
+              />
+            ));
+          })}
+          {hasNextPage ? (
+            <Button
+              onClick={() => fetchNextPage()}
+              isLoading={isFetching && !isLoading}
+            >
+              Load More
+            </Button>
+          ) : null}
         </VStack>
       </>
     ) : null,

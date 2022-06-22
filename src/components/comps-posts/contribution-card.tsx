@@ -86,7 +86,10 @@ export const ContributionCard = ({
         <Paragraph textAlign="left">{contribution.content}</Paragraph>
         <HStack align="center" justify="space-between" w="full" spacing="4">
           <SmallText fontWeight="light">
-            Contributed by {contribution.author.name}{' '}
+            Contributed by{' '}
+            {contribution.authorId === session?.user.id
+              ? 'you'
+              : contribution.author.name}{' '}
             {moment(contribution.createdAt).fromNow()}
           </SmallText>
 

@@ -24,13 +24,13 @@ export const postsRouter = createRouter()
     cursor: z.number().nullish(),
   }),
   async resolve({ctx, input}){
-    const limit = input.limit ?? 2
+    const limit = input.limit ?? 6
     const {cursor} = input
     const posts = await ctx.prisma.post.findMany({
       orderBy: {
         id: "desc"
       }, 
-      take: limit + 1 ,
+      take: limit + 1,
       cursor: cursor ? { id: cursor } : undefined,
     
       include: {

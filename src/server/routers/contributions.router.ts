@@ -13,13 +13,19 @@ export const contributionRouter = createRouter()
   })
 .query('byBlock', {
     input: z.object({
-        blockId: z.number()
+        blockId: z.number(),
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.number().nullish(),
     }),
-    resolve({ctx, input}){
-        return ctx.prisma.contribution.findMany({
+    async resolve({ctx, input}){
+        const limit = input.limit ?? 6
+        const {cursor, blockId} = input
+        const contributions = await ctx.prisma.contribution.findMany({
             where: {
-                blockId: input.blockId,
+                blockId: blockId,
             },
+            take: limit + 1,
+            cursor: cursor ? { id: cursor } : undefined,
             orderBy: [
                 {likes: {
                     _count: 'desc'
@@ -37,11 +43,18 @@ export const contributionRouter = createRouter()
                     select: {
                         likes: true
                     }
-                }
-                
+                }   
             }
-        
         })
+        let nextCursor: typeof cursor | null = null;
+        if(contributions.length > limit){
+            const nextItem = contributions.pop()
+            nextCursor = nextItem!.id
+        }
+        return {
+            contributions,
+            nextCursor
+        }
     }
 })
 .mutation('create', {

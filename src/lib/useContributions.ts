@@ -6,7 +6,10 @@ export const useContributions = (post_uuid: string) => {
   const utils = trpc.useContext()
   return {
       // GET CONTRIBUTIONS
-      getAllByBlock: (blockId: number) => trpc.useQuery(['contributions.byBlock', {blockId}]),
+      getAllByBlock: (blockId: number) => trpc.useInfiniteQuery(['contributions.byBlock', {blockId, limit: 2}], {
+        keepPreviousData: true,
+        getNextPageParam: lastPage => lastPage.nextCursor
+      }),
       // CREATE CONTRIBUTION
       createContrib: (options: { onSuccesFunc: () => void }) => trpc.useMutation(['contributions.create'], {
         onSuccess: () => {

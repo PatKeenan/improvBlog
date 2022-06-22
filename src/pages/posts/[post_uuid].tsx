@@ -191,7 +191,6 @@ export const PostDetailContainer: NextPage = () => {
                         Add Block
                       </Button>
                     ) : null}
-                    {data.blocks.length > 1 && <LoadMore />}
                   </VStack>
                 </GridItem>
                 <GridItem colSpan={4} overflow="auto" p={2}>
@@ -230,7 +229,3 @@ export const PostDetailContainer: NextPage = () => {
 };
 
 export default PostDetailContainer;
-
-const LoadMore = () => {
-  return <Button w="full">Load More</Button>;
-};

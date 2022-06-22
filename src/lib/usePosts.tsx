@@ -16,7 +16,7 @@ export const usePosts = () => {
   return {
     // GET POSTS
     getPosts: () =>
-      trpc.useInfiniteQuery(['posts.all', { limit: 2 }], {
+      trpc.useInfiniteQuery(['posts.all', { limit: 6 }], {
         keepPreviousData: true,
         getNextPageParam: lastPage => lastPage.nextCursor,
       }),
