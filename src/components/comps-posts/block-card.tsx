@@ -8,7 +8,7 @@ interface BlockCardType extends ButtonProps {
   content: Contribution['content'];
   createdAt: Contribution['createdAt'];
   username: User['name'];
-  likes: Contribution['likes'];
+  likes: number;
   contributionTotal: number;
   activeBorder: boolean;
   handleClick: () => void;
