@@ -25,7 +25,7 @@ const getBlockContributions = async (blockId: number) => {
             },
             select: {
                 contributions: {
-                    orderBy: [{likes: 'desc'}, {createdAt: "asc"}],
+                    orderBy: [ {createdAt: "asc"}],
                     include: {
                         author: {
                             select: {
