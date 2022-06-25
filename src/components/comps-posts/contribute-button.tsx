@@ -12,9 +12,8 @@ export const ContributeButton = ({
     <Button
       as="button"
       w="full"
-      border="1px solid"
-      bg="gray.50"
-      borderColor="gray.200"
+      colorScheme="telegram"
+      variant="outline"
       leftIcon={<IoMdAdd />}
       onClick={handleClick ? handleClick : () => {}}
     >

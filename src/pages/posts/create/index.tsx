@@ -79,7 +79,7 @@ export const PostCreate: NextPage = () => {
               </Button>
               <Button
                 variant="solid"
-                colorScheme={isSuccess ? 'green' : 'blue'}
+                colorScheme={isSuccess ? 'green' : 'telegram'}
                 type="submit"
                 id="submit-button"
                 isLoading={isLoading}

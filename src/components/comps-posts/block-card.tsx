@@ -30,7 +30,11 @@ export const BlockCard = ({
     _active={{ bg: 'gray.200' }}
     role={'group'}
     onClick={handleClick}
-    border={activeBorder ? '1px solid indigo' : '1px solid transparent'}
+    border={
+      activeBorder
+        ? '1px solid var(--chakra-colors-telegram-500)'
+        : '1px solid transparent'
+    }
     {...rest}
   >
     <Box
@@ -60,7 +64,7 @@ export const BlockCard = ({
         opacity={0}
         _groupHover={{ opacity: 1 }}
       >
-        <SmallText fontWeight="light">
+        <SmallText fontWeight="light" textAlign={'left'}>
           Contributed by {username} {moment(createdAt).fromNow()}
         </SmallText>
         <SmallText>{likes} Likes</SmallText>

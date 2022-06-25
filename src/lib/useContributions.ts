@@ -6,7 +6,7 @@ export const useContributions = (post_uuid: string) => {
   const utils = trpc.useContext()
   return {
       // GET CONTRIBUTIONS
-      getAllByBlock: (blockId: number) => trpc.useInfiniteQuery(['contributions.byBlock', {blockId, limit: 2}], {
+      getAllByBlock: (blockId: number) => trpc.useInfiniteQuery(['contributions.byBlock', {blockId, limit: 8}], {
         keepPreviousData: true,
         getNextPageParam: lastPage => lastPage.nextCursor
       }),

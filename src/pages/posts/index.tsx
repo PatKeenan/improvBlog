@@ -28,7 +28,7 @@ export const Posts: NextPage = () => {
       >
         <Link href={'/posts/create'}>
           <Button
-            colorScheme="blue"
+            colorScheme="telegram"
             leftIcon={<IoMdAdd />}
             alignSelf="flex-end"
           >

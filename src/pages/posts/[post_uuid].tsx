@@ -78,10 +78,9 @@ export const PostDetailContainer: NextPage = () => {
           width="full"
           display="flex"
           flexDirection="column"
-          p={10}
-          overflow="hidden"
+          p={[2, 10]}
+          overflow="auto"
           minH="calc(100vh - 75px)"
-          maxH="calc(100vh - 75px)"
           marginInlineStart="auto"
           marginInlineEnd="auto"
         >
@@ -95,7 +94,7 @@ export const PostDetailContainer: NextPage = () => {
             templateColumns="repeat(10,1fr)"
             w="full"
             height="100%"
-            overflow="hidden"
+            overflow="auto"
             flex="auto"
             p={2}
             gap={8}
@@ -108,7 +107,7 @@ export const PostDetailContainer: NextPage = () => {
             />
             {data.blocks.length > 0 && (
               <>
-                <GridItem colSpan={6} overflow="hidden">
+                <GridItem colSpan={[10, selectedBlock ? 6 : 10]}>
                   <VStack
                     height="100%"
                     align="flex-start"
@@ -185,7 +184,7 @@ export const PostDetailContainer: NextPage = () => {
                         onClick={handleAddBlock}
                         w="full"
                         h="40px"
-                        variant="outline"
+                        colorScheme="telegram"
                         isLoading={blockLoading}
                       >
                         Add Block

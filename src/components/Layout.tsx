@@ -54,9 +54,13 @@ const Header = () => {
             </LinkOverlay>
           </Link>
         </LinkBox>
-        <Link href="/posts/">Posts</Link>
+        <Link href="/posts" passHref>
+          <ChakraLink px="2" fontWeight="semibold">
+            Posts
+          </ChakraLink>
+        </Link>
       </HStack>
-      <Box flexGrow={1}>Search Bar</Box>
+      <Box flexGrow={1}></Box>
       <HStack>
         {session && session.user ? (
           <>

@@ -22,6 +22,7 @@ export const AuthForm = ({
         bg={useColorModeValue('white', 'gray.700')}
         shadow={'lg'}
         p={8}
+        position="relative"
       >
         {children}
       </Box>
